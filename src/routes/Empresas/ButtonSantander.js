@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Image, TouchableOpacity, StyleSheet } from "react-native";
-import CORES from "../../util/cores";
+import { useThemedStyles } from "../../theme";
 
 export default function ButtonSantander({
   onPress,
@@ -9,6 +9,7 @@ export default function ButtonSantander({
   bottomInset = 0,
   ...rest
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <TouchableOpacity
       activeOpacity={0.9}
@@ -29,34 +30,35 @@ export default function ButtonSantander({
   );
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 20,
-    marginTop: -24,
-  },
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    wrapper: {
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 20,
+      marginTop: -24,
+    },
 
-  border: {
-    width: 78,
-    height: 78,
-    borderRadius: 39,
-    backgroundColor: CORES.PRIMARY,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+    border: {
+      width: 78,
+      height: 78,
+      borderRadius: 39,
+      backgroundColor: CORES.PRIMARY,
+      justifyContent: "center",
+      alignItems: "center",
+    },
 
-  inner: {
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    backgroundColor: "#ec0000",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+    inner: {
+      width: 62,
+      height: 62,
+      borderRadius: 31,
+      backgroundColor: "#ec0000",
+      justifyContent: "center",
+      alignItems: "center",
+    },
 
-  icon: {
-    width: 36,
-    height: 36,
-  },
-});
+    icon: {
+      width: 36,
+      height: 36,
+    },
+  });

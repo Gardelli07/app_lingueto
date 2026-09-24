@@ -21,14 +21,17 @@ import {
   desfazerAmizade,
 } from "../services/amizades";
 import { fetchBloqueios, desbloquearUsuario } from "../services/bloqueios";
-import CORES from "../util/cores";
+import { useTheme, useThemedStyles } from "../theme";
 
-const IconArrowLeft = ({ size = 20, color = CORES.PROFILE_NAVY }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-    <Path d="M19 12H5" />
-    <Path d="M12 19l-7-7 7-7" />
-  </Svg>
-);
+const IconArrowLeft = ({ size = 20, color }) => {
+  const CORES = useTheme();
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color || CORES.PROFILE_NAVY} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M19 12H5" />
+      <Path d="M12 19l-7-7 7-7" />
+    </Svg>
+  );
+};
 
 const TABS = [
   { id: "amigos", label: "Amigos" },
@@ -38,6 +41,7 @@ const TABS = [
 ];
 
 function Avatar({ uri, nome }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.avatar}>
       {uri ? (
@@ -50,6 +54,8 @@ function Avatar({ uri, nome }) {
 }
 
 export default function Amigos({ navigation }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [tab, setTab] = useState("amigos");
   const [amigos, setAmigos] = useState([]);
   const [recebidos, setRecebidos] = useState([]);
@@ -144,7 +150,7 @@ export default function Amigos({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={CORES.statusBarStyle} />
 
       <View style={styles.header}>
         <Pressable onPress={() => navigation.goBack()} hitSlop={10} style={styles.backBtn}>
@@ -268,53 +274,55 @@ export default function Amigos({ navigation }) {
   );
 }
 
-const shadow = {
-  shadowColor: "#2E4A78",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.05,
-  shadowRadius: 14,
-  elevation: 3,
+const makeStyles = (CORES) => {
+  const shadow = {
+    shadowColor: CORES.SHADOW,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: CORES.mode === "dark" ? 0.28 : 0.05,
+    shadowRadius: 14,
+    elevation: 3,
+  };
+
+  return StyleSheet.create({
+    safe: { flex: 1, backgroundColor: CORES.PROFILE_BG },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+    },
+    backBtn: { width: 32, height: 32, alignItems: "center", justifyContent: "center" },
+    headerTitle: { fontSize: 16, fontWeight: "800", color: CORES.PROFILE_NAVY },
+
+    tabsRow: { flexDirection: "row", gap: 8, paddingHorizontal: 16, marginBottom: 8 },
+    tabBtn: { flex: 1, borderRadius: 12, paddingVertical: 10, alignItems: "center", backgroundColor: CORES.SURFACE },
+    tabBtnActive: { backgroundColor: CORES.NAVY_FILL },
+    tabBtnText: { fontSize: 12.5, fontWeight: "800", color: CORES.PROFILE_MUTED },
+    tabBtnTextActive: { color: CORES.ON_ACCENT },
+
+    centered: { flex: 1, alignItems: "center", justifyContent: "center" },
+    scroll: { padding: 16, paddingTop: 8, paddingBottom: 28, gap: 10 },
+    emptyText: { color: CORES.PROFILE_MUTED, fontSize: 14, fontWeight: "600", textAlign: "center", marginTop: 30 },
+
+    card: {
+      flexDirection: "row", alignItems: "center", gap: 12,
+      backgroundColor: CORES.SURFACE, borderRadius: 16, padding: 14, marginBottom: 10, ...shadow,
+    },
+    avatar: {
+      width: 48, height: 48, borderRadius: 24, backgroundColor: CORES.ACCENT_FILL,
+      alignItems: "center", justifyContent: "center", overflow: "hidden",
+    },
+    avatarImg: { width: 48, height: 48 },
+    avatarInitial: { color: CORES.ON_ACCENT, fontSize: 18, fontWeight: "900" },
+    nome: { fontSize: 15, fontWeight: "800", color: CORES.PROFILE_NAVY },
+    meta: { fontSize: 12.5, fontWeight: "600", color: CORES.PROFILE_MUTED, marginTop: 2 },
+
+    pedidoActions: { flexDirection: "row", gap: 8 },
+    acceptBtn: { backgroundColor: CORES.ACCENT_FILL, borderRadius: 10, paddingVertical: 8, paddingHorizontal: 12 },
+    acceptBtnText: { color: CORES.ON_ACCENT, fontSize: 12.5, fontWeight: "800" },
+    declineBtn: { backgroundColor: CORES.PROFILE_CHIP_BG, borderRadius: 10, paddingVertical: 8, paddingHorizontal: 12 },
+    declineBtnText: { color: CORES.PROFILE_MUTED, fontSize: 12.5, fontWeight: "800" },
+    unblockText: { color: CORES.PROFILE_DANGER, fontSize: 12.5, fontWeight: "800" },
+  });
 };
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: CORES.PROFILE_BG },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  backBtn: { width: 32, height: 32, alignItems: "center", justifyContent: "center" },
-  headerTitle: { fontSize: 16, fontWeight: "800", color: CORES.PROFILE_NAVY },
-
-  tabsRow: { flexDirection: "row", gap: 8, paddingHorizontal: 16, marginBottom: 8 },
-  tabBtn: { flex: 1, borderRadius: 12, paddingVertical: 10, alignItems: "center", backgroundColor: CORES.WHITE },
-  tabBtnActive: { backgroundColor: CORES.PROFILE_NAVY },
-  tabBtnText: { fontSize: 12.5, fontWeight: "800", color: CORES.PROFILE_MUTED },
-  tabBtnTextActive: { color: "#fff" },
-
-  centered: { flex: 1, alignItems: "center", justifyContent: "center" },
-  scroll: { padding: 16, paddingTop: 8, paddingBottom: 28, gap: 10 },
-  emptyText: { color: CORES.PROFILE_MUTED, fontSize: 14, fontWeight: "600", textAlign: "center", marginTop: 30 },
-
-  card: {
-    flexDirection: "row", alignItems: "center", gap: 12,
-    backgroundColor: CORES.WHITE, borderRadius: 16, padding: 14, marginBottom: 10, ...shadow,
-  },
-  avatar: {
-    width: 48, height: 48, borderRadius: 24, backgroundColor: CORES.PROFILE_BLUE,
-    alignItems: "center", justifyContent: "center", overflow: "hidden",
-  },
-  avatarImg: { width: 48, height: 48 },
-  avatarInitial: { color: "#fff", fontSize: 18, fontWeight: "900" },
-  nome: { fontSize: 15, fontWeight: "800", color: CORES.PROFILE_NAVY },
-  meta: { fontSize: 12.5, fontWeight: "600", color: CORES.PROFILE_MUTED, marginTop: 2 },
-
-  pedidoActions: { flexDirection: "row", gap: 8 },
-  acceptBtn: { backgroundColor: CORES.PROFILE_BLUE, borderRadius: 10, paddingVertical: 8, paddingHorizontal: 12 },
-  acceptBtnText: { color: "#fff", fontSize: 12.5, fontWeight: "800" },
-  declineBtn: { backgroundColor: CORES.PROFILE_CHIP_BG, borderRadius: 10, paddingVertical: 8, paddingHorizontal: 12 },
-  declineBtnText: { color: CORES.PROFILE_MUTED, fontSize: 12.5, fontWeight: "800" },
-  unblockText: { color: CORES.PROFILE_DANGER, fontSize: 12.5, fontWeight: "800" },
-});

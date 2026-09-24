@@ -22,18 +22,9 @@ import * as AppleAuthentication from "expo-apple-authentication";
 import { useAuth } from "../context/AuthContext";
 import api, { setTokens } from "../services/api";
 import { requestNotificationPermission } from "../services/notifications";
-import CORES from "../util/cores";
+import { useTheme, useThemeMode, useThemedStyles } from "../theme";
 
 WebBrowser.maybeCompleteAuthSession();
-
-// paleta do redesign
-const BLUE = "#7ba0c4";
-const MINT = CORES.SECONDARY || "#86c7a4";
-const MINT_DARK = "#4f9271";
-const BG = "#ececec";
-const INK = "#26323d";
-const MUTED = "#7b8794";
-const BORDER = "#cfd6dd";
 
 function getHomeRouteByEmpresa(empresa) {
   if (!empresa) return "Home";
@@ -43,6 +34,9 @@ function getHomeRouteByEmpresa(empresa) {
 }
 
 export default function LoginScreen({ navigation }) {
+  const CORES = useTheme();
+  const { isDark } = useThemeMode();
+  const styles = useThemedStyles(makeStyles);
   const { signIn } = useAuth();
 
   const [email, setEmail] = useState("");
@@ -265,7 +259,9 @@ export default function LoginScreen({ navigation }) {
                 AppleAuthentication.AppleAuthenticationButtonType.CONTINUE
               }
               buttonStyle={
-                AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
+                isDark
+                  ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
+                  : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
               }
               cornerRadius={15}
               style={styles.appleNativeButton}
@@ -277,7 +273,7 @@ export default function LoginScreen({ navigation }) {
               onPress={handleAppleSignIn}
               activeOpacity={0.85}
             >
-              <AntDesign name="apple" size={20} color="#fff" />
+              <AntDesign name="apple" size={20} color={CORES.LOGIN_APPLE_TEXT} />
               <Text style={styles.appleText}>Continuar com Apple</Text>
             </TouchableOpacity>
           )}
@@ -295,7 +291,7 @@ export default function LoginScreen({ navigation }) {
             onPress={toggleCorp}
             activeOpacity={0.8}
           >
-            <Ionicons name="business-outline" size={18} color={MINT_DARK} />
+            <Ionicons name="business-outline" size={18} color={CORES.LOGIN_MINT_DARK} />
             <Text style={styles.corpToggleText}>
               {corpOpen
                 ? "Ocultar acesso corporativo"
@@ -304,7 +300,7 @@ export default function LoginScreen({ navigation }) {
             <Ionicons
               name={corpOpen ? "chevron-up" : "chevron-down"}
               size={18}
-              color={MINT_DARK}
+              color={CORES.LOGIN_MINT_DARK}
             />
           </TouchableOpacity>
 
@@ -316,7 +312,7 @@ export default function LoginScreen({ navigation }) {
                 value={email}
                 onChangeText={setEmail}
                 placeholder="usuario@empresa.com"
-                placeholderTextColor="#a6afba"
+                placeholderTextColor={CORES.TEXT_FAINT}
                 style={styles.input}
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -328,7 +324,7 @@ export default function LoginScreen({ navigation }) {
                   value={senha}
                   onChangeText={setSenha}
                   placeholder="••••••••"
-                  placeholderTextColor="#a6afba"
+                  placeholderTextColor={CORES.TEXT_FAINT}
                   style={[styles.input, { paddingRight: 48 }]}
                   secureTextEntry={!showSenha}
                 />
@@ -340,7 +336,7 @@ export default function LoginScreen({ navigation }) {
                   <Ionicons
                     name={showSenha ? "eye-off-outline" : "eye-outline"}
                     size={20}
-                    color="#9aa5b1"
+                    color={CORES.TEXT_FAINT}
                   />
                 </TouchableOpacity>
               </View>
@@ -378,227 +374,228 @@ export default function LoginScreen({ navigation }) {
 
       {socialLoading && (
         <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="#fff" />
+          <ActivityIndicator size="large" color={CORES.ON_ACCENT} />
         </View>
       )}
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: BG,
-  },
-  loadingOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(38,50,61,0.45)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container: {
-    alignItems: "center",
-    paddingVertical: 34,
-    paddingHorizontal: 26,
-    flexGrow: 1,
-    justifyContent: "center",
-  },
-  logoCircle: {
-    width: 112,
-    height: 112,
-    borderRadius: 56,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    borderWidth: 4,
-    borderColor: "#fff",
-    shadowColor: "#5a7896",
-    shadowOpacity: 0.22,
-    shadowRadius: 26,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 6,
-  },
-  logo: {
-    width: 96,
-    height: 96,
-    transform: [{ translateY: 4 }],
-  },
-  title: {
-    marginTop: 22,
-    fontSize: 26,
-    fontWeight: "900",
-    color: INK,
-    letterSpacing: 0.5,
-  },
-  subtitle: {
-    marginTop: 4,
-    marginBottom: 30,
-    fontSize: 15,
-    fontWeight: "600",
-    color: MUTED,
-    textAlign: "center",
-    lineHeight: 21,
-  },
-  googleButton: {
-    width: "100%",
-    height: 56,
-    borderRadius: 15,
-    borderWidth: 1.5,
-    borderColor: "#dce1e6",
-    backgroundColor: "#fff",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 12,
-    shadowColor: "#5a7896",
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 2,
-  },
-  googleText: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#3c4653",
-  },
-  appleButton: {
-    width: "100%",
-    height: 56,
-    marginTop: 13,
-    borderRadius: 15,
-    backgroundColor: "#101418",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 11,
-  },
-  appleNativeButton: {
-    width: "100%",
-    height: 56,
-    marginTop: 13,
-  },
-  appleText: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#fff",
-  },
-  dividerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    marginTop: 26,
-    marginBottom: 6,
-    gap: 14,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1.5,
-    backgroundColor: BORDER,
-  },
-  dividerText: {
-    fontSize: 12,
-    fontWeight: "800",
-    color: "#9aa5b1",
-    letterSpacing: 1,
-  },
-  corpToggle: {
-    width: "100%",
-    height: 48,
-    marginTop: 12,
-    borderRadius: 15,
-    borderWidth: 1.5,
-    borderStyle: "dashed",
-    borderColor: MINT,
-    backgroundColor: "rgba(134,199,164,0.12)",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-  },
-  corpToggleText: {
-    fontSize: 15,
-    fontWeight: "800",
-    color: MINT_DARK,
-  },
-  corpFields: {
-    width: "100%",
-    marginTop: 16,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "800",
-    color: "#3c4653",
-    marginBottom: 7,
-    marginLeft: 2,
-  },
-  input: {
-    width: "100%",
-    height: 54,
-    borderRadius: 14,
-    borderWidth: 2,
-    borderColor: BORDER,
-    backgroundColor: "#fff",
-    paddingHorizontal: 16,
-    fontSize: 16,
-    fontWeight: "600",
-    color: INK,
-  },
-  senhaWrap: {
-    position: "relative",
-    justifyContent: "center",
-  },
-  eyeButton: {
-    position: "absolute",
-    right: 10,
-    height: 36,
-    width: 36,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  entrarButton: {
-    width: "100%",
-    height: 54,
-    marginTop: 20,
-    borderRadius: 14,
-    backgroundColor: MINT,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: MINT,
-    shadowOpacity: 0.4,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
-  entrarText: {
-    fontSize: 17,
-    fontWeight: "900",
-    color: "#fff",
-    letterSpacing: 0.5,
-  },
-  forgot: {
-    textAlign: "center",
-    marginTop: 14,
-    fontSize: 13,
-    fontWeight: "700",
-    color: "#9aa5b1",
-  },
-  forgotLink: {
-    color: MINT_DARK,
-    textDecorationLine: "underline",
-  },
-  signUpWrap: {
-    marginTop: 22,
-  },
-  noAccount: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: MUTED,
-    textAlign: "center",
-  },
-  signUpText: {
-    color: MINT_DARK,
-    fontWeight: "900",
-    textDecorationLine: "underline",
-  },
-});
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    safe: {
+      flex: 1,
+      backgroundColor: CORES.LOGIN_BG,
+    },
+    loadingOverlay: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: CORES.OVERLAY,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    container: {
+      alignItems: "center",
+      paddingVertical: 34,
+      paddingHorizontal: 26,
+      flexGrow: 1,
+      justifyContent: "center",
+    },
+    logoCircle: {
+      width: 112,
+      height: 112,
+      borderRadius: 56,
+      backgroundColor: CORES.SURFACE,
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "hidden",
+      borderWidth: 4,
+      borderColor: CORES.SURFACE,
+      shadowColor: CORES.SHADOW,
+      shadowOpacity: CORES.mode === "dark" ? 0.45 : 0.22,
+      shadowRadius: 26,
+      shadowOffset: { width: 0, height: 10 },
+      elevation: 6,
+    },
+    logo: {
+      width: 96,
+      height: 96,
+      transform: [{ translateY: 4 }],
+    },
+    title: {
+      marginTop: 22,
+      fontSize: 26,
+      fontWeight: "900",
+      color: CORES.LOGIN_INK,
+      letterSpacing: 0.5,
+    },
+    subtitle: {
+      marginTop: 4,
+      marginBottom: 30,
+      fontSize: 15,
+      fontWeight: "600",
+      color: CORES.LOGIN_MUTED,
+      textAlign: "center",
+      lineHeight: 21,
+    },
+    googleButton: {
+      width: "100%",
+      height: 56,
+      borderRadius: 15,
+      borderWidth: 1.5,
+      borderColor: CORES.BORDER_STRONG,
+      backgroundColor: CORES.SURFACE,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 12,
+      shadowColor: CORES.SHADOW,
+      shadowOpacity: CORES.mode === "dark" ? 0.35 : 0.08,
+      shadowRadius: 10,
+      shadowOffset: { width: 0, height: 3 },
+      elevation: 2,
+    },
+    googleText: {
+      fontSize: 16,
+      fontWeight: "800",
+      color: CORES.TEXT,
+    },
+    appleButton: {
+      width: "100%",
+      height: 56,
+      marginTop: 13,
+      borderRadius: 15,
+      backgroundColor: CORES.LOGIN_APPLE_BG,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 11,
+    },
+    appleNativeButton: {
+      width: "100%",
+      height: 56,
+      marginTop: 13,
+    },
+    appleText: {
+      fontSize: 16,
+      fontWeight: "800",
+      color: CORES.LOGIN_APPLE_TEXT,
+    },
+    dividerRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      width: "100%",
+      marginTop: 26,
+      marginBottom: 6,
+      gap: 14,
+    },
+    dividerLine: {
+      flex: 1,
+      height: 1.5,
+      backgroundColor: CORES.LOGIN_BORDER,
+    },
+    dividerText: {
+      fontSize: 12,
+      fontWeight: "800",
+      color: CORES.TEXT_FAINT,
+      letterSpacing: 1,
+    },
+    corpToggle: {
+      width: "100%",
+      height: 48,
+      marginTop: 12,
+      borderRadius: 15,
+      borderWidth: 1.5,
+      borderStyle: "dashed",
+      borderColor: CORES.SECONDARY,
+      backgroundColor: CORES.LOGIN_MINT_SOFT,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+    },
+    corpToggleText: {
+      fontSize: 15,
+      fontWeight: "800",
+      color: CORES.LOGIN_MINT_DARK,
+    },
+    corpFields: {
+      width: "100%",
+      marginTop: 16,
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: "800",
+      color: CORES.TEXT,
+      marginBottom: 7,
+      marginLeft: 2,
+    },
+    input: {
+      width: "100%",
+      height: 54,
+      borderRadius: 14,
+      borderWidth: 2,
+      borderColor: CORES.LOGIN_BORDER,
+      backgroundColor: CORES.SURFACE,
+      paddingHorizontal: 16,
+      fontSize: 16,
+      fontWeight: "600",
+      color: CORES.LOGIN_INK,
+    },
+    senhaWrap: {
+      position: "relative",
+      justifyContent: "center",
+    },
+    eyeButton: {
+      position: "absolute",
+      right: 10,
+      height: 36,
+      width: 36,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    entrarButton: {
+      width: "100%",
+      height: 54,
+      marginTop: 20,
+      borderRadius: 14,
+      backgroundColor: CORES.SECONDARY,
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: CORES.SECONDARY,
+      shadowOpacity: 0.4,
+      shadowRadius: 16,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 4,
+    },
+    entrarText: {
+      fontSize: 17,
+      fontWeight: "900",
+      color: CORES.ON_ACCENT,
+      letterSpacing: 0.5,
+    },
+    forgot: {
+      textAlign: "center",
+      marginTop: 14,
+      fontSize: 13,
+      fontWeight: "700",
+      color: CORES.TEXT_FAINT,
+    },
+    forgotLink: {
+      color: CORES.LOGIN_MINT_DARK,
+      textDecorationLine: "underline",
+    },
+    signUpWrap: {
+      marginTop: 22,
+    },
+    noAccount: {
+      fontSize: 14,
+      fontWeight: "700",
+      color: CORES.LOGIN_MUTED,
+      textAlign: "center",
+    },
+    signUpText: {
+      color: CORES.LOGIN_MINT_DARK,
+      fontWeight: "900",
+      textDecorationLine: "underline",
+    },
+  });

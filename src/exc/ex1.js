@@ -7,7 +7,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise1({
   activity,
@@ -16,6 +16,7 @@ export function Exercise1({
   next,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
 
   const shuffleArray = (items) => {
@@ -290,74 +291,75 @@ export function Exercise1({
   );
 }
 
-const ex1 = StyleSheet.create({
-  matchBlock: {
-    width: "88%",
-    alignItems: "center",
-  },
-  matchList: {
-    width: "100%",
-    gap: 10,
-    marginTop: 4,
-  },
-  matchCard: {
-    width: "100%",
-    borderWidth: 1,
-    borderRadius: 20,
-    overflow: "hidden",
-  },
-  matchCardEnglish: {
-    backgroundColor: CORES.WHITE,
-    borderColor: "#60A5FA",
-  },
-  matchCardTranslation: {
-    backgroundColor: CORES.BLUE_SOFT,
-    borderColor: CORES.BLUE_SOFT,
-  },
-  matchCardSelected: {
-    borderColor: CORES.BRAND_STRONG,
-    borderWidth: 2,
-  },
-  matchCardTranslationSelected: {
-    backgroundColor: "#4A8FC8",
-    borderColor: CORES.BRAND_STRONG,
-    borderWidth: 2,
-  },
-  matchCardCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-    borderWidth: 2,
-  },
-  matchCardWrong: {
-    borderColor: CORES.DANGER,
-    borderWidth: 2,
-  },
-  matchCardButton: {
-    width: "100%",
-    minHeight: 52,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  matchCardText: {
-    fontSize: 19,
-    lineHeight: 23,
-    color: "#397BB2",
-    fontFamily: "serif",
-    textAlign: "center",
-    textAlignVertical: "center",
-    includeFontPadding: false,
-    flexShrink: 1,
-  },
-  matchCardTextTranslation: {
-    color: CORES.WHITE,
-  },
-  matchCardTextCorrect: {
-    color: "#166534",
-    fontWeight: "700",
-  },
-});
+const ex1 = (CORES) =>
+  StyleSheet.create({
+    matchBlock: {
+      width: "88%",
+      alignItems: "center",
+    },
+    matchList: {
+      width: "100%",
+      gap: 10,
+      marginTop: 4,
+    },
+    matchCard: {
+      width: "100%",
+      borderWidth: 1,
+      borderRadius: 20,
+      overflow: "hidden",
+    },
+    matchCardEnglish: {
+      backgroundColor: CORES.SURFACE,
+      borderColor: CORES.EX_BORDER_ACCENT,
+    },
+    matchCardTranslation: {
+      backgroundColor: CORES.BLUE_SOFT,
+      borderColor: CORES.BLUE_SOFT,
+    },
+    matchCardSelected: {
+      borderColor: CORES.BRAND_STRONG,
+      borderWidth: 2,
+    },
+    matchCardTranslationSelected: {
+      backgroundColor: CORES.BLUE_SOFT_DARK,
+      borderColor: CORES.BRAND_STRONG,
+      borderWidth: 2,
+    },
+    matchCardCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+      borderWidth: 2,
+    },
+    matchCardWrong: {
+      borderColor: CORES.DANGER,
+      borderWidth: 2,
+    },
+    matchCardButton: {
+      width: "100%",
+      minHeight: 52,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 12,
+      paddingVertical: 8,
+    },
+    matchCardText: {
+      fontSize: 19,
+      lineHeight: 23,
+      color: CORES.EX_BLUE_TEXT,
+      fontFamily: "serif",
+      textAlign: "center",
+      textAlignVertical: "center",
+      includeFontPadding: false,
+      flexShrink: 1,
+    },
+    matchCardTextTranslation: {
+      color: CORES.WHITE,
+    },
+    matchCardTextCorrect: {
+      color: CORES.SUCCESS_DARK,
+      fontWeight: "700",
+    },
+  });
 
 export default ex1;
 

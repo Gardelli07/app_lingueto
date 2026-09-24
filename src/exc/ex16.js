@@ -18,7 +18,7 @@ import {
   setAudioModeAsync,
   useAudioRecorder,
 } from "expo-audio";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 import { Images } from "../util/images";
 import { enviarArquivo } from "../services/arquivos";
 import { criarPostAudio } from "../services/comunidade";
@@ -39,6 +39,7 @@ export function Exercise16({
   onAttempt,
   slideKey,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const playerRef = useRef(null);
@@ -65,7 +66,7 @@ export function Exercise16({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -620,334 +621,335 @@ export function Exercise16({
   );
 }
 
-const ex16 = StyleSheet.create({
-  sendAudioBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  sendAudioPrompt: {
-    width: "88%",
-    textAlign: "left",
-    fontSize: 22,
-    color: "#7BA9D6",
-    marginBottom: 6,
-    fontWeight: "700",
-  },
-  sendAudioInstruction: {
-    width: "88%",
-    textAlign: "left",
-    fontSize: 15,
-    color: "#4F8A66",
-    fontWeight: "700",
-  },
-  sendAudioHelperText: {
-    width: "88%",
-    textAlign: "left",
-    fontSize: 14,
-    color: "#5E7F6A",
-    marginBottom: 18,
-  },
-  sendAudioAvatarWrap: {
-    width: 78,
-    height: 78,
-    borderRadius: 39,
-    overflow: "hidden",
-    marginBottom: 14,
-  },
-  sendAudioAvatar: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain",
-  },
-  sendAudioContentCard: {
-    width: "88%",
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#D6E6F7",
-    backgroundColor: CORES.WHITE,
-    alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 14,
-  },
-  sendAudioContentCardWrong: {
-    borderColor: CORES.DANGER,
-  },
-  sendAudioTipButton: {
-    minWidth: 102,
-    minHeight: 34,
-    borderRadius: 17,
-    borderWidth: 1.5,
-    borderColor: "#7BA9D6",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 14,
-    paddingHorizontal: 14,
-  },
-  sendAudioTipButtonText: {
-    color: "#7BA9D6",
-    fontSize: 14,
-  },
-  sendAudioTipCard: {
-    width: "88%",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#D6E6F7",
-    backgroundColor: CORES.WHITE,
-    padding: 12,
-    marginBottom: 16,
-  },
-  sendAudioTipText: {
-    color: CORES.TEXT_DARK,
-    fontSize: 14,
-    textAlign: "left",
-  },
-  sendAudioToolbar: {
-    width: "100%",
-    minHeight: 68,
-    borderRadius: 24,
-    backgroundColor: CORES.PRIMARY,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingLeft: 10,
-    paddingRight: 8,
-    paddingVertical: 8,
-    gap: 8,
-    marginTop: 8,
-  },
-  sendAudioToolbarSideButton: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.08)",
-  },
-  sendAudioToolbarSideButtonText: {
-    color: "#D7DADD",
-    fontSize: 15,
-    fontWeight: "800",
-  },
-  sendAudioToolbarMain: {
-    flex: 1,
-    paddingHorizontal: 4,
-  },
-  sendAudioToolbarTopRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 8,
-  },
-  sendAudioRecordingDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: "#FF6A7C",
-  },
-  sendAudioRecordingDotPaused: {
-    backgroundColor: "#FFB84D",
-  },
-  sendAudioRecordingDotIdle: {
-    backgroundColor: "rgba(255,255,255,0.4)",
-  },
-  sendAudioToolbarMicImage: {
-    width: 18,
-    height: 18,
-    resizeMode: "contain",
-    tintColor: "#D7DADD",
-  },
-  sendAudioPlaybackChip: {
-    minWidth: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: "rgba(255,255,255,0.08)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sendAudioPlaybackChipAccent: {
-    backgroundColor: CORES.SECONDARY,
-  },
-  sendAudioPlaybackChipDisabled: {
-    backgroundColor: "rgba(255,255,255,0.14)",
-  },
-  sendAudioPlaybackChipText: {
-    color: CORES.WHITE,
-    fontSize: 12,
-    fontWeight: "800",
-  },
-  sendAudioToolbarTime: {
-    color: "#FFFFFF",
-    fontSize: 20,
-    fontWeight: "700",
-    letterSpacing: 0.4,
-  },
-  sendAudioProgressTrack: {
-    width: "100%",
-    height: 28,
-    justifyContent: "center",
-  },
-  sendAudioProgressSlider: {
-    width: "100%",
-    height: 28,
-  },
-  sendAudioToolbarPauseButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: "rgba(255,255,255,0.08)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sendAudioToolbarPauseButtonText: {
-    color: "#FF8DA0",
-    fontSize: 11,
-    fontWeight: "800",
-  },
-  sendAudioToolbarPrimaryButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: CORES.SECONDARY,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: CORES.SECONDARY,
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    shadowOffset: {
-      width: 0,
-      height: 3,
+const ex16 = (CORES) =>
+  StyleSheet.create({
+    sendAudioBlock: {
+      width: "100%",
+      alignItems: "center",
     },
-    elevation: 4,
-  },
-  sendAudioToolbarPrimaryButtonStop: {
-    backgroundColor: "#2ABF71",
-  },
-  sendAudioToolbarPrimaryButtonIdle: {
-    backgroundColor: "#7BA9D6",
-  },
-  sendAudioToolbarPrimaryButtonText: {
-    color: CORES.WHITE,
-    fontSize: 16,
-    fontWeight: "900",
-  },
-  sendAudioToolbarPrimaryButtonDisabled: {
-    backgroundColor: "#A7B3BF",
-    shadowColor: "#A7B3BF",
-  },
-  sendAudioToolbarPrimaryImage: {
-    width: 28,
-    height: 28,
-    resizeMode: "contain",
-  },
-  sendAudioControls: {
-    alignItems: "center",
-    marginBottom: 14,
-  },
-  sendAudioControlsRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 14,
-  },
-  sendAudioRecordButton: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: "#7BA9D6",
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#7BA9D6",
-    shadowOpacity: 0.18,
-    shadowRadius: 8,
-    shadowOffset: {
-      width: 0,
-      height: 3,
+    sendAudioPrompt: {
+      width: "88%",
+      textAlign: "left",
+      fontSize: 22,
+      color: CORES.EX_BLUE,
+      marginBottom: 6,
+      fontWeight: "700",
     },
-    elevation: 4,
-  },
-  sendAudioStopButton: {
-    backgroundColor: CORES.DANGER,
-    shadowColor: CORES.DANGER,
-  },
-  sendAudioRecordIcon: {
-    color: CORES.WHITE,
-    fontSize: 20,
-    fontWeight: "700",
-  },
-  sendAudioRecordImage: {
-    width: 60,
-    height: 60,
-    resizeMode: "contain",
-  },
-  sendAudioRecordLabel: {
-    color: "#7BA9D6",
-    fontSize: 16,
-    marginTop: 8,
-  },
-  sendAudioActionsRow: {
-    flexDirection: "row",
-    gap: 12,
-    marginBottom: 14,
-    alignItems: "center",
-  },
-  sendAudioMiniActionButton: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sendAudioMiniActionButtonDanger: {
-    backgroundColor: CORES.DANGER,
-  },
-  sendAudioMiniActionButtonPause: {
-    backgroundColor: "#F59E0B",
-  },
-  sendAudioMiniActionButtonDisabled: {
-    backgroundColor: "#A7B3BF",
-  },
-  sendAudioMiniActionButtonText: {
-    color: CORES.WHITE,
-    fontSize: 13,
-    fontWeight: "800",
-  },
-  sendAudioActionButton: {
-    minWidth: 96,
-    minHeight: 34,
-    borderRadius: 17,
-    borderWidth: 1,
-    borderColor: "#7BA9D6",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 14,
-  },
-  sendAudioActionButtonText: {
-    color: "#7BA9D6",
-    fontSize: 14,
-  },
-  sendAudioSubmitButton: {
-    minWidth: 132,
-    minHeight: 42,
-    borderRadius: 21,
-    backgroundColor: CORES.SECONDARY,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 16,
-  },
-  sendAudioSubmitButtonDisabled: {
-    backgroundColor: "#B6C8DB",
-  },
-  sendAudioSubmitButtonText: {
-    color: CORES.WHITE,
-    fontSize: 15,
-    fontWeight: "700",
-  },
-  slide16SuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+    sendAudioInstruction: {
+      width: "88%",
+      textAlign: "left",
+      fontSize: 15,
+      color: CORES.SUCCESS_TEXT,
+      fontWeight: "700",
+    },
+    sendAudioHelperText: {
+      width: "88%",
+      textAlign: "left",
+      fontSize: 14,
+      color: CORES.SUCCESS_TEXT,
+      marginBottom: 18,
+    },
+    sendAudioAvatarWrap: {
+      width: 78,
+      height: 78,
+      borderRadius: 39,
+      overflow: "hidden",
+      marginBottom: 14,
+    },
+    sendAudioAvatar: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "contain",
+    },
+    sendAudioContentCard: {
+      width: "88%",
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+      backgroundColor: CORES.SURFACE,
+      alignItems: "center",
+      paddingVertical: 16,
+      paddingHorizontal: 14,
+    },
+    sendAudioContentCardWrong: {
+      borderColor: CORES.DANGER,
+    },
+    sendAudioTipButton: {
+      minWidth: 102,
+      minHeight: 34,
+      borderRadius: 17,
+      borderWidth: 1.5,
+      borderColor: CORES.EX_BLUE,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 14,
+      paddingHorizontal: 14,
+    },
+    sendAudioTipButtonText: {
+      color: CORES.EX_BLUE,
+      fontSize: 14,
+    },
+    sendAudioTipCard: {
+      width: "88%",
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+      backgroundColor: CORES.SURFACE,
+      padding: 12,
+      marginBottom: 16,
+    },
+    sendAudioTipText: {
+      color: CORES.TEXT_DARK,
+      fontSize: 14,
+      textAlign: "left",
+    },
+    sendAudioToolbar: {
+      width: "100%",
+      minHeight: 68,
+      borderRadius: 24,
+      backgroundColor: CORES.PRIMARY,
+      flexDirection: "row",
+      alignItems: "center",
+      paddingLeft: 10,
+      paddingRight: 8,
+      paddingVertical: 8,
+      gap: 8,
+      marginTop: 8,
+    },
+    sendAudioToolbarSideButton: {
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "rgba(255,255,255,0.08)",
+    },
+    sendAudioToolbarSideButtonText: {
+      color: CORES.TEXT_FAINT,
+      fontSize: 15,
+      fontWeight: "800",
+    },
+    sendAudioToolbarMain: {
+      flex: 1,
+      paddingHorizontal: 4,
+    },
+    sendAudioToolbarTopRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      marginBottom: 8,
+    },
+    sendAudioRecordingDot: {
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+      backgroundColor: CORES.DANGER_FILL,
+    },
+    sendAudioRecordingDotPaused: {
+      backgroundColor: CORES.GOLD,
+    },
+    sendAudioRecordingDotIdle: {
+      backgroundColor: "rgba(255,255,255,0.4)",
+    },
+    sendAudioToolbarMicImage: {
+      width: 18,
+      height: 18,
+      resizeMode: "contain",
+      tintColor: CORES.TEXT_FAINT,
+    },
+    sendAudioPlaybackChip: {
+      minWidth: 26,
+      height: 26,
+      borderRadius: 13,
+      backgroundColor: "rgba(255,255,255,0.08)",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    sendAudioPlaybackChipAccent: {
+      backgroundColor: CORES.SECONDARY,
+    },
+    sendAudioPlaybackChipDisabled: {
+      backgroundColor: "rgba(255,255,255,0.14)",
+    },
+    sendAudioPlaybackChipText: {
+      color: CORES.WHITE,
+      fontSize: 12,
+      fontWeight: "800",
+    },
+    sendAudioToolbarTime: {
+      color: CORES.ON_ACCENT,
+      fontSize: 20,
+      fontWeight: "700",
+      letterSpacing: 0.4,
+    },
+    sendAudioProgressTrack: {
+      width: "100%",
+      height: 28,
+      justifyContent: "center",
+    },
+    sendAudioProgressSlider: {
+      width: "100%",
+      height: 28,
+    },
+    sendAudioToolbarPauseButton: {
+      width: 38,
+      height: 38,
+      borderRadius: 19,
+      backgroundColor: "rgba(255,255,255,0.08)",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    sendAudioToolbarPauseButtonText: {
+      color: CORES.DANGER_TEXT,
+      fontSize: 11,
+      fontWeight: "800",
+    },
+    sendAudioToolbarPrimaryButton: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      backgroundColor: CORES.SECONDARY,
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: CORES.SECONDARY,
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      elevation: 4,
+    },
+    sendAudioToolbarPrimaryButtonStop: {
+      backgroundColor: CORES.SUCCESS,
+    },
+    sendAudioToolbarPrimaryButtonIdle: {
+      backgroundColor: CORES.EX_BLUE,
+    },
+    sendAudioToolbarPrimaryButtonText: {
+      color: CORES.WHITE,
+      fontSize: 16,
+      fontWeight: "900",
+    },
+    sendAudioToolbarPrimaryButtonDisabled: {
+      backgroundColor: CORES.EX_DISABLED_DEEP,
+      shadowColor: CORES.EX_DISABLED_DEEP,
+    },
+    sendAudioToolbarPrimaryImage: {
+      width: 28,
+      height: 28,
+      resizeMode: "contain",
+    },
+    sendAudioControls: {
+      alignItems: "center",
+      marginBottom: 14,
+    },
+    sendAudioControlsRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 14,
+    },
+    sendAudioRecordButton: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      backgroundColor: CORES.EX_BLUE,
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: CORES.EX_BLUE,
+      shadowOpacity: 0.18,
+      shadowRadius: 8,
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      elevation: 4,
+    },
+    sendAudioStopButton: {
+      backgroundColor: CORES.DANGER_FILL,
+      shadowColor: CORES.DANGER,
+    },
+    sendAudioRecordIcon: {
+      color: CORES.WHITE,
+      fontSize: 20,
+      fontWeight: "700",
+    },
+    sendAudioRecordImage: {
+      width: 60,
+      height: 60,
+      resizeMode: "contain",
+    },
+    sendAudioRecordLabel: {
+      color: CORES.EX_BLUE,
+      fontSize: 16,
+      marginTop: 8,
+    },
+    sendAudioActionsRow: {
+      flexDirection: "row",
+      gap: 12,
+      marginBottom: 14,
+      alignItems: "center",
+    },
+    sendAudioMiniActionButton: {
+      width: 46,
+      height: 46,
+      borderRadius: 23,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    sendAudioMiniActionButtonDanger: {
+      backgroundColor: CORES.DANGER_FILL,
+    },
+    sendAudioMiniActionButtonPause: {
+      backgroundColor: CORES.GOLD,
+    },
+    sendAudioMiniActionButtonDisabled: {
+      backgroundColor: CORES.EX_DISABLED_DEEP,
+    },
+    sendAudioMiniActionButtonText: {
+      color: CORES.WHITE,
+      fontSize: 13,
+      fontWeight: "800",
+    },
+    sendAudioActionButton: {
+      minWidth: 96,
+      minHeight: 34,
+      borderRadius: 17,
+      borderWidth: 1,
+      borderColor: CORES.EX_BLUE,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 14,
+    },
+    sendAudioActionButtonText: {
+      color: CORES.EX_BLUE,
+      fontSize: 14,
+    },
+    sendAudioSubmitButton: {
+      minWidth: 132,
+      minHeight: 42,
+      borderRadius: 21,
+      backgroundColor: CORES.SECONDARY,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 16,
+    },
+    sendAudioSubmitButtonDisabled: {
+      backgroundColor: CORES.EX_DISABLED,
+    },
+    sendAudioSubmitButtonText: {
+      color: CORES.WHITE,
+      fontSize: 15,
+      fontWeight: "700",
+    },
+    slide16SuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex16;
 

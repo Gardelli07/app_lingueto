@@ -9,7 +9,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise8({
   activity,
@@ -18,6 +18,7 @@ export function Exercise8({
   next,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -38,7 +39,7 @@ export function Exercise8({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -272,81 +273,82 @@ export function Exercise8({
   );
 }
 
-const ex8 = StyleSheet.create({
-  imageChoiceBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  imageChoiceMediaCard: {
-    width: "88%",
-    maxWidth: 520,
-    aspectRatio: 16 / 9,
-    borderRadius: 16,
-    overflow: "hidden",
-    marginBottom: 16,
-    backgroundColor: CORES.SURFACE_MUTED,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  imageChoiceMedia: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  imageChoiceEmojiWrap: {
-    flex: 1,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  imageChoiceEmoji: {
-    fontSize: 72,
-  },
-  imageChoiceOptionsList: {
-    width: "88%",
-    gap: 8,
-  },
-  imageChoiceOptionWrap: {
-    width: "100%",
-  },
-  imageChoiceOption: {
-    width: "100%",
-    minHeight: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#7BA9D6",
-    backgroundColor: CORES.WHITE,
-  },
-  imageChoiceOptionTouch: {
-    flex: 1,
-    minHeight: 32,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 14,
-  },
-  imageChoiceOptionText: {
-    color: CORES.PRIMARY,
-    fontSize: 13,
-    textAlign: "center",
-  },
-  imageChoiceOptionCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  imageChoiceOptionWrong: {
-    borderColor: CORES.DANGER,
-  },
-  imageChoiceOptionTextCorrect: {
-    color: CORES.SUCCESS_DARK,
-    fontWeight: "700",
-  },
-  slide9SuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+const ex8 = (CORES) =>
+  StyleSheet.create({
+    imageChoiceBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    imageChoiceMediaCard: {
+      width: "88%",
+      maxWidth: 520,
+      aspectRatio: 16 / 9,
+      borderRadius: 16,
+      overflow: "hidden",
+      marginBottom: 16,
+      backgroundColor: CORES.SURFACE_MUTED,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    imageChoiceMedia: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    imageChoiceEmojiWrap: {
+      flex: 1,
+      width: "100%",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    imageChoiceEmoji: {
+      fontSize: 72,
+    },
+    imageChoiceOptionsList: {
+      width: "88%",
+      gap: 8,
+    },
+    imageChoiceOptionWrap: {
+      width: "100%",
+    },
+    imageChoiceOption: {
+      width: "100%",
+      minHeight: 32,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: CORES.EX_BLUE,
+      backgroundColor: CORES.SURFACE,
+    },
+    imageChoiceOptionTouch: {
+      flex: 1,
+      minHeight: 32,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 14,
+    },
+    imageChoiceOptionText: {
+      color: CORES.PRIMARY,
+      fontSize: 13,
+      textAlign: "center",
+    },
+    imageChoiceOptionCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    imageChoiceOptionWrong: {
+      borderColor: CORES.DANGER,
+    },
+    imageChoiceOptionTextCorrect: {
+      color: CORES.SUCCESS_DARK,
+      fontWeight: "700",
+    },
+    slide9SuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex8;
 

@@ -1,9 +1,13 @@
 ﻿import * as React from "react";
 import { Image, TouchableOpacity, BackHandler } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  DarkTheme as NavDarkTheme,
+  DefaultTheme as NavDefaultTheme,
+  NavigationContainer,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Appbar } from "react-native-paper";
-import CORES from "../util/cores";
+import { useTheme, useThemeMode } from "../theme";
 
 import TabsNavigator from "./TabsNavigator";
 
@@ -40,12 +44,6 @@ import CRM1 from "../pages/santander/crm/CRM1";
 
 const Stack = createNativeStackNavigator();
 
-/* ===== HEADER PADRÃO ===== */
-const defaultHeader = {
-  headerStyle: { backgroundColor: CORES.PRIMARY },
-  headerTintColor: "#fff",
-};
-
 function renderLessonScreens(lessonScreens) {
   return Object.entries(lessonScreens).map(([screenName, Screen]) => (
     <Stack.Screen
@@ -60,6 +58,31 @@ function renderLessonScreens(lessonScreens) {
 /* ================= STACK NAVIGATOR ================= */
 export default function Routes() {
   const navigationRef = React.useRef();
+  const CORES = useTheme();
+  const { isDark } = useThemeMode();
+
+  /* ===== HEADER PADRÃO ===== */
+  const defaultHeader = {
+    headerStyle: { backgroundColor: CORES.PRIMARY },
+    headerTintColor: CORES.ON_ACCENT,
+  };
+
+  // Tema do react-navigation: define o fundo das telas e das transicoes,
+  // evitando o flash branco entre telas quando o app esta no modo escuro.
+  const navTheme = React.useMemo(() => {
+    const base = isDark ? NavDarkTheme : NavDefaultTheme;
+    return {
+      ...base,
+      colors: {
+        ...base.colors,
+        background: CORES.SCREEN_BG,
+        card: CORES.SURFACE,
+        text: CORES.TEXT,
+        border: CORES.BORDER,
+        primary: CORES.PRIMARY,
+      },
+    };
+  }, [isDark, CORES]);
 
   React.useEffect(() => {
     const onBackPress = () => {
@@ -76,8 +99,11 @@ export default function Routes() {
   }, []);
 
   return (
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator initialRouteName="Splash">
+    <NavigationContainer ref={navigationRef} theme={navTheme}>
+      <Stack.Navigator
+        initialRouteName="Splash"
+        screenOptions={{ contentStyle: { backgroundColor: CORES.SCREEN_BG } }}
+      >
         {/* ===== TABS ===== */}
         <Stack.Screen
           name="Tabs"

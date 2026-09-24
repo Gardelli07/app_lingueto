@@ -9,7 +9,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise15({
   activity,
@@ -18,6 +18,7 @@ export function Exercise15({
   next,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -42,7 +43,7 @@ export function Exercise15({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -307,114 +308,115 @@ export function Exercise15({
   );
 }
 
-const ex15 = StyleSheet.create({
-  matchMediaWordBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  matchMediaWordSubtitle: {
-    width: "88%",
-    textAlign: "center",
-    fontSize: 13,
-    color: "#7BA9D6",
-    marginBottom: 16,
-    fontWeight: "700",
-  },
-  matchMediaWordImagesRow: {
-    width: "94%",
-    maxWidth: 520,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    gap: 10,
-    marginBottom: 10,
-  },
-  matchMediaWordImageCard: {
-    flex: 1,
-    maxWidth: "48%",
-    minWidth: 0,
-    aspectRatio: 16 / 9,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: "#D6E6F7",
-    backgroundColor: CORES.WHITE,
-    overflow: "hidden",
-    marginBottom: 10,
-  },
-  matchMediaWordImageCardSelected: {
-    borderColor: "#7BA9D6",
-  },
-  matchMediaWordImageCardCorrect: {
-    borderColor: CORES.SUCCESS,
-    backgroundColor: CORES.SUCCESS_BG,
-  },
-  matchMediaWordImageCardWrong: {
-    borderColor: CORES.DANGER,
-  },
-  matchMediaWordImageTouch: {
-    flex: 1,
-  },
-  matchMediaWordImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  matchMediaWordOptionsRow: {
-    width: "94%",
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 8,
-  },
-  matchMediaWordOptionWrap: {
-    flex: 1,
-    maxWidth: "48%",
-    minWidth: 0,
-    borderRadius: 18,
-  },
-  matchMediaWordOption: {
-    width: "100%",
-    minHeight: 42,
-    borderRadius: 19,
-    borderWidth: 1,
-    borderColor: "#D6E6F7",
-    backgroundColor: CORES.WHITE,
-  },
-  matchMediaWordOptionSelected: {
-    borderColor: "#7BA9D6",
-  },
-  matchMediaWordOptionCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  matchMediaWordOptionWrong: {
-    borderColor: CORES.DANGER,
-  },
-  matchMediaWordOptionTouch: {
-    flex: 1,
-    minHeight: 42,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-  },
-  matchMediaWordOptionText: {
-    color: CORES.TEXT_DARK,
-    fontSize: 14,
-    lineHeight: 18,
-    textAlign: "center",
-    flexShrink: 1,
-  },
-  matchMediaWordOptionTextCorrect: {
-    color: CORES.SUCCESS_DARK,
-    fontWeight: "700",
-  },
-  slide15SuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+const ex15 = (CORES) =>
+  StyleSheet.create({
+    matchMediaWordBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    matchMediaWordSubtitle: {
+      width: "88%",
+      textAlign: "center",
+      fontSize: 13,
+      color: CORES.EX_BLUE,
+      marginBottom: 16,
+      fontWeight: "700",
+    },
+    matchMediaWordImagesRow: {
+      width: "94%",
+      maxWidth: 520,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      gap: 10,
+      marginBottom: 10,
+    },
+    matchMediaWordImageCard: {
+      flex: 1,
+      maxWidth: "48%",
+      minWidth: 0,
+      aspectRatio: 16 / 9,
+      borderRadius: 12,
+      borderWidth: 1.5,
+      borderColor: CORES.EX_BORDER,
+      backgroundColor: CORES.SURFACE,
+      overflow: "hidden",
+      marginBottom: 10,
+    },
+    matchMediaWordImageCardSelected: {
+      borderColor: CORES.EX_BLUE,
+    },
+    matchMediaWordImageCardCorrect: {
+      borderColor: CORES.SUCCESS,
+      backgroundColor: CORES.SUCCESS_BG,
+    },
+    matchMediaWordImageCardWrong: {
+      borderColor: CORES.DANGER,
+    },
+    matchMediaWordImageTouch: {
+      flex: 1,
+    },
+    matchMediaWordImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    matchMediaWordOptionsRow: {
+      width: "94%",
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: 8,
+    },
+    matchMediaWordOptionWrap: {
+      flex: 1,
+      maxWidth: "48%",
+      minWidth: 0,
+      borderRadius: 18,
+    },
+    matchMediaWordOption: {
+      width: "100%",
+      minHeight: 42,
+      borderRadius: 19,
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+      backgroundColor: CORES.SURFACE,
+    },
+    matchMediaWordOptionSelected: {
+      borderColor: CORES.EX_BLUE,
+    },
+    matchMediaWordOptionCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    matchMediaWordOptionWrong: {
+      borderColor: CORES.DANGER,
+    },
+    matchMediaWordOptionTouch: {
+      flex: 1,
+      minHeight: 42,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 10,
+      paddingVertical: 6,
+    },
+    matchMediaWordOptionText: {
+      color: CORES.TEXT_DARK,
+      fontSize: 14,
+      lineHeight: 18,
+      textAlign: "center",
+      flexShrink: 1,
+    },
+    matchMediaWordOptionTextCorrect: {
+      color: CORES.SUCCESS_DARK,
+      fontWeight: "700",
+    },
+    slide15SuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex15;
 

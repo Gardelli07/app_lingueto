@@ -12,17 +12,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { ApiError } from '../services/api';
 import { validarCompraSandbox } from '../services/assinaturas';
+import { useTheme, useThemedStyles } from '../theme';
 
-const COLORS = {
-  blue: '#3d70b2',
-  mint: '#8ecdb8',
-  white: '#ffffff',
-  ink: '#1c2b45',
-  greyText: '#8a8f9a',
-  greyBorder: '#e6e8ec',
-  greyBg: '#f4f5f7',
+// Paleta local da tela, derivada do tema ativo.
+const paywallColors = (CORES) => ({
+  blue: CORES.mode === 'dark' ? '#6E82FF' : '#3d70b2',
+  mint: CORES.SECONDARY,
+  white: CORES.SURFACE,
+  onAccent: CORES.ON_ACCENT,
+  ink: CORES.TEXT,
+  greyText: CORES.TEXT_MUTED,
+  greyBorder: CORES.BORDER,
+  greyBg: CORES.SURFACE_ALT,
   mintDark: '#0f3d2e',
-};
+});
 
 const RAW_PLANS = {
   free: {
@@ -63,6 +66,9 @@ function fmt(n) {
 }
 
 export default function PaywallScreen({ navigation }) {
+  const CORES = useTheme();
+  const COLORS = paywallColors(CORES);
+  const styles = useThemedStyles(makeStyles);
   const { upgradeToFullAccessPlan } = useAuth();
   const [billing, setBilling] = useState('monthly'); // 'monthly' | 'yearly'
   const [selected, setSelected] = useState('premium');
@@ -189,7 +195,7 @@ export default function PaywallScreen({ navigation }) {
                   styles.card,
                   {
                     borderColor: isSelected ? COLORS.blue : COLORS.greyBorder,
-                    backgroundColor: isSelected ? '#f5f8fc' : COLORS.white,
+                    backgroundColor: isSelected ? CORES.EX_BLUE_BG : COLORS.white,
                   },
                   plan.recommended && styles.cardRecommended,
                 ]}
@@ -214,7 +220,7 @@ export default function PaywallScreen({ navigation }) {
                     style={[
                       styles.radio,
                       {
-                        borderColor: isSelected ? COLORS.blue : '#c9ccd2',
+                        borderColor: isSelected ? COLORS.blue : CORES.BORDER_STRONG,
                         backgroundColor: isSelected ? COLORS.blue : COLORS.white,
                       },
                     ]}
@@ -235,13 +241,13 @@ export default function PaywallScreen({ navigation }) {
                       <View
                         style={[
                           styles.featureIcon,
-                          { backgroundColor: feat.ok ? COLORS.mint : '#e9eaed' },
+                          { backgroundColor: feat.ok ? COLORS.mint : CORES.TRACK },
                         ]}
                       >
                         <Text
                           style={[
                             styles.featureIconText,
-                            { color: feat.ok ? COLORS.mintDark : '#8a8f9a' },
+                            { color: feat.ok ? COLORS.mintDark : CORES.TEXT_MUTED },
                           ]}
                         >
                           {feat.ok ? '✓' : '✕'}
@@ -274,7 +280,7 @@ export default function PaywallScreen({ navigation }) {
             disabled={submitting}
           >
             {submitting ? (
-              <ActivityIndicator color={COLORS.white} />
+              <ActivityIndicator color={COLORS.onAccent} />
             ) : (
               <Text style={styles.ctaText}>{ctaLabel}</Text>
             )}
@@ -288,154 +294,158 @@ export default function PaywallScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: COLORS.white },
-  scroll: { paddingBottom: 24 },
-  closeRow: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, paddingTop: 8 },
-  closeBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: COLORS.greyBg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeBtnText: { color: '#6b7280', fontSize: 16, fontWeight: '600' },
-  header: { paddingHorizontal: 24, alignItems: 'center', marginTop: 4 },
-  title: { fontSize: 24, fontWeight: '800', color: COLORS.ink, textAlign: 'center' },
-  subtitle: {
-    fontSize: 14,
-    color: '#7c828d',
-    textAlign: 'center',
-    marginTop: 6,
-    lineHeight: 19,
-  },
-  trustRow: { flexDirection: 'row', marginTop: 10 },
-  trustText: { fontSize: 12, fontWeight: '600', color: '#6b7280' },
-  tabBar: {
-    flexDirection: 'row',
-    backgroundColor: COLORS.greyBg,
-    borderRadius: 999,
-    padding: 4,
-    marginHorizontal: 24,
-    marginTop: 18,
-    marginBottom: 4,
-  },
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 9,
-    borderRadius: 999,
-  },
-  tabActive: {
-    backgroundColor: COLORS.white,
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 1 },
-    elevation: 2,
-  },
-  tabText: { fontSize: 13, fontWeight: '700', color: '#8a8f9a' },
-  tabTextActive: { color: COLORS.ink },
-  yearlyBadge: {
-    position: 'absolute',
-    top: -9,
-    right: 6,
-    backgroundColor: COLORS.mint,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 8,
-  },
-  yearlyBadgeText: { fontSize: 9, fontWeight: '800', color: COLORS.mintDark },
-  plansWrap: { paddingHorizontal: 20, paddingTop: 16, gap: 12 },
-  card: {
-    borderRadius: 18,
-    padding: 16,
-    borderWidth: 2,
-    position: 'relative',
-    marginTop: 12,
-  },
-  cardRecommended: {
-    shadowColor: COLORS.blue,
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 4,
-  },
-  popularBadge: {
-    position: 'absolute',
-    top: -11,
-    left: 16,
-    backgroundColor: COLORS.blue,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 8,
-  },
-  popularBadgeText: { color: COLORS.white, fontSize: 10, fontWeight: '800', letterSpacing: 0.5 },
-  discountBadge: {
-    position: 'absolute',
-    top: -11,
-    right: 16,
-    backgroundColor: COLORS.mint,
-    paddingHorizontal: 9,
-    paddingVertical: 3,
-    borderRadius: 8,
-  },
-  discountBadgeText: { color: COLORS.mintDark, fontSize: 10, fontWeight: '800' },
-  cardTopRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  planName: { fontSize: 17, fontWeight: '700', color: COLORS.ink },
-  planTagline: { fontSize: 12, color: '#8a8f9a', marginTop: 2 },
-  radio: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  radioDot: { width: 9, height: 9, borderRadius: 4.5, backgroundColor: COLORS.white },
-  priceRow: { flexDirection: 'row', alignItems: 'flex-end', marginTop: 12, gap: 8 },
-  priceNow: { fontSize: 24, fontWeight: '800', color: COLORS.ink },
-  priceWas: {
-    fontSize: 13,
-    color: '#9aa0aa',
-    textDecorationLine: 'line-through',
-    marginBottom: 2,
-  },
-  priceSubnote: { fontSize: 11, color: '#9aa0aa', marginTop: 1 },
-  featuresWrap: { marginTop: 12, gap: 16 },
-  featureRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
-  featureIcon: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 1,
-  },
-  featureIconText: { fontSize: 9, fontWeight: '800' },
-  featureLabel: { fontSize: 12.5, lineHeight: 17, flex: 1 },
-  ctaWrap: { paddingHorizontal: 20, paddingTop: 14 },
-  urgency: {
-    textAlign: 'center',
-    fontSize: 12,
-    fontWeight: '700',
-    color: COLORS.blue,
-    marginBottom: 8,
-    letterSpacing: 0.5,
-  },
-  ctaBtn: {
-    backgroundColor: COLORS.blue,
-    paddingVertical: 16,
-    borderRadius: 14,
-    alignItems: 'center',
-    shadowColor: COLORS.blue,
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 4,
-  },
-  ctaBtnDisabled: { opacity: 0.7 },
-  ctaText: { color: COLORS.white, fontWeight: '700', fontSize: 16 },
-  disclaimer: { textAlign: 'center', fontSize: 11, color: '#9aa0aa', marginTop: 10 },
-});
+const makeStyles = (CORES) => {
+  const COLORS = paywallColors(CORES);
+
+  return StyleSheet.create({
+    safe: { flex: 1, backgroundColor: COLORS.white },
+    scroll: { paddingBottom: 24 },
+    closeRow: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, paddingTop: 8 },
+    closeBtn: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: COLORS.greyBg,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    closeBtnText: { color: CORES.TEXT_MUTED, fontSize: 16, fontWeight: '600' },
+    header: { paddingHorizontal: 24, alignItems: 'center', marginTop: 4 },
+    title: { fontSize: 24, fontWeight: '800', color: COLORS.ink, textAlign: 'center' },
+    subtitle: {
+      fontSize: 14,
+      color: CORES.TEXT_MUTED,
+      textAlign: 'center',
+      marginTop: 6,
+      lineHeight: 19,
+    },
+    trustRow: { flexDirection: 'row', marginTop: 10 },
+    trustText: { fontSize: 12, fontWeight: '600', color: CORES.TEXT_MUTED },
+    tabBar: {
+      flexDirection: 'row',
+      backgroundColor: COLORS.greyBg,
+      borderRadius: 999,
+      padding: 4,
+      marginHorizontal: 24,
+      marginTop: 18,
+      marginBottom: 4,
+    },
+    tab: {
+      flex: 1,
+      alignItems: 'center',
+      paddingVertical: 9,
+      borderRadius: 999,
+    },
+    tabActive: {
+      backgroundColor: COLORS.white,
+      shadowColor: CORES.SHADOW,
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      shadowOffset: { width: 0, height: 1 },
+      elevation: 2,
+    },
+    tabText: { fontSize: 13, fontWeight: '700', color: CORES.TEXT_MUTED },
+    tabTextActive: { color: COLORS.ink },
+    yearlyBadge: {
+      position: 'absolute',
+      top: -9,
+      right: 6,
+      backgroundColor: COLORS.mint,
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+      borderRadius: 8,
+    },
+    yearlyBadgeText: { fontSize: 9, fontWeight: '800', color: COLORS.mintDark },
+    plansWrap: { paddingHorizontal: 20, paddingTop: 16, gap: 12 },
+    card: {
+      borderRadius: 18,
+      padding: 16,
+      borderWidth: 2,
+      position: 'relative',
+      marginTop: 12,
+    },
+    cardRecommended: {
+      shadowColor: COLORS.blue,
+      shadowOpacity: 0.2,
+      shadowRadius: 16,
+      shadowOffset: { width: 0, height: 8 },
+      elevation: 4,
+    },
+    popularBadge: {
+      position: 'absolute',
+      top: -11,
+      left: 16,
+      backgroundColor: COLORS.blue,
+      paddingHorizontal: 10,
+      paddingVertical: 3,
+      borderRadius: 8,
+    },
+    popularBadgeText: { color: COLORS.onAccent, fontSize: 10, fontWeight: '800', letterSpacing: 0.5 },
+    discountBadge: {
+      position: 'absolute',
+      top: -11,
+      right: 16,
+      backgroundColor: COLORS.mint,
+      paddingHorizontal: 9,
+      paddingVertical: 3,
+      borderRadius: 8,
+    },
+    discountBadgeText: { color: COLORS.mintDark, fontSize: 10, fontWeight: '800' },
+    cardTopRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+    planName: { fontSize: 17, fontWeight: '700', color: COLORS.ink },
+    planTagline: { fontSize: 12, color: CORES.TEXT_MUTED, marginTop: 2 },
+    radio: {
+      width: 22,
+      height: 22,
+      borderRadius: 11,
+      borderWidth: 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    radioDot: { width: 9, height: 9, borderRadius: 4.5, backgroundColor: COLORS.onAccent },
+    priceRow: { flexDirection: 'row', alignItems: 'flex-end', marginTop: 12, gap: 8 },
+    priceNow: { fontSize: 24, fontWeight: '800', color: COLORS.ink },
+    priceWas: {
+      fontSize: 13,
+      color: CORES.TEXT_FAINT,
+      textDecorationLine: 'line-through',
+      marginBottom: 2,
+    },
+    priceSubnote: { fontSize: 11, color: CORES.TEXT_FAINT, marginTop: 1 },
+    featuresWrap: { marginTop: 12, gap: 16 },
+    featureRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
+    featureIcon: {
+      width: 16,
+      height: 16,
+      borderRadius: 8,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 1,
+    },
+    featureIconText: { fontSize: 9, fontWeight: '800' },
+    featureLabel: { fontSize: 12.5, lineHeight: 17, flex: 1 },
+    ctaWrap: { paddingHorizontal: 20, paddingTop: 14 },
+    urgency: {
+      textAlign: 'center',
+      fontSize: 12,
+      fontWeight: '700',
+      color: COLORS.blue,
+      marginBottom: 8,
+      letterSpacing: 0.5,
+    },
+    ctaBtn: {
+      backgroundColor: COLORS.blue,
+      paddingVertical: 16,
+      borderRadius: 14,
+      alignItems: 'center',
+      shadowColor: COLORS.blue,
+      shadowOpacity: 0.35,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 8 },
+      elevation: 4,
+    },
+    ctaBtnDisabled: { opacity: 0.7 },
+    ctaText: { color: COLORS.onAccent, fontWeight: '700', fontSize: 16 },
+    disclaimer: { textAlign: 'center', fontSize: 11, color: CORES.TEXT_FAINT, marginTop: 10 },
+  });
+};

@@ -12,7 +12,7 @@ import {
 import Slider from "@react-native-community/slider";
 import { createAudioPlayer } from "expo-audio";
 import * as Speech from "expo-speech";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise3({
   activity,
@@ -22,6 +22,7 @@ export function Exercise3({
   speak,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -65,7 +66,7 @@ export function Exercise3({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   const clearPlayback = () => {
@@ -579,63 +580,64 @@ export function Exercise3({
   );
 }
 
-const ex3 = StyleSheet.create({
-  listenAnswerBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  listenAnswerDialogue: {
-    width: "88%",
-    textAlign: "center",
-    fontSize: 16,
-    lineHeight: 22,
-    color: CORES.PRIMARY,
-    fontWeight: "700",
-    marginBottom: 16,
-  },
-  listenAnswerOptionsRow: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  listenAnswerOptionWrap: {
-    minWidth: 86,
-  },
-  listenAnswerOption: {
-    height: 40,
-    minWidth: 86,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#D8E1EC",
-    backgroundColor: CORES.WHITE,
-  },
-  listenAnswerOptionTouch: {
-    flex: 1,
-    paddingHorizontal: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  listenAnswerOptionText: {
-    fontSize: 16,
-    color: "#64748B",
-    fontWeight: "600",
-  },
-  listenAnswerOptionCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  listenAnswerOptionWrong: {
-    borderColor: CORES.DANGER,
-  },
-  listenAnswerOptionTextCorrect: {
-    color: CORES.SUCCESS_DARK,
-  },
-  slide4SuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+const ex3 = (CORES) =>
+  StyleSheet.create({
+    listenAnswerBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    listenAnswerDialogue: {
+      width: "88%",
+      textAlign: "center",
+      fontSize: 16,
+      lineHeight: 22,
+      color: CORES.PRIMARY,
+      fontWeight: "700",
+      marginBottom: 16,
+    },
+    listenAnswerOptionsRow: {
+      flexDirection: "row",
+      gap: 12,
+    },
+    listenAnswerOptionWrap: {
+      minWidth: 86,
+    },
+    listenAnswerOption: {
+      height: 40,
+      minWidth: 86,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+      backgroundColor: CORES.SURFACE,
+    },
+    listenAnswerOptionTouch: {
+      flex: 1,
+      paddingHorizontal: 20,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    listenAnswerOptionText: {
+      fontSize: 16,
+      color: CORES.TEXT_MUTED,
+      fontWeight: "600",
+    },
+    listenAnswerOptionCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    listenAnswerOptionWrong: {
+      borderColor: CORES.DANGER,
+    },
+    listenAnswerOptionTextCorrect: {
+      color: CORES.SUCCESS_DARK,
+    },
+    slide4SuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex3;
 /*

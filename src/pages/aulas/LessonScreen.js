@@ -47,6 +47,7 @@ import { registrarTentativaExercicio } from "../../services/erros";
 import { getSlideHint } from "../../util/erroReview";
 import { scopedKey } from "../../util/userScope";
 import * as dailyGoals from "../../util/dailyGoals";
+import { useTheme, useThemedStyles } from "../../theme";
 
 const CORRECT_SOUND_SOURCE = require("../../../assets/sounds/correct.wav");
 
@@ -55,29 +56,16 @@ const SlideNavContext = React.createContext(null);
 const BACK_IMAGE = require("../../../assets/seta.png");
 const CLOSE_IMAGE = require("../../../assets/x.png");
 
-const styles = {
-  ...geral,
-  ...ex1,
-  ...ex2,
-  ...ex3,
-  ...ex4,
-  ...ex5,
-  ...ex6,
-  ...ex7,
-  ...ex8,
-  ...ex9,
-  ...ex10,
-  ...ex11,
-  ...ex12,
-  ...ex13,
-  ...ex14,
-  ...ex15,
-  ...ex16,
-  ...ex17,
-  ...ex18,
-  ...ex19,
-  ...ex20,
-};
+// Cada modulo de exercicio exporta uma fabrica `(CORES) => StyleSheet`; aqui
+// elas viram um unico objeto de estilos, resolvido para o tema ativo e
+// repassado por prop pros componentes de exercicio (que ja recebiam `styles`).
+const STYLE_FACTORIES = [
+  geral, ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10,
+  ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19, ex20,
+];
+
+const makeStyles = (CORES) =>
+  Object.assign({}, ...STYLE_FACTORIES.map((factory) => factory(CORES)));
 
 const COMPONENTS = {
   Exercise1,
@@ -149,6 +137,7 @@ function useSlideNavigation({
   progressAnim,
   onSlideWillChange,
 }) {
+  const styles = useThemedStyles(makeStyles);
   const lockRef = useRef(false);
 
   const next = () => {
@@ -195,6 +184,7 @@ function useNav() {
 }
 
 function SlideHeader() {
+  const styles = useThemedStyles(makeStyles);
   const { progressAnim, goBack, renderPrevButton } = useNav();
 
   return (
@@ -223,6 +213,8 @@ function SlideHeader() {
 }
 
 function ListenOnlySlide({ activity, next, speak, onAttempt }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const playerRef = useRef(null);
   const playbackSubscriptionRef = useRef(null);
   const completedRef = useRef(false);
@@ -462,9 +454,9 @@ function ListenOnlySlide({ activity, next, speak, onAttempt }) {
               minimumValue={0}
               maximumValue={1}
               value={audioProgress}
-              minimumTrackTintColor="#F8FAFC"
+              minimumTrackTintColor={CORES.WHITE}
               maximumTrackTintColor="rgba(255,255,255,0.35)"
-              thumbTintColor="#F8FAFC"
+              thumbTintColor={CORES.WHITE}
               onSlidingStart={handleAudioSeekStart}
               onValueChange={handleAudioSeek}
               onSlidingComplete={handleAudioSeekComplete}
@@ -498,6 +490,8 @@ function LessonFinishSlide({ onPressNextLesson, feedbackProps }) {
 }
 
 function ReviewFinishSlide({ onFinish, accuracy }) {
+  const reviewFinishStyles = useThemedStyles(makeReviewFinishStyles);
+
   return (
     <SafeAreaView style={reviewFinishStyles.safeArea}>
       <View style={reviewFinishStyles.container}>
@@ -520,8 +514,8 @@ function ReviewFinishSlide({ onFinish, accuracy }) {
   );
 }
 
-const reviewFinishStyles = {
-  safeArea: { flex: 1, backgroundColor: "#FFFFFF" },
+const makeReviewFinishStyles = (CORES) => ({
+  safeArea: { flex: 1, backgroundColor: CORES.SURFACE },
   container: {
     flex: 1,
     alignItems: "center",
@@ -532,13 +526,13 @@ const reviewFinishStyles = {
   title: {
     fontSize: 20,
     fontWeight: "800",
-    color: "#16305C",
+    color: CORES.PROFILE_NAVY,
     marginBottom: 8,
     textAlign: "center",
   },
   subtitle: {
     fontSize: 14,
-    color: "#7C8597",
+    color: CORES.TEXT_MUTED,
     textAlign: "center",
     marginBottom: 28,
   },
@@ -546,15 +540,16 @@ const reviewFinishStyles = {
     width: "100%",
     height: 54,
     borderRadius: 14,
-    backgroundColor: "#356FF1",
+    backgroundColor: CORES.FB_BLUE,
     alignItems: "center",
     justifyContent: "center",
   },
-  buttonText: { color: "#FFFFFF", fontSize: 16, fontWeight: "800" },
-};
+  buttonText: { color: CORES.ON_ACCENT, fontSize: 16, fontWeight: "800" },
+});
 
 function LessonSlideRenderer({
   slide,
+  styles,
   slideInstanceKey,
   next,
   speak,
@@ -613,6 +608,8 @@ function LessonSlideRenderer({
 }
 
 function HintOverlay({ visible, hintText, showHint, onToggle }) {
+  const hintStyles = useThemedStyles(makeHintStyles);
+
   if (!visible) return null;
 
   return (
@@ -639,14 +636,14 @@ function HintOverlay({ visible, hintText, showHint, onToggle }) {
 // pra ficar consistente com o resto do app, e fica como rodape fixo abaixo do
 // ScrollView (em vez de flutuar sobre o conteudo) pra nunca cobrir nem
 // disputar espaco com os botoes do proprio exercicio.
-const hintStyles = {
+const makeHintStyles = (CORES) => ({
   footer: {
     paddingHorizontal: 20,
     paddingTop: 10,
     paddingBottom: 14,
     borderTopWidth: 1,
-    borderTopColor: "#E6ECF3",
-    backgroundColor: "#FFFFFF",
+    borderTopColor: CORES.BORDER,
+    backgroundColor: CORES.SURFACE,
   },
   button: {
     alignSelf: "center",
@@ -654,30 +651,30 @@ const hintStyles = {
     minHeight: 40,
     borderRadius: 20,
     borderWidth: 1.5,
-    borderColor: "#7BA9D6",
+    borderColor: CORES.EX_BLUE,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 18,
   },
   buttonText: {
-    color: "#3F6FA8",
+    color: CORES.PROFILE_BLUE,
     fontWeight: "700",
     fontSize: 14,
   },
   card: {
-    backgroundColor: "#F3F8FE",
+    backgroundColor: CORES.EX_BLUE_BG_SOFT,
     borderWidth: 1,
-    borderColor: "#D6E6F7",
+    borderColor: CORES.EX_BORDER,
     borderRadius: 12,
     padding: 12,
     marginBottom: 10,
   },
   cardText: {
-    color: "#111827",
+    color: CORES.TEXT,
     fontSize: 14,
     lineHeight: 20,
   },
-};
+});
 
 function buildSlideKey(lesson, index) {
   const screenName = lesson && lesson.screen ? String(lesson.screen) : "lesson";
@@ -747,11 +744,13 @@ export default function createLessonScreen(
   };
 
   function LessonScreen({ route, navigation }) {
+    const styles = useThemedStyles(makeStyles);
     const lesson = route && route.params ? route.params.lesson : undefined;
     const lessons = route && route.params ? route.params.lessons : undefined;
     const reviewSlideIndices =
       route && route.params ? route.params.reviewSlideIndices : undefined;
     const reviewMode = Boolean(route && route.params && route.params.reviewMode);
+    const CORES = useTheme();
     const { speak } = useSpeech();
 
     const activeSlides = buildActiveSlides(
@@ -1075,7 +1074,10 @@ export default function createLessonScreen(
       currentSlide.type !== "reviewFinish";
 
     return (
-      <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: CORES.BACKGROUND }}
+        edges={["top", "bottom"]}
+      >
         <SlideNavContext.Provider
           value={{
             ...slideNav,
@@ -1094,6 +1096,7 @@ export default function createLessonScreen(
             <LessonSlideRenderer
               key={currentSlideInstanceKey}
               slide={currentSlide}
+              styles={styles}
               slideInstanceKey={currentSlideInstanceKey}
               next={slideNav.next}
               speak={speak}

@@ -7,7 +7,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise11({
   activity,
@@ -16,6 +16,7 @@ export function Exercise11({
   next,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const inputRef = useRef(null);
 
   const words = activity.words || [];
@@ -206,7 +207,7 @@ export function Exercise11({
               blurOnSubmit={false}
               returnKeyType="send"
               placeholder=""
-              placeholderTextColor="#8BB7E0"
+              placeholderTextColor={CORES.EX_BLUE_FAINT}
             />
           </View>
 
@@ -309,239 +310,240 @@ export function Exercise11({
   );
 }
 
-const ex11 = StyleSheet.create({
-  fastTypeBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  fastTypeWordPill: {
-    minWidth: "50%",
-    maxWidth: "88%",
-    minHeight: 44,
-    borderRadius: 10,
-    backgroundColor: "#76A8D7",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 18,
-    marginBottom: 24,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    alignSelf: "center",
-  },
-  fastTypeWordPillText: {
-    color: CORES.WHITE,
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "700",
-    textDecorationLine: "underline",
-    textAlign: "center",
-  },
-  fastTypeInputWrap: {
-    width: "38%",
-    borderBottomWidth: 2,
-    borderBottomColor: "#8EB8E0",
-    marginBottom: 12,
-  },
-  fastTypeInput: {
-    minHeight: 34,
-    color: CORES.PRIMARY,
-    fontSize: 16,
-    textAlign: "center",
-    paddingVertical: 4,
-    fontWeight: "700",
-  },
-  fastTypeTimer: {
-    width: "88%",
-    textAlign: "center",
-    fontSize: 12,
-    color: "#78A2CC",
-    fontWeight: "700",
-  },
-  fastTypeSubmitButton: {
-    marginTop: 8,
-    minWidth: 112,
-    height: 40,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    backgroundColor: CORES.SECONDARY,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  fastTypeSubmitButtonText: {
-    color: CORES.WHITE_SHORT,
-    fontSize: 14,
-    fontWeight: "700",
-  },
-  fastTypeIntroCard: {
-    width: "100%",
-    minHeight: 248,
-    backgroundColor: CORES.WHITE,
-    borderWidth: 1,
-    borderColor: "#9DC0E4",
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    justifyContent: "flex-start",
-  },
-  fastTypeIntroTitle: {
-    color: "#5D97CC",
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 12,
-  },
-  fastTypeIntroText: {
-    color: "#3D3D3D",
-    fontSize: 13,
-    lineHeight: 21,
-    marginBottom: 5,
-  },
-  fastTypeIntroAccentBlue: {
-    color: "#5D97CC",
-    fontWeight: "700",
-  },
-  fastTypeIntroHighlight: {
-    color: "#2E7D32",
-    fontSize: 13,
-    lineHeight: 21,
-    marginTop: 10,
-    fontWeight: "700",
-  },
-  fastTypeIntroFooter: {
-    color: "#76A8D7",
-    fontSize: 13,
-    fontWeight: "700",
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  fastTypeIntroContinue: {
-    alignSelf: "flex-start",
-    marginTop: "auto",
-  },
-  fastTypeIntroContinueText: {
-    color: "#5D97CC",
-    fontSize: 13,
-    fontWeight: "700",
-  },
-  fastTypeFeedbackCard: {
-    width: "100%",
-    minHeight: 248,
-    paddingHorizontal: 2,
-    paddingVertical: 4,
-    justifyContent: "flex-start",
-  },
-  fastTypeFeedbackHeader: {
-    color: "#5D97CC",
-    fontSize: 17,
-    fontWeight: "700",
-    marginBottom: 10,
-  },
-  fastTypeFeedbackScore: {
-    color: "#3D3D3D",
-    fontSize: 13,
-    marginBottom: 8,
-  },
-  fastTypeFeedbackSummaryRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 14,
-  },
-  fastTypeFeedbackSummaryDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-  },
-  fastTypeFeedbackSummaryDotDanger: {
-    backgroundColor: "#E53935",
-  },
-  fastTypeFeedbackSummaryDotWarning: {
-    backgroundColor: "#E2A72E",
-  },
-  fastTypeFeedbackSummaryDotSuccess: {
-    backgroundColor: "#2EAF50",
-  },
-  fastTypeFeedbackSummary: {
-    color: "#3D3D3D",
-    fontSize: 13,
-  },
-  fastTypeFeedbackSectionTitle: {
-    color: "#5D97CC",
-    fontSize: 13,
-    fontWeight: "700",
-    marginBottom: 10,
-  },
-  fastTypeFeedbackList: {
-    gap: 14,
-  },
-  fastTypeFeedbackItem: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 8,
-  },
-  fastTypeFeedbackCopy: {
-    flex: 1,
-  },
-  fastTypeFeedbackWrongWord: {
-    color: "#222222",
-    fontSize: 15,
-    marginBottom: 2,
-  },
-  fastTypeFeedbackLine: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 8,
-    marginTop: 3,
-  },
-  fastTypeFeedbackLineIcon: {
-    fontSize: 16,
-    lineHeight: 18,
-    width: 18,
-    textAlign: "center",
-  },
-  fastTypeFeedbackLineIconWrong: {
-    color: "#FF4B6E",
-    marginTop: 1,
-    fontSize: 16,
-    lineHeight: 18,
-    width: 18,
-    textAlign: "center",
-  },
-  fastTypeFeedbackLineText: {
-    color: "#4A4A4A",
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  fastTypeFeedbackPerfectRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  fastTypeFeedbackPerfectIcon: {
-    color: CORES.SUCCESS_TEXT,
-    fontSize: 14,
-    fontWeight: "700",
-  },
-  fastTypeFeedbackPerfectText: {
-    color: "#3D3D3D",
-    fontSize: 13,
-  },
-  fastTypeNextButton: {
-    marginTop: 18,
-    alignSelf: "center",
-    minWidth: 180,
-    height: 44,
-    paddingHorizontal: 18,
-    borderRadius: 12,
-    backgroundColor: CORES.SECONDARY,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  fastTypeNextButtonText: {
-    color: CORES.WHITE_SHORT,
-    fontSize: 14,
-    fontWeight: "700",
-  },
-});
+const ex11 = (CORES) =>
+  StyleSheet.create({
+    fastTypeBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    fastTypeWordPill: {
+      minWidth: "50%",
+      maxWidth: "88%",
+      minHeight: 44,
+      borderRadius: 10,
+      backgroundColor: CORES.EX_BLUE,
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 18,
+      marginBottom: 24,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      alignSelf: "center",
+    },
+    fastTypeWordPillText: {
+      color: CORES.WHITE,
+      fontSize: 16,
+      lineHeight: 20,
+      fontWeight: "700",
+      textDecorationLine: "underline",
+      textAlign: "center",
+    },
+    fastTypeInputWrap: {
+      width: "38%",
+      borderBottomWidth: 2,
+      borderBottomColor: CORES.EX_BORDER,
+      marginBottom: 12,
+    },
+    fastTypeInput: {
+      minHeight: 34,
+      color: CORES.PRIMARY,
+      fontSize: 16,
+      textAlign: "center",
+      paddingVertical: 4,
+      fontWeight: "700",
+    },
+    fastTypeTimer: {
+      width: "88%",
+      textAlign: "center",
+      fontSize: 12,
+      color: CORES.PRIMARY,
+      fontWeight: "700",
+    },
+    fastTypeSubmitButton: {
+      marginTop: 8,
+      minWidth: 112,
+      height: 40,
+      paddingHorizontal: 16,
+      borderRadius: 12,
+      backgroundColor: CORES.SECONDARY,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    fastTypeSubmitButtonText: {
+      color: CORES.WHITE_SHORT,
+      fontSize: 14,
+      fontWeight: "700",
+    },
+    fastTypeIntroCard: {
+      width: "100%",
+      minHeight: 248,
+      backgroundColor: CORES.SURFACE,
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+      borderRadius: 10,
+      paddingHorizontal: 14,
+      paddingVertical: 14,
+      justifyContent: "flex-start",
+    },
+    fastTypeIntroTitle: {
+      color: CORES.EX_BLUE_DEEP,
+      fontSize: 18,
+      fontWeight: "700",
+      marginBottom: 12,
+    },
+    fastTypeIntroText: {
+      color: CORES.TEXT,
+      fontSize: 13,
+      lineHeight: 21,
+      marginBottom: 5,
+    },
+    fastTypeIntroAccentBlue: {
+      color: CORES.EX_BLUE_DEEP,
+      fontWeight: "700",
+    },
+    fastTypeIntroHighlight: {
+      color: CORES.SUCCESS_DARK,
+      fontSize: 13,
+      lineHeight: 21,
+      marginTop: 10,
+      fontWeight: "700",
+    },
+    fastTypeIntroFooter: {
+      color: CORES.EX_BLUE,
+      fontSize: 13,
+      fontWeight: "700",
+      marginTop: 10,
+      marginBottom: 10,
+    },
+    fastTypeIntroContinue: {
+      alignSelf: "flex-start",
+      marginTop: "auto",
+    },
+    fastTypeIntroContinueText: {
+      color: CORES.EX_BLUE_DEEP,
+      fontSize: 13,
+      fontWeight: "700",
+    },
+    fastTypeFeedbackCard: {
+      width: "100%",
+      minHeight: 248,
+      paddingHorizontal: 2,
+      paddingVertical: 4,
+      justifyContent: "flex-start",
+    },
+    fastTypeFeedbackHeader: {
+      color: CORES.EX_BLUE_DEEP,
+      fontSize: 17,
+      fontWeight: "700",
+      marginBottom: 10,
+    },
+    fastTypeFeedbackScore: {
+      color: CORES.TEXT,
+      fontSize: 13,
+      marginBottom: 8,
+    },
+    fastTypeFeedbackSummaryRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      marginBottom: 14,
+    },
+    fastTypeFeedbackSummaryDot: {
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+    },
+    fastTypeFeedbackSummaryDotDanger: {
+      backgroundColor: CORES.DANGER_FILL,
+    },
+    fastTypeFeedbackSummaryDotWarning: {
+      backgroundColor: CORES.GOLD,
+    },
+    fastTypeFeedbackSummaryDotSuccess: {
+      backgroundColor: CORES.SUCCESS,
+    },
+    fastTypeFeedbackSummary: {
+      color: CORES.TEXT,
+      fontSize: 13,
+    },
+    fastTypeFeedbackSectionTitle: {
+      color: CORES.EX_BLUE_DEEP,
+      fontSize: 13,
+      fontWeight: "700",
+      marginBottom: 10,
+    },
+    fastTypeFeedbackList: {
+      gap: 14,
+    },
+    fastTypeFeedbackItem: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 8,
+    },
+    fastTypeFeedbackCopy: {
+      flex: 1,
+    },
+    fastTypeFeedbackWrongWord: {
+      color: CORES.TEXT,
+      fontSize: 15,
+      marginBottom: 2,
+    },
+    fastTypeFeedbackLine: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 8,
+      marginTop: 3,
+    },
+    fastTypeFeedbackLineIcon: {
+      fontSize: 16,
+      lineHeight: 18,
+      width: 18,
+      textAlign: "center",
+    },
+    fastTypeFeedbackLineIconWrong: {
+      color: CORES.DANGER,
+      marginTop: 1,
+      fontSize: 16,
+      lineHeight: 18,
+      width: 18,
+      textAlign: "center",
+    },
+    fastTypeFeedbackLineText: {
+      color: CORES.TEXT,
+      fontSize: 13,
+      lineHeight: 18,
+    },
+    fastTypeFeedbackPerfectRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
+    fastTypeFeedbackPerfectIcon: {
+      color: CORES.SUCCESS_TEXT,
+      fontSize: 14,
+      fontWeight: "700",
+    },
+    fastTypeFeedbackPerfectText: {
+      color: CORES.TEXT,
+      fontSize: 13,
+    },
+    fastTypeNextButton: {
+      marginTop: 18,
+      alignSelf: "center",
+      minWidth: 180,
+      height: 44,
+      paddingHorizontal: 18,
+      borderRadius: 12,
+      backgroundColor: CORES.SECONDARY,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    fastTypeNextButtonText: {
+      color: CORES.WHITE_SHORT,
+      fontSize: 14,
+      fontWeight: "700",
+    },
+  });
 
 export default ex11;
 

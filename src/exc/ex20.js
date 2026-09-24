@@ -9,9 +9,10 @@ import {
   Vibration,
   View,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise20({ activity, styles, HeaderComponent, next, onAttempt }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -37,7 +38,7 @@ export function Exercise20({ activity, styles, HeaderComponent, next, onAttempt 
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -271,88 +272,89 @@ export function Exercise20({ activity, styles, HeaderComponent, next, onAttempt 
   );
 }
 
-const ex20 = StyleSheet.create({
-  trueFalseImageBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  trueFalseImagePrompt: {
-    width: "88%",
-    textAlign: "left",
-    fontSize: 20,
-    color: "#7BA9D6",
-    marginBottom: 18,
-    fontWeight: "700",
-  },
-  trueFalseImageMediaWrapper: {
-    width: "88%",
-    maxWidth: 520,
-    marginBottom: 14,
-  },
-  trueFalseImageMediaCard: {
-    width: "100%",
-    aspectRatio: 16 / 9,
-    backgroundColor: CORES.SURFACE_MUTED,
-    borderRadius: 18,
-    overflow: "hidden",
-  },
-  trueFalseImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  trueFalseImageCommand: {
-    width: "88%",
-    textAlign: "center",
-    fontSize: 16,
-    lineHeight: 22,
-    color: CORES.PRIMARY,
-    fontWeight: "700",
-    marginBottom: 16,
-  },
-  trueFalseImageOptionsRow: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  trueFalseImageOptionWrap: {
-    minWidth: 86,
-  },
-  trueFalseImageOption: {
-    height: 40,
-    minWidth: 86,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#D8E1EC",
-    backgroundColor: CORES.WHITE,
-  },
-  trueFalseImageOptionTouch: {
-    flex: 1,
-    paddingHorizontal: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  trueFalseImageOptionText: {
-    fontSize: 16,
-    color: "#64748B",
-    fontWeight: "600",
-  },
-  trueFalseImageOptionCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  trueFalseImageOptionWrong: {
-    borderColor: CORES.DANGER,
-  },
-  trueFalseImageOptionTextCorrect: {
-    color: CORES.SUCCESS_DARK,
-  },
-  trueFalseImageSuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+const ex20 = (CORES) =>
+  StyleSheet.create({
+    trueFalseImageBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    trueFalseImagePrompt: {
+      width: "88%",
+      textAlign: "left",
+      fontSize: 20,
+      color: CORES.EX_BLUE,
+      marginBottom: 18,
+      fontWeight: "700",
+    },
+    trueFalseImageMediaWrapper: {
+      width: "88%",
+      maxWidth: 520,
+      marginBottom: 14,
+    },
+    trueFalseImageMediaCard: {
+      width: "100%",
+      aspectRatio: 16 / 9,
+      backgroundColor: CORES.SURFACE_MUTED,
+      borderRadius: 18,
+      overflow: "hidden",
+    },
+    trueFalseImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    trueFalseImageCommand: {
+      width: "88%",
+      textAlign: "center",
+      fontSize: 16,
+      lineHeight: 22,
+      color: CORES.PRIMARY,
+      fontWeight: "700",
+      marginBottom: 16,
+    },
+    trueFalseImageOptionsRow: {
+      flexDirection: "row",
+      gap: 12,
+    },
+    trueFalseImageOptionWrap: {
+      minWidth: 86,
+    },
+    trueFalseImageOption: {
+      height: 40,
+      minWidth: 86,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+      backgroundColor: CORES.SURFACE,
+    },
+    trueFalseImageOptionTouch: {
+      flex: 1,
+      paddingHorizontal: 20,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    trueFalseImageOptionText: {
+      fontSize: 16,
+      color: CORES.TEXT_MUTED,
+      fontWeight: "600",
+    },
+    trueFalseImageOptionCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    trueFalseImageOptionWrong: {
+      borderColor: CORES.DANGER,
+    },
+    trueFalseImageOptionTextCorrect: {
+      color: CORES.SUCCESS_DARK,
+    },
+    trueFalseImageSuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex20;
 

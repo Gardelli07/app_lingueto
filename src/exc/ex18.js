@@ -9,7 +9,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 const normalizeText = (value) =>
   String(value || "")
@@ -24,6 +24,7 @@ export function Exercise18({
   next,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -45,7 +46,7 @@ export function Exercise18({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -164,7 +165,7 @@ export function Exercise18({
             }}
             style={styles.orderSentenceInput}
             placeholder={activity.placeholder}
-            placeholderTextColor="#8BB7E0"
+            placeholderTextColor={CORES.EX_BLUE_FAINT}
             autoCapitalize="sentences"
             autoCorrect={false}
           />
@@ -279,79 +280,80 @@ export function Exercise18({
   );
 }
 
-const ex18 = StyleSheet.create({
-  orderSentenceBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  orderSentenceInstruction: {
-    width: "88%",
-    textAlign: "left",
-    fontSize: 16,
-    color: "#7BA9D6",
-    marginBottom: 18,
-    fontWeight: "600",
-  },
-  orderSentenceWordsCard: {
-    width: "88%",
-    minHeight: 72,
-    borderRadius: 12,
-    backgroundColor: "#76A8D7",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 18,
-    paddingVertical: 16,
-    marginBottom: 24,
-  },
-  orderSentenceWordsCardWrong: {
-    borderWidth: 1.5,
-    borderColor: CORES.DANGER,
-  },
-  orderSentenceWordsText: {
-    color: CORES.WHITE,
-    fontSize: 19,
-    textAlign: "center",
-    textDecorationLine: "underline",
-    fontFamily: "serif",
-  },
-  orderSentenceInputWrap: {
-    width: "72%",
-    borderBottomWidth: 2,
-    borderBottomColor: "#8EB8E0",
-    marginBottom: 20,
-  },
-  orderSentenceInputWrapWrong: {
-    borderBottomColor: CORES.DANGER,
-  },
-  orderSentenceInputWrapCorrect: {
-    borderBottomColor: CORES.SUCCESS,
-  },
-  orderSentenceInput: {
-    minHeight: 36,
-    color: CORES.PRIMARY,
-    fontSize: 19,
-    textAlign: "center",
-    paddingVertical: 4,
-    fontFamily: "serif",
-  },
-  orderSentenceSubmitButton: {
-    minWidth: 152,
-    height: 44,
-    borderRadius: 14,
-    backgroundColor: CORES.SECONDARY,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 18,
-  },
-  orderSentenceSubmitButtonDisabled: {
-    backgroundColor: "#B6C8DB",
-  },
-  orderSentenceSubmitButtonText: {
-    color: CORES.WHITE_SHORT,
-    fontSize: 15,
-    fontWeight: "700",
-  },
-});
+const ex18 = (CORES) =>
+  StyleSheet.create({
+    orderSentenceBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    orderSentenceInstruction: {
+      width: "88%",
+      textAlign: "left",
+      fontSize: 16,
+      color: CORES.EX_BLUE,
+      marginBottom: 18,
+      fontWeight: "600",
+    },
+    orderSentenceWordsCard: {
+      width: "88%",
+      minHeight: 72,
+      borderRadius: 12,
+      backgroundColor: CORES.EX_BLUE,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 18,
+      paddingVertical: 16,
+      marginBottom: 24,
+    },
+    orderSentenceWordsCardWrong: {
+      borderWidth: 1.5,
+      borderColor: CORES.DANGER,
+    },
+    orderSentenceWordsText: {
+      color: CORES.WHITE,
+      fontSize: 19,
+      textAlign: "center",
+      textDecorationLine: "underline",
+      fontFamily: "serif",
+    },
+    orderSentenceInputWrap: {
+      width: "72%",
+      borderBottomWidth: 2,
+      borderBottomColor: CORES.EX_BORDER,
+      marginBottom: 20,
+    },
+    orderSentenceInputWrapWrong: {
+      borderBottomColor: CORES.DANGER,
+    },
+    orderSentenceInputWrapCorrect: {
+      borderBottomColor: CORES.SUCCESS,
+    },
+    orderSentenceInput: {
+      minHeight: 36,
+      color: CORES.PRIMARY,
+      fontSize: 19,
+      textAlign: "center",
+      paddingVertical: 4,
+      fontFamily: "serif",
+    },
+    orderSentenceSubmitButton: {
+      minWidth: 152,
+      height: 44,
+      borderRadius: 14,
+      backgroundColor: CORES.SECONDARY,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 18,
+    },
+    orderSentenceSubmitButtonDisabled: {
+      backgroundColor: CORES.EX_DISABLED,
+    },
+    orderSentenceSubmitButtonText: {
+      color: CORES.WHITE_SHORT,
+      fontSize: 15,
+      fontWeight: "700",
+    },
+  });
 
 export default ex18;
 

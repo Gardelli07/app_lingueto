@@ -1,76 +1,13 @@
-const CORES = {
-  PRIMARY: "#78A2CC",
-  SECONDARY: "#8ecdb8",
-  WHITE: "#FFFFFF",
-  WHITE_SHORT: "#FFF",
-  BLACK: "#000000",
-  SUCCESS: "#22C55E",
-  SUCCESS_BG: "#DCFCE7",
-  SUCCESS_DARK: "#15803D",
-  SUCCESS_TEXT: "#16A34A",
-  DANGER: "#EF4444",
-  DANGER_BG: "#FEE2E2",
-  DANGER_LIGHT: "#FCA5A5",
-  DANGER_TEXT: "#DC2626",
-  SURFACE_MUTED: "#DDE7F5",
-  PANEL_SUCCESS: "#ECFDF5",
-  BLUE_SOFT: "#5FA1D6",
-  BORDER_LIGHT: "#E5E7EB",
-  BRAND_STRONG: "#2563EB",
-  TEXT_DARK: "#111827",
-  BACKGROUND: "#F5F5F5",
+// Paleta estatica do modo claro.
+//
+// Mantida por compatibilidade: telas ainda nao migradas para o tema
+// dinamico continuam importando este objeto. Telas novas (ou migradas)
+// devem usar `useTheme()` / `useThemedStyles()` de src/theme, que devolvem
+// a paleta clara OU escura conforme a preferencia do usuario.
+//
+// As cores em si vivem em src/theme/palettes.js (LIGHT).
+import { LIGHT } from "../theme/palettes";
 
-  // Home.js
-  HOME_BG: "#EEF2F8",
-  HOME_PRIMARY: "#3E6FB8",
-  HOME_NAVY: "#16335B",
-  HOME_BORDER: "#EBEFF6",
-  HOME_MUTED: "#6B7C93",
-  HOME_FAINT: "#8294AB",
-  HOME_GREEN: "#2FA86B",
-  HOME_AMBER: "#F2B23E",
-  HOME_DANGER: "#C23C38",
-
-  // Profile.js
-  PROFILE_BG: "#EEF1F7",
-  PROFILE_NAVY: "#16305C",
-  PROFILE_BLUE: "#3F6FA8",
-  PROFILE_MUTED: "#7E8CA0",
-  PROFILE_MUTED_LIGHT: "#9AA6B8",
-  PROFILE_BORDER: "#EEF1F7",
-  PROFILE_CHIP_BG: "#F1F5FA",
-  PROFILE_GREEN: "#2E9E5B",
-  PROFILE_GREEN_BG: "#E6F4EC",
-  PROFILE_GOLD: "#F5C451",
-  PROFILE_AMBER: "#E8A317",
-  PROFILE_DANGER: "#D9534F",
-  PROFILE_ARROW: "#C2CDDD",
-
-  // Comunidade.js
-  COMUNIDADE_ACCENT: "#2E6BF6",
-  COMUNIDADE_ACCENT_SOFT: "rgba(46,107,246,0.10)",
-  COMUNIDADE_ACCENT_BORDER: "rgba(46,107,246,0.25)",
-  COMUNIDADE_BG: "#EEF2F9",
-  COMUNIDADE_TEXT: "#101828",
-  COMUNIDADE_TEXT_2: "#475467",
-  COMUNIDADE_MUTED: "#667085",
-  COMUNIDADE_MUTED_2: "#98A2B3",
-  COMUNIDADE_LINE: "#EAECF2",
-  COMUNIDADE_BUBBLE: "#F5F7FC",
-  COMUNIDADE_BUBBLE_LINE: "#EAEEF6",
-
-  // PlacementFlow.js
-  PLACEMENT_BLUE: "#173B6E",
-  PLACEMENT_MUTED: "#8FA0B7",
-  PLACEMENT_ACCENT: "#26BA86",
-  PLACEMENT_DANGER: "#EF6A62",
-  PLACEMENT_BORDER: "#E6ECF3",
-  PLACEMENT_TRACK: "#DFE5ED",
-
-  // aulas/CourseOverviewScreen.js
-  COURSE_TEXT_STRONG: "#1B2233",
-  COURSE_TEXT_SOFT: "#7C8292",
-  COURSE_BORDER: "#E8DDD0",
-};
+const CORES = LIGHT;
 
 export default CORES;

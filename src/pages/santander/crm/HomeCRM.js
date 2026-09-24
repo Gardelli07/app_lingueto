@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../../context/AuthContext";
+import { useThemedStyles } from "../../../theme";
 
 const STORAGE_KEY = "@curso_progress_v1";
 
@@ -109,6 +110,7 @@ const sampleLessons = [
 ========================= */
 
 export default function CourseScreen({ navigation }) {
+  const styles = useThemedStyles(makeStyles);
   const { user } = useAuth();
   const nomeUsuario = user?.login || "Usuário";
 
@@ -220,113 +222,115 @@ export default function CourseScreen({ navigation }) {
    ESTILOS
 ========================= */
 
-const MUTED = "#6b7280";
-const TEXT = "#111827";
+const makeStyles = (CORES) => {
+  const MUTED = CORES.TEXT_MUTED;
+  const TEXT = CORES.TEXT;
 
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: "#F7F4EE",
-  },
+  return StyleSheet.create({
+    safe: {
+      flex: 1,
+      backgroundColor: CORES.SANT_BG,
+    },
 
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    marginBottom: 20,
-  },
+    header: {
+      paddingHorizontal: 20,
+      paddingTop: 16,
+      marginBottom: 20,
+    },
 
-  area: {
-    fontSize: 13,
-    color: MUTED,
-    marginBottom: 4,
-  },
+    area: {
+      fontSize: 13,
+      color: MUTED,
+      marginBottom: 4,
+    },
 
-  hello: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: TEXT,
-  },
+    hello: {
+      fontSize: 24,
+      fontWeight: "700",
+      color: TEXT,
+    },
 
-  moduleCard: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    marginBottom: 18,
-    elevation: 2,
-    overflow: "hidden",
-  },
+    moduleCard: {
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 16,
+      marginBottom: 18,
+      elevation: 2,
+      overflow: "hidden",
+    },
 
-  moduleHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-  },
+    moduleHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 16,
+    },
 
-  moduleNumber: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: "#6c63ff",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
+    moduleNumber: {
+      width: 36,
+      height: 36,
+      borderRadius: 10,
+      backgroundColor: CORES.PRIMARY,
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: 12,
+    },
 
-  moduleNumberText: {
-    color: "#fff",
-    fontWeight: "700",
-  },
+    moduleNumberText: {
+      color: CORES.ON_ACCENT,
+      fontWeight: "700",
+    },
 
-  moduleTitle: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#111",
-  },
+    moduleTitle: {
+      fontSize: 15,
+      fontWeight: "700",
+      color: CORES.TEXT,
+    },
 
-  moduleSubtitle: {
-    fontSize: 12,
-    marginTop: 2,
-  },
+    moduleSubtitle: {
+      fontSize: 12,
+      marginTop: 2,
+    },
 
-  arrow: {
-    fontSize: 18,
-    color: "#9ca3af",
-  },
+    arrow: {
+      fontSize: 18,
+      color: CORES.TEXT_FAINT,
+    },
 
-  lessonRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 14,
-    borderTopWidth: 1,
-    borderTopColor: "#eee",
-  },
+    lessonRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      padding: 14,
+      borderTopWidth: 1,
+      borderTopColor: CORES.BORDER,
+    },
 
-  lessonCircle: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: "#e5e7eb",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
+    lessonCircle: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: CORES.TRACK,
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: 12,
+    },
 
-  lessonCircleDone: {
-    backgroundColor: "#22c55e",
-  },
+    lessonCircleDone: {
+      backgroundColor: CORES.SUCCESS,
+    },
 
-  lessonCircleText: {
-    fontSize: 12,
-    fontWeight: "700",
-    color: "#374151",
-  },
+    lessonCircleText: {
+      fontSize: 12,
+      fontWeight: "700",
+      color: CORES.TEXT_MUTED,
+    },
 
-  lessonCircleTextDone: {
-    color: "#fff",
-  },
+    lessonCircleTextDone: {
+      color: CORES.ON_ACCENT,
+    },
 
-  lessonTitle: {
-    fontSize: 14,
-    color: "#111",
-    flex: 1,
-  },
-});
+    lessonTitle: {
+      fontSize: 14,
+      color: CORES.TEXT,
+      flex: 1,
+    },
+  });
+};

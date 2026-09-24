@@ -12,7 +12,7 @@ import {
 import Slider from "@react-native-community/slider";
 import { createAudioPlayer } from "expo-audio";
 import * as Speech from "expo-speech";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 const normalizeText = (value) =>
   String(value || "")
@@ -28,6 +28,7 @@ export function Exercise19({
   onAttempt,
   speak,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -64,7 +65,7 @@ export function Exercise19({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   const clearPlayback = () => {
@@ -366,7 +367,7 @@ export function Exercise19({
             }}
             style={styles.writeAudioInput}
             placeholder={activity.placeholder}
-            placeholderTextColor="#8BB7E0"
+            placeholderTextColor={CORES.EX_BLUE_FAINT}
             autoCapitalize="sentences"
             autoCorrect={false}
           />
@@ -477,89 +478,90 @@ export function Exercise19({
   );
 }
 
-const ex19 = StyleSheet.create({
-  writeAudioBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  writeAudioPrompt: {
-    width: "88%",
-    color: "#78A2CC",
-    fontSize: 20,
-    fontWeight: "700",
-    marginBottom: 18,
-  },
-  writeAudioPlayer: {
-    width: "88%",
-    height: 40,
-    backgroundColor: "#78A2CC",
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    gap: 12,
-    marginBottom: 28,
-  },
-  writeAudioPlayIcon: {
-    color: CORES.WHITE_SHORT,
-    fontSize: 18,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  writeAudioPlayButton: {
-    width: 32,
-    height: 32,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  writeAudioBar: {
-    flex: 1,
-    height: 36,
-    justifyContent: "center",
-  },
-  writeAudioSlider: {
-    width: "100%",
-    height: 36,
-  },
-  writeAudioInputWrap: {
-    width: "58%",
-    borderBottomWidth: 1,
-    borderBottomColor: "#78A2CC",
-    marginBottom: 20,
-  },
-  writeAudioInputWrapWrong: {
-    borderBottomColor: CORES.DANGER,
-  },
-  writeAudioInputWrapCorrect: {
-    borderBottomColor: CORES.SUCCESS,
-  },
-  writeAudioInput: {
-    minHeight: 34,
-    color: CORES.PRIMARY,
-    fontSize: 13,
-    textAlign: "center",
-    paddingVertical: 3,
-    textDecorationLine: "underline",
-    fontFamily: "serif",
-  },
-  writeAudioSubmitButton: {
-    minWidth: 152,
-    height: 44,
-    borderRadius: 8,
-    backgroundColor: CORES.SECONDARY,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 18,
-  },
-  writeAudioSubmitButtonDisabled: {
-    backgroundColor: "#B6C8DB",
-  },
-  writeAudioSubmitButtonText: {
-    color: CORES.WHITE_SHORT,
-    fontSize: 15,
-    fontWeight: "700",
-  },
-});
+const ex19 = (CORES) =>
+  StyleSheet.create({
+    writeAudioBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    writeAudioPrompt: {
+      width: "88%",
+      color: CORES.PRIMARY,
+      fontSize: 20,
+      fontWeight: "700",
+      marginBottom: 18,
+    },
+    writeAudioPlayer: {
+      width: "88%",
+      height: 40,
+      backgroundColor: CORES.PRIMARY,
+      flexDirection: "row",
+      alignItems: "center",
+      borderRadius: 8,
+      paddingHorizontal: 16,
+      gap: 12,
+      marginBottom: 28,
+    },
+    writeAudioPlayIcon: {
+      color: CORES.WHITE_SHORT,
+      fontSize: 18,
+      fontWeight: "700",
+      textAlign: "center",
+    },
+    writeAudioPlayButton: {
+      width: 32,
+      height: 32,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    writeAudioBar: {
+      flex: 1,
+      height: 36,
+      justifyContent: "center",
+    },
+    writeAudioSlider: {
+      width: "100%",
+      height: 36,
+    },
+    writeAudioInputWrap: {
+      width: "58%",
+      borderBottomWidth: 1,
+      borderBottomColor: CORES.PRIMARY,
+      marginBottom: 20,
+    },
+    writeAudioInputWrapWrong: {
+      borderBottomColor: CORES.DANGER,
+    },
+    writeAudioInputWrapCorrect: {
+      borderBottomColor: CORES.SUCCESS,
+    },
+    writeAudioInput: {
+      minHeight: 34,
+      color: CORES.PRIMARY,
+      fontSize: 13,
+      textAlign: "center",
+      paddingVertical: 3,
+      textDecorationLine: "underline",
+      fontFamily: "serif",
+    },
+    writeAudioSubmitButton: {
+      minWidth: 152,
+      height: 44,
+      borderRadius: 8,
+      backgroundColor: CORES.SECONDARY,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 18,
+    },
+    writeAudioSubmitButtonDisabled: {
+      backgroundColor: CORES.EX_DISABLED,
+    },
+    writeAudioSubmitButtonText: {
+      color: CORES.WHITE_SHORT,
+      fontSize: 15,
+      fontWeight: "700",
+    },
+  });
 
 export default ex19;
 

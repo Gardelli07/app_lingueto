@@ -21,7 +21,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../services/api";
 import { getLevelProgress, XP_PER_LESSON } from "../util/xp";
-import CORES from "../util/cores";
+import { useTheme, useThemedStyles } from "../theme";
 import { fetchAulaAccessMap } from "../services/conteudos";
 import { fetchResumoProgresso } from "../services/progresso";
 import * as dailyGoals from "../util/dailyGoals";
@@ -60,27 +60,45 @@ import {
 import { travelModuleDefs, travelSampleLessons } from "./aulas/viagem/A1";
 import NotificationBell from "../components/NotificationBell";
 
+// Acentos de curso/nivel: sao fundos solidos com icone branco por cima, entao
+// no tema escuro usam a versao mais clara pra nao sumirem no card.
 const LEVEL_ACCENT = {
-  Starter: "#2E9E6B",
-  Elementary: "#3E6FB8",
-  Intermediate: "#7A5BC0",
-  Advanced: "#1E97A8",
+  light: {
+    Starter: "#2E9E6B",
+    Elementary: "#3E6FB8",
+    Intermediate: "#7A5BC0",
+    Advanced: "#1E97A8",
+  },
+  dark: {
+    Starter: "#3DC486",
+    Elementary: "#6E82FF",
+    Intermediate: "#A17BEB",
+    Advanced: "#2FC0D4",
+  },
 };
 
 const COURSE_ACCENT = {
-  "Ingles Completo": "#2E9E6B",
-  "Bussines English": "#2F4A78",
-  "Ingles para viagem": "#1E97A8",
+  light: {
+    "Ingles Completo": "#2E9E6B",
+    "Bussines English": "#2F4A78",
+    "Ingles para viagem": "#1E97A8",
+  },
+  dark: {
+    "Ingles Completo": "#3DC486",
+    "Bussines English": "#5B6EF5",
+    "Ingles para viagem": "#2FC0D4",
+  },
 };
 
 const DIFFICULTY_LABEL = { facil: "Fácil", normal: "Normal", dificil: "Difícil" };
-const DIFFICULTY_COLOR = {
+const difficultyColor = (CORES) => ({
   facil: CORES.HOME_GREEN,
   normal: CORES.HOME_AMBER,
   dificil: CORES.HOME_DANGER,
-};
+});
 
 function ProgressCircle({ percent, size = 70, strokeWidth = 8 }) {
+  const CORES = useTheme();
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - percent / 100);
@@ -123,6 +141,9 @@ function ProgressCircle({ percent, size = 70, strokeWidth = 8 }) {
 }
 
 function QuickAction({ icon, label, primary, onPress }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -151,6 +172,9 @@ function CourseCard({
   color,
   onPress,
 }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -195,12 +219,15 @@ function CourseCard({
           <Text style={styles.meta}>{started ? `${percent}%` : tagLabel}</Text>
         </View>
       </View>
-      <MaterialCommunityIcons name="chevron-right" size={20} color="#B7C3D4" />
+      <MaterialCommunityIcons name="chevron-right" size={20} color={CORES.TEXT_FAINT} />
     </TouchableOpacity>
   );
 }
 
 function PremiumBanner({ onPress }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
+
   return (
     <TouchableOpacity
       style={styles.premiumBanner}
@@ -223,21 +250,23 @@ function PremiumBanner({ onPress }) {
       <MaterialCommunityIcons
         name="chevron-right"
         size={20}
-        color="#B4791E"
+        color={CORES.HOME_STREAK_TXT}
       />
     </TouchableOpacity>
   );
 }
 
 function ActivityRow({ item }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const map = {
     done: {
-      bg: "#E5F3EC",
+      bg: CORES.HOME_GREEN_BG,
       icon: "check",
       color: CORES.HOME_GREEN,
     },
     streak: {
-      bg: "#FDF1DF",
+      bg: CORES.HOME_STREAK_BG,
       icon: "fire",
       color: CORES.HOME_AMBER,
     },
@@ -264,6 +293,9 @@ function ActivityRow({ item }) {
 
 export default function Inglescompleto({ navigation, route }) {
   const { user } = useAuth();
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const DIFFICULTY_COLOR = difficultyColor(CORES);
   const fullAccess = hasFullAccess(user);
   const displayName = user?.nome_exibicao?.trim() || user?.login || "Usuário";
   const firstName = displayName.split(" ")[0];
@@ -552,7 +584,7 @@ export default function Inglescompleto({ navigation, route }) {
       );
       return {
         courseName,
-        color: COURSE_ACCENT[courseName] || CORES.HOME_PRIMARY,
+        color: COURSE_ACCENT[CORES.mode][courseName] || CORES.HOME_PRIMARY,
         levels,
       };
     }).filter((group) => group.levels.length > 0);
@@ -646,7 +678,7 @@ export default function Inglescompleto({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.safe} edges={["left", "right"]}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={CORES.statusBarStyle} />
 
       <ScrollView
         ref={scrollViewRef}
@@ -997,7 +1029,7 @@ export default function Inglescompleto({ navigation, route }) {
                 <Text
                   style={[
                     styles.chipTxt,
-                    { color: on ? CORES.WHITE : "#3A557A" },
+                    { color: on ? CORES.WHITE : CORES.HOME_CHIP_TXT },
                   ]}
                 >
                   {chip.label}
@@ -1019,7 +1051,7 @@ export default function Inglescompleto({ navigation, route }) {
                     tagLabel={`${course.total} lições`}
                     started={course.completed > 0}
                     percent={course.percent}
-                    color={LEVEL_ACCENT[levelFilter] || CORES.HOME_PRIMARY}
+                    color={LEVEL_ACCENT[CORES.mode][levelFilter] || CORES.HOME_PRIMARY}
                     onPress={() =>
                       openCourseFromViewAll(course.courseName, levelFilter)
                     }
@@ -1119,7 +1151,7 @@ export default function Inglescompleto({ navigation, route }) {
                         styles.moduleIconWrap,
                         {
                           backgroundColor: moduleItem.locked
-                            ? "#C6CFDB"
+                            ? CORES.HOME_LOCKED_ICON
                             : moduleItem.accent,
                         },
                       ]}
@@ -1162,7 +1194,7 @@ export default function Inglescompleto({ navigation, route }) {
                       <MaterialCommunityIcons
                         name={isOpen ? "chevron-up" : "chevron-down"}
                         size={20}
-                        color={moduleItem.locked ? "#B8C2CF" : "#8A97AA"}
+                        color={moduleItem.locked ? CORES.HOME_LOCKED : CORES.TEXT_FAINT}
                       />
                     </View>
                   </TouchableOpacity>
@@ -1202,7 +1234,7 @@ export default function Inglescompleto({ navigation, route }) {
                                   done
                                     ? CORES.HOME_GREEN
                                     : isLocked
-                                      ? "#B4BFCC"
+                                      ? CORES.HOME_LOCKED
                                       : CORES.HOME_PRIMARY
                                 }
                               />
@@ -1219,7 +1251,7 @@ export default function Inglescompleto({ navigation, route }) {
                               <MaterialCommunityIcons
                                 name="chevron-right"
                                 size={18}
-                                color="#8A97AA"
+                                color={CORES.TEXT_FAINT}
                               />
                             )}
                           </TouchableOpacity>
@@ -1244,489 +1276,491 @@ export default function Inglescompleto({ navigation, route }) {
 }
 
 /* -------------------------------- styles --------------------------------- */
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: CORES.HOME_BG,
-  },
-  content: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 28,
-  },
-  row: { flexDirection: "row", alignItems: "center" },
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    safe: {
+      flex: 1,
+      backgroundColor: CORES.HOME_BG,
+    },
+    content: {
+      paddingHorizontal: 16,
+      paddingTop: 12,
+      paddingBottom: 28,
+    },
+    row: { flexDirection: "row", alignItems: "center" },
 
-  greetingRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 14,
-  },
-  avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 18,
-    backgroundColor: CORES.HOME_PRIMARY,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-  avatarImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  avatarInitial: {
-    color: CORES.WHITE,
-    fontWeight: "900",
-    fontSize: 22,
-  },
-  onlineDot: {
-    position: "absolute",
-    bottom: -1,
-    right: -1,
-    width: 15,
-    height: 15,
-    borderRadius: 8,
-    backgroundColor: CORES.HOME_GREEN,
-    borderWidth: 2.5,
-    borderColor: CORES.HOME_BG,
-  },
-  hello: { color: CORES.HOME_MUTED, fontWeight: "700", fontSize: 14 },
-  userName: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 25 },
-  statsArea: { alignItems: "flex-end" },
-  topRightRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 6,
-  },
-  streak: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    backgroundColor: "#FDF1DF",
-    paddingHorizontal: 9,
-    paddingVertical: 5,
-    borderRadius: 99,
-  },
-  streakTxt: { color: "#B4791E", fontWeight: "800", fontSize: 12.5 },
-  xp: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 16 },
-  xpUnit: { color: CORES.HOME_MUTED, fontWeight: "800", fontSize: 12 },
-  levelBadge: {
-    backgroundColor: CORES.HOME_NAVY,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 99,
-    marginTop: 5,
-  },
-  levelBadgeTxt: { color: CORES.WHITE, fontWeight: "800", fontSize: 12 },
+    greetingRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 14,
+    },
+    avatar: {
+      width: 56,
+      height: 56,
+      borderRadius: 18,
+      backgroundColor: CORES.ACCENT_FILL_HOME,
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "hidden",
+    },
+    avatarImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    avatarInitial: {
+      color: CORES.WHITE,
+      fontWeight: "900",
+      fontSize: 22,
+    },
+    onlineDot: {
+      position: "absolute",
+      bottom: -1,
+      right: -1,
+      width: 15,
+      height: 15,
+      borderRadius: 8,
+      backgroundColor: CORES.HOME_GREEN,
+      borderWidth: 2.5,
+      borderColor: CORES.HOME_BG,
+    },
+    hello: { color: CORES.HOME_MUTED, fontWeight: "700", fontSize: 14 },
+    userName: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 25 },
+    statsArea: { alignItems: "flex-end" },
+    topRightRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      marginBottom: 6,
+    },
+    streak: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 4,
+      backgroundColor: CORES.HOME_STREAK_BG,
+      paddingHorizontal: 9,
+      paddingVertical: 5,
+      borderRadius: 99,
+    },
+    streakTxt: { color: CORES.HOME_STREAK_TXT, fontWeight: "800", fontSize: 12.5 },
+    xp: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 16 },
+    xpUnit: { color: CORES.HOME_MUTED, fontWeight: "800", fontSize: 12 },
+    levelBadge: {
+      backgroundColor: CORES.NAVY_FILL,
+      paddingHorizontal: 10,
+      paddingVertical: 3,
+      borderRadius: 99,
+      marginTop: 5,
+    },
+    levelBadgeTxt: { color: CORES.WHITE, fontWeight: "800", fontSize: 12 },
 
-  card: {
-    backgroundColor: CORES.WHITE,
-    borderRadius: 18,
-    padding: 16,
-    marginBottom: 18,
-    borderWidth: 1,
-    borderColor: CORES.HOME_BORDER,
-  },
-  cardLabel: { color: CORES.HOME_NAVY, fontWeight: "800", fontSize: 14 },
-  cardHint: { color: CORES.HOME_MUTED, fontWeight: "700", fontSize: 12.5 },
-  bigTrack: {
-    height: 10,
-    borderRadius: 99,
-    backgroundColor: "#E6ECF4",
-    overflow: "hidden",
-  },
-  bigFill: {
-    height: "100%",
-    borderRadius: 99,
-    backgroundColor: CORES.HOME_PRIMARY,
-  },
+    card: {
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 18,
+      padding: 16,
+      marginBottom: 18,
+      borderWidth: 1,
+      borderColor: CORES.HOME_BORDER,
+    },
+    cardLabel: { color: CORES.HOME_NAVY, fontWeight: "800", fontSize: 14 },
+    cardHint: { color: CORES.HOME_MUTED, fontWeight: "700", fontSize: 12.5 },
+    bigTrack: {
+      height: 10,
+      borderRadius: 99,
+      backgroundColor: CORES.HOME_TRACK,
+      overflow: "hidden",
+    },
+    bigFill: {
+      height: "100%",
+      borderRadius: 99,
+      backgroundColor: CORES.ACCENT_FILL_HOME,
+    },
 
-  quickRow: { flexDirection: "row", gap: 10, marginBottom: 18 },
-  qa: {
-    flex: 1,
-    borderRadius: 16,
-    padding: 13,
-    gap: 8,
-    alignItems: "flex-start",
-  },
-  qaPrimary: { backgroundColor: CORES.HOME_PRIMARY },
-  qaPlain: {
-    backgroundColor: CORES.WHITE,
-    borderWidth: 1,
-    borderColor: "#E4EAF3",
-  },
-  qaLabel: { fontWeight: "800", fontSize: 13 },
+    quickRow: { flexDirection: "row", gap: 10, marginBottom: 18 },
+    qa: {
+      flex: 1,
+      borderRadius: 16,
+      padding: 13,
+      gap: 8,
+      alignItems: "flex-start",
+    },
+    qaPrimary: { backgroundColor: CORES.ACCENT_FILL_HOME },
+    qaPlain: {
+      backgroundColor: CORES.SURFACE,
+      borderWidth: 1,
+      borderColor: CORES.HOME_BORDER,
+    },
+    qaLabel: { fontWeight: "800", fontSize: 13 },
 
-  hero: {
-    backgroundColor: CORES.WHITE,
-    borderRadius: 22,
-    padding: 18,
-    marginBottom: 14,
-    borderWidth: 1,
-    borderColor: CORES.HOME_BORDER,
-  },
-  heroKicker: {
-    color: CORES.HOME_MUTED,
-    fontWeight: "800",
-    fontSize: 11,
-    letterSpacing: 0.4,
-  },
-  heroTitle: {
-    color: CORES.HOME_NAVY,
-    fontWeight: "900",
-    fontSize: 20,
-    marginTop: 3,
-  },
-  heroMeta: { color: CORES.HOME_MUTED, fontWeight: "700", fontSize: 13 },
-  primaryBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    backgroundColor: CORES.HOME_PRIMARY,
-    borderRadius: 14,
-    paddingVertical: 14,
-  },
-  primaryBtnTxt: { color: CORES.WHITE, fontWeight: "800", fontSize: 16 },
+    hero: {
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 22,
+      padding: 18,
+      marginBottom: 14,
+      borderWidth: 1,
+      borderColor: CORES.HOME_BORDER,
+    },
+    heroKicker: {
+      color: CORES.HOME_MUTED,
+      fontWeight: "800",
+      fontSize: 11,
+      letterSpacing: 0.4,
+    },
+    heroTitle: {
+      color: CORES.HOME_NAVY,
+      fontWeight: "900",
+      fontSize: 20,
+      marginTop: 3,
+    },
+    heroMeta: { color: CORES.HOME_MUTED, fontWeight: "700", fontSize: 13 },
+    primaryBtn: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      backgroundColor: CORES.ACCENT_FILL_HOME,
+      borderRadius: 14,
+      paddingVertical: 14,
+    },
+    primaryBtnTxt: { color: CORES.WHITE, fontWeight: "800", fontSize: 16 },
 
-  premiumBanner: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FDF6E3",
-    borderRadius: 18,
-    padding: 14,
-    marginBottom: 18,
-    borderWidth: 1.5,
-    borderColor: "#F2D896",
-  },
-  premiumIconWrap: {
-    width: 42,
-    height: 42,
-    borderRadius: 13,
-    backgroundColor: "#FBEBC2",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  premiumTitle: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 15 },
-  premiumSub: {
-    color: "#8A6D2C",
-    fontWeight: "700",
-    fontSize: 12.5,
-    marginTop: 2,
-  },
+    premiumBanner: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: CORES.HOME_PREMIUM_BG,
+      borderRadius: 18,
+      padding: 14,
+      marginBottom: 18,
+      borderWidth: 1.5,
+      borderColor: CORES.HOME_PREMIUM_BORDER,
+    },
+    premiumIconWrap: {
+      width: 42,
+      height: 42,
+      borderRadius: 13,
+      backgroundColor: CORES.HOME_PREMIUM_ICON_BG,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    premiumTitle: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 15 },
+    premiumSub: {
+      color: CORES.HOME_PREMIUM_SUB,
+      fontWeight: "700",
+      fontSize: 12.5,
+      marginTop: 2,
+    },
 
-  daily: {
-    backgroundColor: "#E7EFFA",
-    borderRadius: 18,
-    padding: 16,
-    marginBottom: 22,
-  },
-  dailyGoalRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 13,
-  },
-  dailyIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 13,
-    backgroundColor: CORES.WHITE,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  dailyIconDone: {
-    backgroundColor: CORES.HOME_GREEN,
-  },
-  dailyTitle: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 15 },
-  dailyGoalLabel: {
-    color: CORES.HOME_NAVY,
-    fontWeight: "700",
-    fontSize: 13,
-    flexShrink: 1,
-    marginRight: 8,
-  },
-  dailyGoalCount: {
-    color: "#5B6E88",
-    fontWeight: "700",
-    fontSize: 12,
-  },
-  difficultyPill: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 99,
-  },
-  difficultyPillTxt: {
-    fontWeight: "800",
-    fontSize: 10,
-  },
-  dailyGoalReward: {
-    color: "#7C8AA0",
-    fontWeight: "800",
-    fontSize: 11,
-  },
-  dailyTrack: {
-    height: 7,
-    borderRadius: 99,
-    backgroundColor: "#CDDDF0",
-    overflow: "hidden",
-    marginTop: 6,
-  },
-  dailyFill: {
-    height: "100%",
-    borderRadius: 99,
-    backgroundColor: CORES.HOME_GREEN,
-  },
+    daily: {
+      backgroundColor: CORES.HOME_DAILY_BG,
+      borderRadius: 18,
+      padding: 16,
+      marginBottom: 22,
+    },
+    dailyGoalRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 13,
+    },
+    dailyIcon: {
+      width: 40,
+      height: 40,
+      borderRadius: 13,
+      // o card de metas ja tem fundo proprio; o chip usa o tom acima dele
+      backgroundColor: CORES.SURFACE_HIGH,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    dailyIconDone: {
+      backgroundColor: CORES.HOME_GREEN,
+    },
+    dailyTitle: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 15 },
+    dailyGoalLabel: {
+      color: CORES.HOME_NAVY,
+      fontWeight: "700",
+      fontSize: 13,
+      flexShrink: 1,
+      marginRight: 8,
+    },
+    dailyGoalCount: {
+      color: CORES.HOME_MUTED,
+      fontWeight: "700",
+      fontSize: 12,
+    },
+    difficultyPill: {
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      borderRadius: 99,
+    },
+    difficultyPillTxt: {
+      fontWeight: "800",
+      fontSize: 10,
+    },
+    dailyGoalReward: {
+      color: CORES.HOME_FAINT,
+      fontWeight: "800",
+      fontSize: 11,
+    },
+    dailyTrack: {
+      height: 7,
+      borderRadius: 99,
+      backgroundColor: CORES.HOME_DAILY_TRACK,
+      overflow: "hidden",
+      marginTop: 6,
+    },
+    dailyFill: {
+      height: "100%",
+      borderRadius: 99,
+      backgroundColor: CORES.HOME_GREEN,
+    },
 
-  sectionHead: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 11,
-  },
-  h2: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 19 },
-  subtle: { color: CORES.HOME_FAINT, fontWeight: "800", fontSize: 13 },
+    sectionHead: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: 11,
+    },
+    h2: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 19 },
+    subtle: { color: CORES.HOME_FAINT, fontWeight: "800", fontSize: 13 },
 
-  levelFilterWrap: { position: "relative" },
-  levelFilterButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    borderWidth: 1.5,
-    borderColor: CORES.HOME_PRIMARY,
-    borderRadius: 99,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    backgroundColor: "#EEF4FF",
-  },
-  levelFilterButtonOn: {
-    backgroundColor: CORES.HOME_NAVY,
-    borderColor: CORES.HOME_NAVY,
-  },
-  levelFilterTxt: {
-    color: CORES.HOME_PRIMARY,
-    fontWeight: "800",
-    fontSize: 13,
-  },
-  levelFilterTxtOn: { color: CORES.WHITE },
-  levelFilterDropdown: {
-    position: "absolute",
-    top: 38,
-    right: 0,
-    width: 200,
-    backgroundColor: CORES.WHITE,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: CORES.HOME_BORDER,
-    overflow: "hidden",
-    zIndex: 20,
-    elevation: 4,
-  },
-  levelFilterItem: {
-    paddingHorizontal: 12,
-    paddingVertical: 11,
-  },
-  levelFilterItemTxt: {
-    color: CORES.HOME_NAVY,
-    fontSize: 13.5,
-    fontWeight: "700",
-  },
-  levelFilterItemTxtActive: { color: CORES.HOME_PRIMARY, fontWeight: "900" },
+    levelFilterWrap: { position: "relative" },
+    levelFilterButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 4,
+      borderWidth: 1.5,
+      borderColor: CORES.HOME_PRIMARY,
+      borderRadius: 99,
+      paddingHorizontal: 12,
+      paddingVertical: 7,
+      backgroundColor: CORES.HOME_FILTER_BG,
+    },
+    levelFilterButtonOn: {
+      backgroundColor: CORES.NAVY_FILL,
+      borderColor: CORES.NAVY_FILL,
+    },
+    levelFilterTxt: {
+      color: CORES.HOME_PRIMARY,
+      fontWeight: "800",
+      fontSize: 13,
+    },
+    levelFilterTxtOn: { color: CORES.WHITE },
+    levelFilterDropdown: {
+      position: "absolute",
+      top: 38,
+      right: 0,
+      width: 200,
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: CORES.HOME_BORDER,
+      overflow: "hidden",
+      zIndex: 20,
+      elevation: 4,
+    },
+    levelFilterItem: {
+      paddingHorizontal: 12,
+      paddingVertical: 11,
+    },
+    levelFilterItemTxt: {
+      color: CORES.HOME_NAVY,
+      fontSize: 13.5,
+      fontWeight: "700",
+    },
+    levelFilterItemTxtActive: { color: CORES.HOME_PRIMARY, fontWeight: "900" },
 
-  activity: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    backgroundColor: CORES.WHITE,
-    borderRadius: 14,
-    padding: 11,
-    borderWidth: 1,
-    borderColor: "#EDF1F7",
-  },
-  activityIcon: {
-    width: 34,
-    height: 34,
-    borderRadius: 11,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  activityTitle: { color: CORES.HOME_NAVY, fontWeight: "800", fontSize: 13.5 },
-  activityMeta: { color: CORES.HOME_FAINT, fontWeight: "700", fontSize: 12 },
-  activityValue: { fontWeight: "900", fontSize: 13 },
+    activity: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 14,
+      padding: 11,
+      borderWidth: 1,
+      borderColor: CORES.HOME_BORDER,
+    },
+    activityIcon: {
+      width: 34,
+      height: 34,
+      borderRadius: 11,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    activityTitle: { color: CORES.HOME_NAVY, fontWeight: "800", fontSize: 13.5 },
+    activityMeta: { color: CORES.HOME_FAINT, fontWeight: "700", fontSize: 12 },
+    activityValue: { fontWeight: "900", fontSize: 13 },
 
-  chip: { paddingHorizontal: 15, paddingVertical: 9, borderRadius: 99 },
-  chipOn: {
-    backgroundColor: CORES.HOME_NAVY,
-    borderWidth: 1.5,
-    borderColor: CORES.HOME_NAVY,
-  },
-  chipOff: {
-    backgroundColor: CORES.WHITE,
-    borderWidth: 1.5,
-    borderColor: "#DCE5EF",
-  },
-  chipTxt: { fontWeight: "800", fontSize: 13 },
+    chip: { paddingHorizontal: 15, paddingVertical: 9, borderRadius: 99 },
+    chipOn: {
+      backgroundColor: CORES.NAVY_FILL,
+      borderWidth: 1.5,
+      borderColor: CORES.NAVY_FILL,
+    },
+    chipOff: {
+      backgroundColor: CORES.SURFACE,
+      borderWidth: 1.5,
+      borderColor: CORES.HOME_BORDER,
+    },
+    chipTxt: { fontWeight: "800", fontSize: 13 },
 
-  groupGoal: {
-    color: CORES.HOME_NAVY,
-    fontWeight: "900",
-    fontSize: 15,
-    marginRight: 9,
-  },
-  groupBadge: {
-    backgroundColor: "#DDE7F4",
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 99,
-  },
-  groupBadgeTxt: { color: CORES.HOME_PRIMARY, fontWeight: "800", fontSize: 11 },
+    groupGoal: {
+      color: CORES.HOME_NAVY,
+      fontWeight: "900",
+      fontSize: 15,
+      marginRight: 9,
+    },
+    groupBadge: {
+      backgroundColor: CORES.HOME_BADGE_BG,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      borderRadius: 99,
+    },
+    groupBadgeTxt: { color: CORES.HOME_PRIMARY, fontWeight: "800", fontSize: 11 },
 
-  course: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 13,
-    backgroundColor: CORES.WHITE,
-    borderRadius: 16,
-    padding: 13,
-    borderWidth: 1,
-    borderColor: CORES.HOME_BORDER,
-  },
-  courseIcon: {
-    width: 46,
-    height: 46,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  courseName: {
-    color: CORES.HOME_NAVY,
-    fontWeight: "900",
-    fontSize: 15.5,
-    marginRight: 7,
-    flexShrink: 1,
-  },
-  courseSub: {
-    color: CORES.HOME_FAINT,
-    fontWeight: "700",
-    fontSize: 12.5,
-    marginVertical: 2,
-  },
-  progressRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 9,
-    marginTop: 6,
-  },
-  track: {
-    flex: 1,
-    height: 6,
-    borderRadius: 99,
-    backgroundColor: "#EAEFF6",
-    overflow: "hidden",
-  },
-  fill: { height: "100%", borderRadius: 99 },
-  meta: { color: CORES.HOME_MUTED, fontWeight: "800", fontSize: 11.5 },
-  tag: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 99 },
-  tagOn: { backgroundColor: "#E5F3EC" },
-  tagOff: { backgroundColor: CORES.HOME_BG },
-  tagTxt: { fontWeight: "800", fontSize: 10.5 },
+    course: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 13,
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 16,
+      padding: 13,
+      borderWidth: 1,
+      borderColor: CORES.HOME_BORDER,
+    },
+    courseIcon: {
+      width: 46,
+      height: 46,
+      borderRadius: 14,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    courseName: {
+      color: CORES.HOME_NAVY,
+      fontWeight: "900",
+      fontSize: 15.5,
+      marginRight: 7,
+      flexShrink: 1,
+    },
+    courseSub: {
+      color: CORES.HOME_FAINT,
+      fontWeight: "700",
+      fontSize: 12.5,
+      marginVertical: 2,
+    },
+    progressRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 9,
+      marginTop: 6,
+    },
+    track: {
+      flex: 1,
+      height: 6,
+      borderRadius: 99,
+      backgroundColor: CORES.HOME_TRACK,
+      overflow: "hidden",
+    },
+    fill: { height: "100%", borderRadius: 99 },
+    meta: { color: CORES.HOME_MUTED, fontWeight: "800", fontSize: 11.5 },
+    tag: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 99 },
+    tagOn: { backgroundColor: CORES.HOME_GREEN_BG },
+    tagOff: { backgroundColor: CORES.HOME_BG },
+    tagTxt: { fontWeight: "800", fontSize: 10.5 },
 
-  backRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 12,
-    gap: 2,
-  },
-  backRowTxt: { color: CORES.HOME_PRIMARY, fontWeight: "800", fontSize: 13.5 },
+    backRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 12,
+      gap: 2,
+    },
+    backRowTxt: { color: CORES.HOME_PRIMARY, fontWeight: "800", fontSize: 13.5 },
 
-  moduleButton: {
-    marginTop: 10,
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: CORES.HOME_BORDER,
-    backgroundColor: CORES.WHITE,
-    paddingHorizontal: 12,
-    paddingVertical: 11,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  lockedModule: {
-    backgroundColor: "#F6F8FA",
-    borderColor: "#EBEFF4",
-  },
-  moduleIconWrap: {
-    width: 31,
-    height: 31,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 10,
-  },
-  moduleTextArea: { flex: 1 },
-  moduleTitle: { color: CORES.HOME_NAVY, fontSize: 14, fontWeight: "800" },
-  moduleSubtitle: {
-    color: "#7D8CA1",
-    fontSize: 12,
-    marginTop: 2,
-    fontWeight: "600",
-  },
-  moduleRight: {
-    marginLeft: 8,
-    alignItems: "flex-end",
-    justifyContent: "center",
-  },
-  modulePercent: {
-    fontSize: 13,
-    fontWeight: "800",
-    color: CORES.HOME_PRIMARY,
-    marginBottom: 2,
-  },
-  lockedText: { color: "#B4BFCC" },
-  dropdown: {
-    marginTop: 8,
-    backgroundColor: CORES.WHITE,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#E8EDF4",
-    overflow: "hidden",
-  },
-  emptyLesson: {
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-  },
-  emptyCourses: {
-    marginTop: 10,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: CORES.HOME_BORDER,
-    backgroundColor: CORES.WHITE,
-    paddingHorizontal: 12,
-    paddingVertical: 14,
-  },
-  emptyLessonText: {
-    color: "#8C99AE",
-    fontSize: 12,
-    fontWeight: "600",
-  },
-  lessonButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 11,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEF2F6",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  lessonLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    flexShrink: 1,
-  },
-  lessonText: {
-    color: "#2E4769",
-    fontSize: 13,
-    fontWeight: "700",
-  },
-});
+    moduleButton: {
+      marginTop: 10,
+      borderRadius: 15,
+      borderWidth: 1,
+      borderColor: CORES.HOME_BORDER,
+      backgroundColor: CORES.SURFACE,
+      paddingHorizontal: 12,
+      paddingVertical: 11,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    lockedModule: {
+      backgroundColor: CORES.HOME_LOCKED_BG,
+      borderColor: CORES.HOME_BORDER,
+    },
+    moduleIconWrap: {
+      width: 31,
+      height: 31,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: 10,
+    },
+    moduleTextArea: { flex: 1 },
+    moduleTitle: { color: CORES.HOME_NAVY, fontSize: 14, fontWeight: "800" },
+    moduleSubtitle: {
+      color: CORES.HOME_MUTED,
+      fontSize: 12,
+      marginTop: 2,
+      fontWeight: "600",
+    },
+    moduleRight: {
+      marginLeft: 8,
+      alignItems: "flex-end",
+      justifyContent: "center",
+    },
+    modulePercent: {
+      fontSize: 13,
+      fontWeight: "800",
+      color: CORES.HOME_PRIMARY,
+      marginBottom: 2,
+    },
+    lockedText: { color: CORES.HOME_LOCKED },
+    dropdown: {
+      marginTop: 8,
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: CORES.HOME_BORDER,
+      overflow: "hidden",
+    },
+    emptyLesson: {
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+    },
+    emptyCourses: {
+      marginTop: 10,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: CORES.HOME_BORDER,
+      backgroundColor: CORES.SURFACE,
+      paddingHorizontal: 12,
+      paddingVertical: 14,
+    },
+    emptyLessonText: {
+      color: CORES.HOME_MUTED,
+      fontSize: 12,
+      fontWeight: "600",
+    },
+    lessonButton: {
+      paddingHorizontal: 12,
+      paddingVertical: 11,
+      borderBottomWidth: 1,
+      borderBottomColor: CORES.HOME_BORDER,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    lessonLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      flexShrink: 1,
+    },
+    lessonText: {
+      color: CORES.HOME_LESSON_TXT,
+      fontSize: 13,
+      fontWeight: "700",
+    },
+  });

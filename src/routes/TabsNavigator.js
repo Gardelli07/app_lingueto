@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import CORES from "../util/cores";
+import { useTheme, useThemedStyles } from "../theme";
 
 import Home from "../pages/Home";
 import Comunidade from "../pages/Comunidade";
@@ -20,6 +20,8 @@ const Tab = createBottomTabNavigator();
 export default function TabsNavigator() {
   const { user } = useAuth();
   const insets = useSafeAreaInsets();
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const bottomInset = Math.max(insets.bottom, 8);
   const isSantander = user?.empresa?.toLowerCase() === "santander";
 
@@ -28,7 +30,7 @@ export default function TabsNavigator() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#F5F5F5",
+          backgroundColor: CORES.SCREEN_BG,
           height: 52 + bottomInset,
           paddingTop: 2,
           paddingBottom: bottomInset,
@@ -54,8 +56,8 @@ export default function TabsNavigator() {
           paddingVertical: 0,
         },
 
-        tabBarActiveTintColor: "#f5f5f5e3",
-        tabBarInactiveTintColor: "#000000aa",
+        tabBarActiveTintColor: CORES.ON_ACCENT,
+        tabBarInactiveTintColor: CORES.mode === "dark" ? "rgba(245,246,252,0.55)" : "#000000aa",
         tabBarLabelStyle: {
           fontWeight: "bold",
           fontSize: 11,
@@ -107,28 +109,29 @@ export default function TabsNavigator() {
   );
 }
 
-const styles = StyleSheet.create({
-  tabBarBackground: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-  },
-  tabBarMainBackground: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    backgroundColor: CORES.PRIMARY,
-    borderTopWidth: 1.5,
-    borderTopColor: "#ffffff",
-  },
-  nativeButtonsBackground: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "#F5F5F5",
-  },
-});
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    tabBarBackground: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+    },
+    tabBarMainBackground: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      top: 0,
+      backgroundColor: CORES.PRIMARY,
+      borderTopWidth: 1.5,
+      borderTopColor: CORES.mode === "dark" ? CORES.BORDER : "#ffffff",
+    },
+    nativeButtonsBackground: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: CORES.SCREEN_BG,
+    },
+  });

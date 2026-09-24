@@ -9,7 +9,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise9({
   activity,
@@ -18,6 +18,7 @@ export function Exercise9({
   next,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -38,7 +39,7 @@ export function Exercise9({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -258,60 +259,61 @@ export function Exercise9({
   );
 }
 
-const ex9 = StyleSheet.create({
-  imageGridBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  imageGridQuestion: {
-    width: "88%",
-    textAlign: "center",
-    fontSize: 20,
-    color: "#7BA9D6",
-    marginBottom: 14,
-    fontWeight: "800",
-  },
-  imageGridList: {
-    width: "88%",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    rowGap: 12,
-  },
-  imageGridOptionWrap: {
-    width: "48%",
-  },
-  imageGridOption: {
-    width: "100%",
-    aspectRatio: 16 / 9,
-    borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: "#7BA9D6",
-    backgroundColor: CORES.WHITE,
-    overflow: "hidden",
-  },
-  imageGridOptionTouch: {
-    flex: 1,
-  },
-  imageGridOptionImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  imageGridOptionCorrect: {
-    borderColor: CORES.SUCCESS,
-    backgroundColor: CORES.SUCCESS_BG,
-  },
-  imageGridOptionWrong: {
-    borderColor: CORES.DANGER,
-  },
-  slide10SuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+const ex9 = (CORES) =>
+  StyleSheet.create({
+    imageGridBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    imageGridQuestion: {
+      width: "88%",
+      textAlign: "center",
+      fontSize: 20,
+      color: CORES.EX_BLUE,
+      marginBottom: 14,
+      fontWeight: "800",
+    },
+    imageGridList: {
+      width: "88%",
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+      rowGap: 12,
+    },
+    imageGridOptionWrap: {
+      width: "48%",
+    },
+    imageGridOption: {
+      width: "100%",
+      aspectRatio: 16 / 9,
+      borderRadius: 14,
+      borderWidth: 1.5,
+      borderColor: CORES.EX_BLUE,
+      backgroundColor: CORES.SURFACE,
+      overflow: "hidden",
+    },
+    imageGridOptionTouch: {
+      flex: 1,
+    },
+    imageGridOptionImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    imageGridOptionCorrect: {
+      borderColor: CORES.SUCCESS,
+      backgroundColor: CORES.SUCCESS_BG,
+    },
+    imageGridOptionWrong: {
+      borderColor: CORES.DANGER,
+    },
+    slide10SuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex9;
 

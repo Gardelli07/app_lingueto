@@ -10,7 +10,7 @@ import {
   Vibration,
   View,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -48,6 +48,7 @@ export function Exercise10({
   onSkipActivity,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -82,7 +83,7 @@ export function Exercise10({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -452,177 +453,178 @@ export function Exercise10({
   );
 }
 
-const ex10 = StyleSheet.create({
-  chatQuizBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  chatQuizCard: {
-    width: "88%",
-    borderRadius: 18,
-    borderWidth: 1.5,
-    borderColor: "#7BA9D6",
-    backgroundColor: CORES.WHITE,
-    paddingHorizontal: 14,
-    paddingVertical: 16,
-    minHeight: 360,
-  },
-  chatQuizTitle: {
-    color: "#7BA9D6",
-    fontSize: 16,
-    fontWeight: "700",
-    marginBottom: 14,
-    textAlign: "center",
-  },
-  chatQuizMessageRow: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 8,
-    marginBottom: 12,
-  },
-  chatQuizAnswerRow: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-    gap: 8,
-    marginBottom: 18,
-    minHeight: 48,
-  },
-  chatQuizAvatar: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    resizeMode: "contain",
-  },
-  chatQuizQuestionBubble: {
-    maxWidth: "78%",
-    backgroundColor: "#EAF4FF",
-    borderRadius: 16,
-    borderTopLeftRadius: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: "#C6E1FF",
-  },
-  chatQuizQuestionText: {
-    color: "#3172A5",
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  chatQuizAnswerBubble: {
-    maxWidth: "76%",
-    backgroundColor: "#DFF1FF",
-    borderRadius: 16,
-    borderTopRightRadius: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: "#8CC5F0",
-  },
-  chatQuizAnswerBubblePending: {
-    minWidth: 116,
-    minHeight: 38,
-    justifyContent: "center",
-    backgroundColor: CORES.WHITE,
-    borderColor: "#B9D9F2",
-  },
-  chatQuizAnswerBubbleCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  chatQuizAnswerBubbleWrong: {
-    borderColor: CORES.DANGER,
-  },
-  chatQuizAnswerText: {
-    color: "#2A7DBD",
-    fontSize: 14,
-    fontWeight: "700",
-  },
-  chatQuizAnswerTextCorrect: {
-    color: CORES.SUCCESS_TEXT,
-  },
-  chatQuizOptionsWrap: {
-    width: "100%",
-    gap: 10,
-  },
-  chatQuizOptionButton: {
-    width: "100%",
-    minHeight: 36,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: "#7BA9D6",
-    backgroundColor: "#F7FBFF",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 7,
-  },
-  chatQuizOptionButtonCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  chatQuizOptionButtonWrong: {
-    borderColor: CORES.DANGER,
-  },
-  chatQuizOptionText: {
-    color: "#3172A5",
-    fontSize: 13,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  chatQuizOptionTextCorrect: {
-    color: CORES.SUCCESS_TEXT,
-  },
-  chatQuizProgressText: {
-    marginTop: 14,
-    textAlign: "center",
-    color: "#7BA9D6",
-    fontSize: 13,
-    fontWeight: "700",
-  },
-  chatQuizLockBox: {
-    width: "88%",
-    marginTop: 16,
-    borderColor: CORES.DANGER,
-    backgroundColor: CORES.DANGER_LIGHT,
-  },
-  chatQuizLockTitle: {
-    color: CORES.DANGER,
-    fontSize: 16,
-    fontWeight: "800",
-    marginBottom: 4,
-  },
-  chatQuizSuccessAlertCard: {
-    paddingBottom: 18,
-  },
-  chatQuizResetButton: {
-    marginTop: 12,
-    alignSelf: "flex-start",
-    minHeight: 36,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: CORES.DANGER,
-    backgroundColor: CORES.WHITE,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  chatQuizResetButtonText: {
-    color: CORES.DANGER,
-    fontSize: 13,
-    fontWeight: "800",
-  },
-  chatQuizTestResetButton: {
-    marginTop: 8,
-    borderColor: "#94A3B8",
-  },
-  chatQuizTestResetButtonText: {
-    color: "#475569",
-  },
-});
+const ex10 = (CORES) =>
+  StyleSheet.create({
+    chatQuizBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    chatQuizCard: {
+      width: "88%",
+      borderRadius: 18,
+      borderWidth: 1.5,
+      borderColor: CORES.EX_BLUE,
+      backgroundColor: CORES.SURFACE,
+      paddingHorizontal: 14,
+      paddingVertical: 16,
+      minHeight: 360,
+    },
+    chatQuizTitle: {
+      color: CORES.EX_BLUE,
+      fontSize: 16,
+      fontWeight: "700",
+      marginBottom: 14,
+      textAlign: "center",
+    },
+    chatQuizMessageRow: {
+      width: "100%",
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 8,
+      marginBottom: 12,
+    },
+    chatQuizAnswerRow: {
+      width: "100%",
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      alignItems: "flex-end",
+      gap: 8,
+      marginBottom: 18,
+      minHeight: 48,
+    },
+    chatQuizAvatar: {
+      width: 38,
+      height: 38,
+      borderRadius: 19,
+      resizeMode: "contain",
+    },
+    chatQuizQuestionBubble: {
+      maxWidth: "78%",
+      backgroundColor: CORES.EX_BLUE_BG,
+      borderRadius: 16,
+      borderTopLeftRadius: 6,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+    },
+    chatQuizQuestionText: {
+      color: CORES.EX_BLUE_TEXT,
+      fontSize: 14,
+      fontWeight: "600",
+    },
+    chatQuizAnswerBubble: {
+      maxWidth: "76%",
+      backgroundColor: CORES.EX_BLUE_BG,
+      borderRadius: 16,
+      borderTopRightRadius: 6,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+    },
+    chatQuizAnswerBubblePending: {
+      minWidth: 116,
+      minHeight: 38,
+      justifyContent: "center",
+      backgroundColor: CORES.SURFACE,
+      borderColor: CORES.EX_BORDER,
+    },
+    chatQuizAnswerBubbleCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    chatQuizAnswerBubbleWrong: {
+      borderColor: CORES.DANGER,
+    },
+    chatQuizAnswerText: {
+      color: CORES.EX_BLUE_TEXT,
+      fontSize: 14,
+      fontWeight: "700",
+    },
+    chatQuizAnswerTextCorrect: {
+      color: CORES.SUCCESS_TEXT,
+    },
+    chatQuizOptionsWrap: {
+      width: "100%",
+      gap: 10,
+    },
+    chatQuizOptionButton: {
+      width: "100%",
+      minHeight: 36,
+      borderRadius: 16,
+      borderWidth: 1.5,
+      borderColor: CORES.EX_BLUE,
+      backgroundColor: CORES.EX_BLUE_BG_SOFT,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 16,
+      paddingVertical: 7,
+    },
+    chatQuizOptionButtonCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    chatQuizOptionButtonWrong: {
+      borderColor: CORES.DANGER,
+    },
+    chatQuizOptionText: {
+      color: CORES.EX_BLUE_TEXT,
+      fontSize: 13,
+      fontWeight: "700",
+      textAlign: "center",
+    },
+    chatQuizOptionTextCorrect: {
+      color: CORES.SUCCESS_TEXT,
+    },
+    chatQuizProgressText: {
+      marginTop: 14,
+      textAlign: "center",
+      color: CORES.EX_BLUE,
+      fontSize: 13,
+      fontWeight: "700",
+    },
+    chatQuizLockBox: {
+      width: "88%",
+      marginTop: 16,
+      borderColor: CORES.DANGER,
+      backgroundColor: CORES.DANGER_LIGHT,
+    },
+    chatQuizLockTitle: {
+      color: CORES.DANGER,
+      fontSize: 16,
+      fontWeight: "800",
+      marginBottom: 4,
+    },
+    chatQuizSuccessAlertCard: {
+      paddingBottom: 18,
+    },
+    chatQuizResetButton: {
+      marginTop: 12,
+      alignSelf: "flex-start",
+      minHeight: 36,
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: CORES.DANGER,
+      backgroundColor: CORES.SURFACE,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    chatQuizResetButtonText: {
+      color: CORES.DANGER,
+      fontSize: 13,
+      fontWeight: "800",
+    },
+    chatQuizTestResetButton: {
+      marginTop: 8,
+      borderColor: CORES.TEXT_FAINT,
+    },
+    chatQuizTestResetButtonText: {
+      color: CORES.TEXT_MUTED,
+    },
+  });
 
 export default ex10;
 

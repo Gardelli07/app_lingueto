@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import CORES from "../util/cores";
 
 function getImageSource(item) {
   if (typeof item === "number") {
@@ -172,64 +171,65 @@ export function Exercise17({
   );
 }
 
-const ex17 = StyleSheet.create({
-  tipVisualBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  tipVisualLabel: {
-    width: "88%",
-    color: "#78A2CC",
-    fontSize: 20,
-    fontWeight: "700",
-    marginBottom: 18,
-    textTransform: "uppercase",
-  },
-  tipVisualCard: {
-    width: "88%",
-    borderWidth: 1,
-    borderColor: "#8DBCE8",
-    backgroundColor: CORES.WHITE,
-    borderRadius: 2,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  tipVisualContentLine: {
-    color: "#333333",
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  tipVisualBlueText: {
-    color: "#78A2CC",
-    fontWeight: "800",
-  },
-  tipVisualImageLine: {
-    width: "100%",
-    alignItems: "center",
-    marginVertical: 8,
-  },
-  tipVisualImage: {
-    width: "100%",
-    height: 180,
-  },
-  tipVisualBlankLine: {
-    lineHeight: 14,
-  },
-  tipVisualContinueButton: {
-    width: 180,
-    height: 46,
-    borderRadius: 8,
-    backgroundColor: CORES.SECONDARY,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 18,
-  },
-  tipVisualContinueButtonText: {
-    color: CORES.WHITE_SHORT,
-    fontSize: 15,
-    fontWeight: "700",
-  },
-});
+const ex17 = (CORES) =>
+  StyleSheet.create({
+    tipVisualBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    tipVisualLabel: {
+      width: "88%",
+      color: CORES.PRIMARY,
+      fontSize: 20,
+      fontWeight: "700",
+      marginBottom: 18,
+      textTransform: "uppercase",
+    },
+    tipVisualCard: {
+      width: "88%",
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 2,
+      paddingHorizontal: 10,
+      paddingVertical: 10,
+    },
+    tipVisualContentLine: {
+      color: CORES.TEXT,
+      fontSize: 16,
+      lineHeight: 24,
+    },
+    tipVisualBlueText: {
+      color: CORES.PRIMARY,
+      fontWeight: "800",
+    },
+    tipVisualImageLine: {
+      width: "100%",
+      alignItems: "center",
+      marginVertical: 8,
+    },
+    tipVisualImage: {
+      width: "100%",
+      height: 180,
+    },
+    tipVisualBlankLine: {
+      lineHeight: 14,
+    },
+    tipVisualContinueButton: {
+      width: 180,
+      height: 46,
+      borderRadius: 8,
+      backgroundColor: CORES.SECONDARY,
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 18,
+    },
+    tipVisualContinueButtonText: {
+      color: CORES.WHITE_SHORT,
+      fontSize: 15,
+      fontWeight: "700",
+    },
+  });
 
 export default ex17;
 

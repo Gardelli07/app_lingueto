@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
-import CORES from "../util/cores";
+import { useTheme, useThemedStyles } from "../theme";
 
 const COURSES = [
   {
@@ -528,6 +528,8 @@ function getPreviousAvailableLevel(courseId, levelId) {
 }
 
 export default function PlacementFlow({ navigation }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { updateUser } = useAuth();
   const [step, setStep] = useState("intro");
   const [course, setCourse] = useState(null);
@@ -690,7 +692,7 @@ export default function PlacementFlow({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar barStyle="dark-content" backgroundColor={CORES.BACKGROUND} />
+      <StatusBar barStyle={CORES.statusBarStyle} backgroundColor={CORES.BACKGROUND} />
       {step === "intro" && (
         <View style={styles.centerScreen}>
           <Text style={styles.heroTitle}>
@@ -739,7 +741,7 @@ export default function PlacementFlow({ navigation }) {
                 <MaterialCommunityIcons
                   name="chevron-right"
                   size={20}
-                  color="#C6D0DD"
+                  color={CORES.PLACEMENT_TRACK}
                 />
               </TouchableOpacity>
             ))}
@@ -790,7 +792,7 @@ export default function PlacementFlow({ navigation }) {
                 <MaterialCommunityIcons
                   name={item.icon}
                   size={30}
-                  color={item.id === "advanced" ? "#8C97A7" : CORES.PRIMARY}
+                  color={item.id === "advanced" ? CORES.PLACEMENT_MUTED : CORES.PRIMARY}
                 />
                 <View style={styles.optionTextWrap}>
                   <Text style={styles.optionTitle}>{item.title}</Text>
@@ -799,7 +801,7 @@ export default function PlacementFlow({ navigation }) {
                 <MaterialCommunityIcons
                   name="chevron-right"
                   size={20}
-                  color="#C6D0DD"
+                  color={CORES.PLACEMENT_TRACK}
                 />
               </TouchableOpacity>
             ))}
@@ -867,7 +869,7 @@ export default function PlacementFlow({ navigation }) {
                       <MaterialCommunityIcons
                         name={showCorrect ? "check-circle" : "close-circle"}
                         size={22}
-                        color="#FFFFFF"
+                        color={CORES.ON_ACCENT}
                       />
                     )}
                   </TouchableOpacity>
@@ -887,7 +889,7 @@ export default function PlacementFlow({ navigation }) {
                   <MaterialCommunityIcons
                     name={selectedIsCorrect ? "check" : "lightbulb-on-outline"}
                     size={16}
-                    color={selectedIsCorrect ? "#168653" : "#B6423B"}
+                    color={selectedIsCorrect ? CORES.SUCCESS_TEXT : CORES.DANGER_TEXT}
                   />
                   <Text
                     style={[
@@ -916,7 +918,7 @@ export default function PlacementFlow({ navigation }) {
                   <MaterialCommunityIcons
                     name="arrow-right"
                     size={18}
-                    color="#FFFFFF"
+                    color={CORES.ON_ACCENT}
                   />
                 </TouchableOpacity>
               </View>
@@ -942,7 +944,7 @@ export default function PlacementFlow({ navigation }) {
                     : "shield-check"
               }
               size={42}
-              color="#FFFFFF"
+              color={CORES.ON_ACCENT}
             />
           </View>
           <Text style={styles.heroTitle}>{result.title}</Text>
@@ -973,358 +975,359 @@ export default function PlacementFlow({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: CORES.BACKGROUND,
-  },
-  centerScreen: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 34,
-    paddingBottom: 44,
-  },
-  avatarStack: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  avatarCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 2,
-    borderColor: "#FFFFFF",
-    backgroundColor: "#FFFFFF",
-    overflow: "hidden",
-    shadowColor: "#173B6E",
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
-  },
-  avatarImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  heroTitle: {
-    color: CORES.PLACEMENT_BLUE,
-    fontSize: 28,
-    lineHeight: 34,
-    fontWeight: "900",
-    textAlign: "center",
-  },
-  heroSubtitle: {
-    marginTop: 18,
-    color: "#6F7E91",
-    fontSize: 14,
-    fontWeight: "600",
-    textAlign: "center",
-  },
-  primaryButton: {
-    marginTop: 30,
-    minWidth: 150,
-    minHeight: 50,
-    borderRadius: 13,
-    paddingHorizontal: 24,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: CORES.PRIMARY,
-    shadowColor: CORES.PRIMARY,
-    shadowOpacity: 0.22,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
-  primaryButtonText: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: "900",
-  },
-  secondaryButton: {
-    marginTop: 14,
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-  },
-  secondaryButtonText: {
-    color: "#8190A4",
-    fontSize: 13,
-    fontWeight: "800",
-  },
-  footerHint: {
-    marginTop: 24,
-    color: "#C7D1DE",
-    fontSize: 13,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  choiceContent: {
-    paddingHorizontal: 28,
-    paddingTop: 48,
-    paddingBottom: 34,
-  },
-  levelHeader: {
-    minHeight: 42,
-    marginBottom: 18,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
-  },
-  backButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 13,
-    backgroundColor: CORES.WHITE,
-    borderWidth: 1,
-    borderColor: CORES.PLACEMENT_BORDER,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  selectedCourseChip: {
-    minHeight: 42,
-    maxWidth: "78%",
-    borderRadius: 13,
-    backgroundColor: "#EEF4FF",
-    borderWidth: 1,
-    borderColor: "#D8E6F5",
-    paddingHorizontal: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 1,
-  },
-  selectedCourseEmoji: {
-    fontSize: 18,
-    marginRight: 7,
-  },
-  selectedCourseText: {
-    color: CORES.PLACEMENT_BLUE,
-    fontSize: 13,
-    fontWeight: "900",
-    flexShrink: 1,
-  },
-  screenTitle: {
-    color: CORES.PLACEMENT_BLUE,
-    fontSize: 23,
-    lineHeight: 29,
-    fontWeight: "900",
-    textAlign: "center",
-  },
-  screenSubtitle: {
-    marginTop: 8,
-    color: CORES.PLACEMENT_MUTED,
-    fontSize: 13,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  optionList: {
-    marginTop: 26,
-    gap: 13,
-  },
-  optionCard: {
-    minHeight: 68,
-    borderRadius: 15,
-    backgroundColor: CORES.WHITE,
-    borderWidth: 1,
-    borderColor: CORES.PLACEMENT_BORDER,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  optionEmoji: {
-    width: 34,
-    fontSize: 26,
-    textAlign: "center",
-  },
-  optionTextWrap: {
-    flex: 1,
-    marginLeft: 14,
-  },
-  optionTitle: {
-    color: CORES.PLACEMENT_BLUE,
-    fontSize: 15,
-    fontWeight: "900",
-  },
-  optionSubtitle: {
-    marginTop: 3,
-    color: "#A4AFBF",
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: "700",
-  },
-  quizScreen: {
-    flex: 1,
-    paddingHorizontal: 26,
-    paddingTop: 34,
-  },
-  quizTop: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
-  },
-  progressTrack: {
-    flex: 1,
-    height: 9,
-    borderRadius: 999,
-    backgroundColor: CORES.PLACEMENT_TRACK,
-    overflow: "hidden",
-  },
-  progressFill: {
-    height: "100%",
-    borderRadius: 999,
-    backgroundColor: CORES.PRIMARY,
-  },
-  xpText: {
-    color: CORES.PRIMARY,
-    fontSize: 13,
-    fontWeight: "900",
-  },
-  questionCounter: {
-    minWidth: 34,
-    color: CORES.PRIMARY,
-    fontSize: 13,
-    fontWeight: "900",
-    textAlign: "right",
-  },
-  questionCard: {
-    marginTop: 18,
-    borderRadius: 16,
-    backgroundColor: CORES.WHITE,
-    borderWidth: 1,
-    borderColor: CORES.PLACEMENT_BORDER,
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: 20,
-  },
-  questionTitle: {
-    color: CORES.PLACEMENT_BLUE,
-    fontSize: 21,
-    lineHeight: 27,
-    fontWeight: "900",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  answerButton: {
-    minHeight: 55,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderRadius: 12,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#EEF2F6",
-    paddingHorizontal: 14,
-    marginTop: 8,
-  },
-  answerButtonCorrect: {
-    backgroundColor: "#27B979",
-    borderColor: "#27B979",
-    shadowColor: "#27B979",
-    shadowOpacity: 0.22,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
-  answerButtonWrong: {
-    backgroundColor: "#F35F55",
-    borderColor: "#F35F55",
-    shadowColor: "#F35F55",
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
-  answerButtonMuted: {
-    opacity: 0.52,
-  },
-  answerText: {
-    color: "#3E4654",
-    fontSize: 15,
-    fontWeight: "800",
-    flex: 1,
-    paddingRight: 10,
-  },
-  answerTextFeedback: {
-    color: "#FFFFFF",
-  },
-  feedbackWrap: {
-    marginTop: 16,
-  },
-  feedbackPill: {
-    borderRadius: 13,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  feedbackPillCorrect: {
-    backgroundColor: "#E8F8F0",
-  },
-  feedbackPillWrong: {
-    backgroundColor: "#FFF0EF",
-  },
-  feedbackText: {
-    flex: 1,
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: "800",
-  },
-  feedbackTextCorrect: {
-    color: "#168653",
-  },
-  feedbackTextWrong: {
-    color: "#B6423B",
-  },
-  nextQuestionButton: {
-    marginTop: 14,
-    minHeight: 48,
-    borderRadius: 13,
-    backgroundColor: CORES.PRIMARY,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    shadowColor: CORES.PRIMARY,
-    shadowOpacity: 0.22,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
-  nextQuestionButtonText: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: "900",
-  },
-  resultIcon: {
-    width: 84,
-    height: 84,
-    borderRadius: 24,
-    backgroundColor: CORES.PLACEMENT_ACCENT,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 24,
-  },
-  resultIconHonest: {
-    backgroundColor: CORES.PLACEMENT_DANGER,
-  },
-  resultMessage: {
-    marginTop: 16,
-    color: "#6E7B8F",
-    fontSize: 15,
-    lineHeight: 22,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  resultMeta: {
-    marginTop: 18,
-    color: CORES.PLACEMENT_BLUE,
-    fontSize: 13,
-    fontWeight: "900",
-    textAlign: "center",
-  },
-});
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    safe: {
+      flex: 1,
+      backgroundColor: CORES.BACKGROUND,
+    },
+    centerScreen: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 34,
+      paddingBottom: 44,
+    },
+    avatarStack: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 30,
+    },
+    avatarCircle: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      borderWidth: 2,
+      borderColor: CORES.SURFACE,
+      backgroundColor: CORES.SURFACE,
+      overflow: "hidden",
+      shadowColor: CORES.SHADOW,
+      shadowOpacity: CORES.mode === "dark" ? 0.4 : 0.12,
+      shadowRadius: 10,
+      shadowOffset: { width: 0, height: 4 },
+      elevation: 4,
+    },
+    avatarImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    heroTitle: {
+      color: CORES.PLACEMENT_BLUE,
+      fontSize: 28,
+      lineHeight: 34,
+      fontWeight: "900",
+      textAlign: "center",
+    },
+    heroSubtitle: {
+      marginTop: 18,
+      color: CORES.PLACEMENT_TEXT,
+      fontSize: 14,
+      fontWeight: "600",
+      textAlign: "center",
+    },
+    primaryButton: {
+      marginTop: 30,
+      minWidth: 150,
+      minHeight: 50,
+      borderRadius: 13,
+      paddingHorizontal: 24,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: CORES.PRIMARY,
+      shadowColor: CORES.PRIMARY,
+      shadowOpacity: 0.22,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 4,
+    },
+    primaryButtonText: {
+      color: CORES.ON_ACCENT,
+      fontSize: 14,
+      fontWeight: "900",
+    },
+    secondaryButton: {
+      marginTop: 14,
+      paddingHorizontal: 18,
+      paddingVertical: 10,
+    },
+    secondaryButtonText: {
+      color: CORES.PLACEMENT_TEXT,
+      fontSize: 13,
+      fontWeight: "800",
+    },
+    footerHint: {
+      marginTop: 24,
+      color: CORES.PLACEMENT_HINT,
+      fontSize: 13,
+      fontWeight: "700",
+      textAlign: "center",
+    },
+    choiceContent: {
+      paddingHorizontal: 28,
+      paddingTop: 48,
+      paddingBottom: 34,
+    },
+    levelHeader: {
+      minHeight: 42,
+      marginBottom: 18,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: 12,
+    },
+    backButton: {
+      width: 42,
+      height: 42,
+      borderRadius: 13,
+      backgroundColor: CORES.SURFACE,
+      borderWidth: 1,
+      borderColor: CORES.PLACEMENT_BORDER,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    selectedCourseChip: {
+      minHeight: 42,
+      maxWidth: "78%",
+      borderRadius: 13,
+      backgroundColor: CORES.EX_BLUE_BG,
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+      paddingHorizontal: 12,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      flexShrink: 1,
+    },
+    selectedCourseEmoji: {
+      fontSize: 18,
+      marginRight: 7,
+    },
+    selectedCourseText: {
+      color: CORES.PLACEMENT_BLUE,
+      fontSize: 13,
+      fontWeight: "900",
+      flexShrink: 1,
+    },
+    screenTitle: {
+      color: CORES.PLACEMENT_BLUE,
+      fontSize: 23,
+      lineHeight: 29,
+      fontWeight: "900",
+      textAlign: "center",
+    },
+    screenSubtitle: {
+      marginTop: 8,
+      color: CORES.PLACEMENT_MUTED,
+      fontSize: 13,
+      fontWeight: "700",
+      textAlign: "center",
+    },
+    optionList: {
+      marginTop: 26,
+      gap: 13,
+    },
+    optionCard: {
+      minHeight: 68,
+      borderRadius: 15,
+      backgroundColor: CORES.SURFACE,
+      borderWidth: 1,
+      borderColor: CORES.PLACEMENT_BORDER,
+      paddingHorizontal: 18,
+      paddingVertical: 14,
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    optionEmoji: {
+      width: 34,
+      fontSize: 26,
+      textAlign: "center",
+    },
+    optionTextWrap: {
+      flex: 1,
+      marginLeft: 14,
+    },
+    optionTitle: {
+      color: CORES.PLACEMENT_BLUE,
+      fontSize: 15,
+      fontWeight: "900",
+    },
+    optionSubtitle: {
+      marginTop: 3,
+      color: CORES.TEXT_FAINT,
+      fontSize: 12,
+      lineHeight: 16,
+      fontWeight: "700",
+    },
+    quizScreen: {
+      flex: 1,
+      paddingHorizontal: 26,
+      paddingTop: 34,
+    },
+    quizTop: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 14,
+    },
+    progressTrack: {
+      flex: 1,
+      height: 9,
+      borderRadius: 999,
+      backgroundColor: CORES.PLACEMENT_TRACK,
+      overflow: "hidden",
+    },
+    progressFill: {
+      height: "100%",
+      borderRadius: 999,
+      backgroundColor: CORES.PRIMARY,
+    },
+    xpText: {
+      color: CORES.PRIMARY,
+      fontSize: 13,
+      fontWeight: "900",
+    },
+    questionCounter: {
+      minWidth: 34,
+      color: CORES.PRIMARY,
+      fontSize: 13,
+      fontWeight: "900",
+      textAlign: "right",
+    },
+    questionCard: {
+      marginTop: 18,
+      borderRadius: 16,
+      backgroundColor: CORES.SURFACE,
+      borderWidth: 1,
+      borderColor: CORES.PLACEMENT_BORDER,
+      paddingHorizontal: 20,
+      paddingTop: 24,
+      paddingBottom: 20,
+    },
+    questionTitle: {
+      color: CORES.PLACEMENT_BLUE,
+      fontSize: 21,
+      lineHeight: 27,
+      fontWeight: "900",
+      textAlign: "center",
+      marginBottom: 20,
+    },
+    answerButton: {
+      minHeight: 55,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      borderRadius: 12,
+      backgroundColor: CORES.SURFACE,
+      borderWidth: 1,
+      borderColor: CORES.PLACEMENT_BORDER,
+      paddingHorizontal: 14,
+      marginTop: 8,
+    },
+    answerButtonCorrect: {
+      backgroundColor: CORES.PLACEMENT_ACCENT,
+      borderColor: CORES.PLACEMENT_ACCENT,
+      shadowColor: CORES.PLACEMENT_ACCENT,
+      shadowOpacity: 0.22,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 4,
+    },
+    answerButtonWrong: {
+      backgroundColor: CORES.PLACEMENT_DANGER,
+      borderColor: CORES.PLACEMENT_DANGER,
+      shadowColor: CORES.PLACEMENT_DANGER,
+      shadowOpacity: 0.2,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 4,
+    },
+    answerButtonMuted: {
+      opacity: 0.52,
+    },
+    answerText: {
+      color: CORES.TEXT,
+      fontSize: 15,
+      fontWeight: "800",
+      flex: 1,
+      paddingRight: 10,
+    },
+    answerTextFeedback: {
+      color: CORES.ON_ACCENT,
+    },
+    feedbackWrap: {
+      marginTop: 16,
+    },
+    feedbackPill: {
+      borderRadius: 13,
+      paddingHorizontal: 12,
+      paddingVertical: 10,
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    },
+    feedbackPillCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+    },
+    feedbackPillWrong: {
+      backgroundColor: CORES.DANGER_BG,
+    },
+    feedbackText: {
+      flex: 1,
+      fontSize: 13,
+      lineHeight: 18,
+      fontWeight: "800",
+    },
+    feedbackTextCorrect: {
+      color: CORES.SUCCESS_TEXT,
+    },
+    feedbackTextWrong: {
+      color: CORES.DANGER_TEXT,
+    },
+    nextQuestionButton: {
+      marginTop: 14,
+      minHeight: 48,
+      borderRadius: 13,
+      backgroundColor: CORES.PRIMARY,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      shadowColor: CORES.PRIMARY,
+      shadowOpacity: 0.22,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 4,
+    },
+    nextQuestionButtonText: {
+      color: CORES.ON_ACCENT,
+      fontSize: 14,
+      fontWeight: "900",
+    },
+    resultIcon: {
+      width: 84,
+      height: 84,
+      borderRadius: 24,
+      backgroundColor: CORES.PLACEMENT_ACCENT,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 24,
+    },
+    resultIconHonest: {
+      backgroundColor: CORES.PLACEMENT_DANGER,
+    },
+    resultMessage: {
+      marginTop: 16,
+      color: CORES.PLACEMENT_TEXT,
+      fontSize: 15,
+      lineHeight: 22,
+      fontWeight: "700",
+      textAlign: "center",
+    },
+    resultMeta: {
+      marginTop: 18,
+      color: CORES.PLACEMENT_BLUE,
+      fontSize: 13,
+      fontWeight: "900",
+      textAlign: "center",
+    },
+  });

@@ -9,7 +9,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 import { Images } from "../util/images";
 import { criarPost } from "../services/comunidade";
 import { getSlidePostId, markSlidePosted } from "../util/exercisePosts";
@@ -23,6 +23,7 @@ export function Exercise12({
   onAttempt,
   slideKey,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -123,7 +124,7 @@ export function Exercise12({
             multiline
             textAlignVertical="top"
             placeholder={activity.placeholder}
-            placeholderTextColor="#C4C4C4"
+            placeholderTextColor={CORES.TEXT_FAINT}
           />
 
           <TouchableOpacity
@@ -209,119 +210,120 @@ export function Exercise12({
   );
 }
 
-const ex12 = StyleSheet.create({
-  writeIntroBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  writeIntroPrompt: {
-    width: "88%",
-    textAlign: "left",
-    fontSize: 24,
-    color: "#7BA9D6",
-    fontWeight: "700",
-    marginBottom: 8,
-  },
-  writeIntroInstruction: {
-    width: "88%",
-    textAlign: "left",
-    fontSize: 15,
-    color: "#4F8A66",
-    fontWeight: "700",
-  },
-  writeIntroHelperText: {
-    width: "88%",
-    textAlign: "left",
-    fontSize: 14,
-    color: "#4F8A66",
-    marginBottom: 18,
-  },
-  writeIntroHelperTextWithImage: {
-    marginBottom: 8,
-  },
-  writeIntroImageFrame: {
-    width: "88%",
-    maxWidth: 520,
-    aspectRatio: 16 / 9,
-    borderRadius: 8,
-    overflow: "hidden",
-    marginBottom: 10,
-    backgroundColor: CORES.SURFACE_MUTED,
-  },
-  writeIntroImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  writeIntroBox: {
-    width: "88%",
-    minHeight: 176,
-    borderRadius: 8,
-    borderWidth: 1.5,
-    borderColor: "#7BA9D6",
-    backgroundColor: CORES.WHITE,
-    padding: 12,
-    marginBottom: 16,
-  },
-  writeIntroInput: {
-    flex: 1,
-    minHeight: 136,
-    color: CORES.TEXT_DARK,
-    fontSize: 16,
-  },
-  writeIntroSendButton: {
-    position: "absolute",
-    right: 8,
-    bottom: 8,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: "#7BA9D6",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  writeIntroSendButtonDisabled: {
-    backgroundColor: "#B6C8DB",
-  },
-  writeIntroSendButtonImage: {
-    width: 25,
-    height: 25,
-    resizeMode: "contain",
-  },
-  writeIntroTipButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "flex-end",
-    marginRight: "6%",
-    marginBottom: 12,
-  },
-  writeIntroTipButtonImage: {
-    width: 54,
-    height: 54,
-    resizeMode: "contain",
-  },
-  writeIntroTipCard: {
-    width: "88%",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#D6E6F7",
-    backgroundColor: CORES.WHITE,
-    padding: 12,
-  },
-  writeIntroTipText: {
-    color: CORES.TEXT_DARK,
-    fontSize: 14,
-  },
-  slide12SuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+const ex12 = (CORES) =>
+  StyleSheet.create({
+    writeIntroBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    writeIntroPrompt: {
+      width: "88%",
+      textAlign: "left",
+      fontSize: 24,
+      color: CORES.EX_BLUE,
+      fontWeight: "700",
+      marginBottom: 8,
+    },
+    writeIntroInstruction: {
+      width: "88%",
+      textAlign: "left",
+      fontSize: 15,
+      color: CORES.SUCCESS_TEXT,
+      fontWeight: "700",
+    },
+    writeIntroHelperText: {
+      width: "88%",
+      textAlign: "left",
+      fontSize: 14,
+      color: CORES.SUCCESS_TEXT,
+      marginBottom: 18,
+    },
+    writeIntroHelperTextWithImage: {
+      marginBottom: 8,
+    },
+    writeIntroImageFrame: {
+      width: "88%",
+      maxWidth: 520,
+      aspectRatio: 16 / 9,
+      borderRadius: 8,
+      overflow: "hidden",
+      marginBottom: 10,
+      backgroundColor: CORES.SURFACE_MUTED,
+    },
+    writeIntroImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    writeIntroBox: {
+      width: "88%",
+      minHeight: 176,
+      borderRadius: 8,
+      borderWidth: 1.5,
+      borderColor: CORES.EX_BLUE,
+      backgroundColor: CORES.SURFACE,
+      padding: 12,
+      marginBottom: 16,
+    },
+    writeIntroInput: {
+      flex: 1,
+      minHeight: 136,
+      color: CORES.TEXT_DARK,
+      fontSize: 16,
+    },
+    writeIntroSendButton: {
+      position: "absolute",
+      right: 8,
+      bottom: 8,
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: CORES.EX_BLUE,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    writeIntroSendButtonDisabled: {
+      backgroundColor: CORES.EX_DISABLED,
+    },
+    writeIntroSendButtonImage: {
+      width: 25,
+      height: 25,
+      resizeMode: "contain",
+    },
+    writeIntroTipButton: {
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      alignItems: "center",
+      justifyContent: "center",
+      alignSelf: "flex-end",
+      marginRight: "6%",
+      marginBottom: 12,
+    },
+    writeIntroTipButtonImage: {
+      width: 54,
+      height: 54,
+      resizeMode: "contain",
+    },
+    writeIntroTipCard: {
+      width: "88%",
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: CORES.EX_BORDER,
+      backgroundColor: CORES.SURFACE,
+      padding: 12,
+    },
+    writeIntroTipText: {
+      color: CORES.TEXT_DARK,
+      fontSize: 14,
+    },
+    slide12SuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex12;
 

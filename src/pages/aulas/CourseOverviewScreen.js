@@ -10,7 +10,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import CORES from "../../util/cores";
+import { useTheme, useThemedStyles } from "../../theme";
 import { fetchAulaAccessMap } from "../../services/conteudos";
 import { scopedKey } from "../../util/userScope";
 import { useAuth } from "../../context/AuthContext";
@@ -33,6 +33,8 @@ export default function CourseOverviewScreen({
   moduleDefs,
   lessons,
 }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { user } = useAuth();
   const fullAccess = hasFullAccess(user);
 
@@ -125,7 +127,7 @@ export default function CourseOverviewScreen({
       style={styles.safe}
       edges={["top", "left", "right", "bottom"]}
     >
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={CORES.statusBarStyle} />
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -157,8 +159,8 @@ export default function CourseOverviewScreen({
                     styles.moduleIndex,
                     {
                       backgroundColor: moduleItem.locked
-                        ? "#D9DEE7"
-                        : moduleItem.accent || "#6C63FF",
+                        ? CORES.HOME_LOCKED_ICON
+                        : moduleItem.accent || CORES.PRIMARY,
                     },
                   ]}
                 >
@@ -186,7 +188,7 @@ export default function CourseOverviewScreen({
                 <MaterialCommunityIcons
                   name={isOpen ? "chevron-up" : "chevron-down"}
                   size={20}
-                  color={moduleItem.locked ? "#B8C2CF" : "#7D8698"}
+                  color={moduleItem.locked ? CORES.HOME_LOCKED : CORES.COURSE_TEXT_SOFT}
                 />
               </TouchableOpacity>
 
@@ -251,10 +253,10 @@ export default function CourseOverviewScreen({
                           size={18}
                           color={
                             done
-                              ? "#26BA86"
+                              ? CORES.PLACEMENT_ACCENT
                               : isPlayable
-                                ? "#9AA5B6"
-                                : "#CDD3DC"
+                                ? CORES.COURSE_TEXT_SOFT
+                                : CORES.TEXT_FAINT
                           }
                         />
                       </TouchableOpacity>
@@ -270,143 +272,144 @@ export default function CourseOverviewScreen({
   );
 }
 
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: CORES.BACKGROUND,
-  },
-  scroll: {
-    flex: 1,
-    backgroundColor: CORES.BACKGROUND,
-  },
-  content: {
-    flexGrow: 1,
-    paddingHorizontal: 18,
-    paddingTop: 10,
-    paddingBottom: 40,
-  },
-  headerBlock: {
-    marginBottom: 12,
-  },
-  courseName: {
-    color: CORES.COURSE_TEXT_STRONG,
-    fontSize: 31,
-    fontWeight: "800",
-  },
-  moduleWrap: {
-    marginTop: 12,
-  },
-  moduleCard: {
-    backgroundColor: CORES.WHITE,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: CORES.COURSE_BORDER,
-    paddingHorizontal: 14,
-    paddingVertical: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: CORES.BLACK,
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 2,
-  },
-  moduleCardLocked: {
-    backgroundColor: "#F8F9FB",
-  },
-  moduleIndex: {
-    width: 34,
-    height: 34,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
-  moduleIndexText: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: "800",
-  },
-  moduleTextArea: {
-    flex: 1,
-  },
-  moduleTitle: {
-    color: CORES.COURSE_TEXT_STRONG,
-    fontSize: 18,
-    fontWeight: "800",
-  },
-  moduleSubtitle: {
-    color: "#51596B",
-    fontSize: 13,
-    marginTop: 3,
-    fontWeight: "600",
-  },
-  moduleMeta: {
-    color: CORES.PRIMARY,
-    fontSize: 12,
-    marginTop: 6,
-    fontWeight: "700",
-  },
-  lockedText: {
-    color: "#B2BCC8",
-  },
-  lessonContainer: {
-    marginTop: 8,
-    backgroundColor: CORES.WHITE,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: CORES.COURSE_BORDER,
-    overflow: "hidden",
-  },
-  lessonButton: {
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  lessonDivider: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#EEF1F5",
-  },
-  lessonLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
-  lessonIndex: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: "#E9EDF2",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
-  lessonIndexDone: {
-    backgroundColor: "#DCF4EA",
-  },
-  lessonIndexText: {
-    color: "#59667B",
-    fontSize: 12,
-    fontWeight: "800",
-  },
-  lessonIndexTextDone: {
-    color: "#1D9A6D",
-  },
-  lessonTextArea: {
-    flex: 1,
-    paddingRight: 12,
-  },
-  lessonTitle: {
-    color: CORES.COURSE_TEXT_STRONG,
-    fontSize: 15,
-    fontWeight: "400",
-  },
-  lessonType: {
-    color: "#7B8698",
-    fontSize: 12,
-    marginTop: 2,
-    fontWeight: "600",
-  },
-});
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    safe: {
+      flex: 1,
+      backgroundColor: CORES.BACKGROUND,
+    },
+    scroll: {
+      flex: 1,
+      backgroundColor: CORES.BACKGROUND,
+    },
+    content: {
+      flexGrow: 1,
+      paddingHorizontal: 18,
+      paddingTop: 10,
+      paddingBottom: 40,
+    },
+    headerBlock: {
+      marginBottom: 12,
+    },
+    courseName: {
+      color: CORES.COURSE_TEXT_STRONG,
+      fontSize: 31,
+      fontWeight: "800",
+    },
+    moduleWrap: {
+      marginTop: 12,
+    },
+    moduleCard: {
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: CORES.COURSE_BORDER,
+      paddingHorizontal: 14,
+      paddingVertical: 16,
+      flexDirection: "row",
+      alignItems: "center",
+      shadowColor: CORES.SHADOW,
+      shadowOpacity: CORES.mode === "dark" ? 0.35 : 0.08,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 3 },
+      elevation: 2,
+    },
+    moduleCardLocked: {
+      backgroundColor: CORES.SURFACE_ALT,
+    },
+    moduleIndex: {
+      width: 34,
+      height: 34,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: 12,
+    },
+    moduleIndexText: {
+      color: CORES.ON_ACCENT,
+      fontSize: 14,
+      fontWeight: "800",
+    },
+    moduleTextArea: {
+      flex: 1,
+    },
+    moduleTitle: {
+      color: CORES.COURSE_TEXT_STRONG,
+      fontSize: 18,
+      fontWeight: "800",
+    },
+    moduleSubtitle: {
+      color: CORES.COURSE_TEXT_MID,
+      fontSize: 13,
+      marginTop: 3,
+      fontWeight: "600",
+    },
+    moduleMeta: {
+      color: CORES.PRIMARY,
+      fontSize: 12,
+      marginTop: 6,
+      fontWeight: "700",
+    },
+    lockedText: {
+      color: CORES.TEXT_FAINT,
+    },
+    lessonContainer: {
+      marginTop: 8,
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 18,
+      borderWidth: 1,
+      borderColor: CORES.COURSE_BORDER,
+      overflow: "hidden",
+    },
+    lessonButton: {
+      paddingHorizontal: 14,
+      paddingVertical: 14,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    lessonDivider: {
+      borderBottomWidth: 1,
+      borderBottomColor: CORES.COURSE_BORDER,
+    },
+    lessonLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+    },
+    lessonIndex: {
+      width: 30,
+      height: 30,
+      borderRadius: 15,
+      backgroundColor: CORES.TRACK,
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: 12,
+    },
+    lessonIndexDone: {
+      backgroundColor: CORES.SUCCESS_BG,
+    },
+    lessonIndexText: {
+      color: CORES.COURSE_TEXT_SOFT,
+      fontSize: 12,
+      fontWeight: "800",
+    },
+    lessonIndexTextDone: {
+      color: CORES.SUCCESS_TEXT,
+    },
+    lessonTextArea: {
+      flex: 1,
+      paddingRight: 12,
+    },
+    lessonTitle: {
+      color: CORES.COURSE_TEXT_STRONG,
+      fontSize: 15,
+      fontWeight: "400",
+    },
+    lessonType: {
+      color: CORES.COURSE_TEXT_SOFT,
+      fontSize: 12,
+      marginTop: 2,
+      fontWeight: "600",
+    },
+  });

@@ -10,6 +10,7 @@ import {
   Inter_700Bold,
 } from "@expo-google-fonts/inter";
 import { AuthProvider } from "./src/context/AuthContext";
+import { ThemeProvider } from "./src/theme";
 import Routes from "./src/routes/routes";
 
 export default function App() {
@@ -27,11 +28,13 @@ export default function App() {
   return (
     <KeyboardProvider>
       <SafeAreaProvider>
-        <AuthProvider>
-          <PaperProvider>
-            <Routes />
-          </PaperProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <PaperProvider>
+              <Routes />
+            </PaperProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </SafeAreaProvider>
     </KeyboardProvider>
   );

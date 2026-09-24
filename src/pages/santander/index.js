@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTheme, useThemedStyles } from "../../theme";
 import Svg, {
   Path,
   Circle,
@@ -22,6 +23,8 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
 export default function HomeSantander() {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { user } = useAuth();
 
   const nomeUsuario = user?.login || "Usuário";
@@ -79,6 +82,8 @@ export default function HomeSantander() {
 /* ================= CARD ================= */
 
 function CourseItem({ title, subtitle, colors, icon, route }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const navigation = useNavigation();
 
   return (
@@ -108,7 +113,7 @@ function CourseItem({ title, subtitle, colors, icon, route }) {
         <Polyline
           points="9 18 15 12 9 6"
           fill="none"
-          stroke="#8B8178"
+          stroke={CORES.SANT_FAINT}
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -207,90 +212,92 @@ const BackOfficeIcon = (
 
 /* ================= ESTILOS ================= */
 
-const BG = "#F7F4EE";
-const CARD = "#FFFFFF";
-const TEXT = "#111827";
-const MUTED = "#6B7280";
-const BORDER = "#EBE6DE";
-const SANTANDER_RED = "#EC0000";
+const makeStyles = (CORES) => {
+  const BG = CORES.SANT_BG;
+  const CARD = CORES.SURFACE;
+  const TEXT = CORES.TEXT;
+  const MUTED = CORES.TEXT_MUTED;
+  const BORDER = CORES.SANT_BORDER;
+  const SANTANDER_RED = CORES.SANT_RED;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG,
-  },
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: BG,
+    },
 
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    marginBottom: 20,
-  },
+    header: {
+      paddingHorizontal: 20,
+      paddingTop: 16,
+      marginBottom: 20,
+    },
 
-  area: {
-    fontSize: 13,
-    color: MUTED,
-    marginBottom: 4,
-  },
+    area: {
+      fontSize: 13,
+      color: MUTED,
+      marginBottom: 4,
+    },
 
-  hello: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: TEXT,
-  },
+    hello: {
+      fontSize: 24,
+      fontWeight: "700",
+      color: TEXT,
+    },
 
-  exportButton: {
-    marginHorizontal: 20,
-    backgroundColor: SANTANDER_RED,
-    borderRadius: 14,
-    height: 56,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-    marginBottom: 26,
-    elevation: 5,
-  },
+    exportButton: {
+      marginHorizontal: 20,
+      backgroundColor: SANTANDER_RED,
+      borderRadius: 14,
+      height: 56,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 10,
+      marginBottom: 26,
+      elevation: 5,
+    },
 
-  exportText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700",
-  },
+    exportText: {
+      color: CORES.ON_ACCENT,
+      fontSize: 16,
+      fontWeight: "700",
+    },
 
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: TEXT,
-    marginHorizontal: 20,
-    marginBottom: 12,
-  },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: "700",
+      color: TEXT,
+      marginHorizontal: 20,
+      marginBottom: 12,
+    },
 
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: CARD,
-    borderRadius: 16,
-    padding: 14,
-    marginHorizontal: 20,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: BORDER,
-  },
+    card: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: CARD,
+      borderRadius: 16,
+      padding: 14,
+      marginHorizontal: 20,
+      marginBottom: 12,
+      borderWidth: 1,
+      borderColor: BORDER,
+    },
 
-  itemText: {
-    flex: 1,
-    marginLeft: 14,
-  },
+    itemText: {
+      flex: 1,
+      marginLeft: 14,
+    },
 
-  itemTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#2D2A26",
-  },
+    itemTitle: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: CORES.SANT_INK,
+    },
 
-  itemSubtitle: {
-    fontSize: 13,
-    color: "#8B8178",
-    marginTop: 2,
-  },
-});
+    itemSubtitle: {
+      fontSize: 13,
+      color: CORES.SANT_FAINT,
+      marginTop: 2,
+    },
+  });
+};

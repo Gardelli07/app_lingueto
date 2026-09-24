@@ -11,7 +11,7 @@ import {
 import Slider from "@react-native-community/slider";
 import { createAudioPlayer } from "expo-audio";
 import * as Speech from "expo-speech";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise13({
   activity,
@@ -21,6 +21,7 @@ export function Exercise13({
   speak,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
 
   const shuffleArray = (items) => {
@@ -94,7 +95,7 @@ export function Exercise13({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -528,110 +529,111 @@ export function Exercise13({
   );
 }
 
-const ex13 = StyleSheet.create({
-  spellWordBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  spellWordAudioCard: {
-    width: "88%",
-    marginBottom: 12,
-  },
-  spellWordAudioButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#7BA9D6",
-    width: "100%",
-    height: 40,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    gap: 12,
-  },
-  spellWordAnswerBox: {
-    width: "88%",
-    minHeight: 58,
-    borderRadius: 8,
-    borderWidth: 1.5,
-    borderColor: CORES.PRIMARY,
-    backgroundColor: CORES.WHITE,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 8,
-    paddingVertical: 8,
-    gap: 6,
-    marginBottom: 18,
-  },
-  spellWordAnswerBoxCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  spellWordAnswerBoxWrong: {
-    borderColor: CORES.DANGER,
-  },
-  spellWordPlaceholder: {
-    color: CORES.PRIMARY,
-    fontSize: 14,
-  },
-  spellWordSelectedLetter: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "#7BA9D6",
-    backgroundColor: "#7BA9D6",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  spellWordSelectedLetterCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  spellWordSelectedLetterText: {
-    color: CORES.WHITE,
-    fontSize: 13,
-    fontWeight: "700",
-  },
-  spellWordSelectedLetterTextCorrect: {
-    color: CORES.SUCCESS_DARK,
-  },
-  spellWordOptionsRow: {
-    width: "88%",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    gap: 10,
-  },
-  spellWordOption: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "#7BA9D6",
-    backgroundColor: CORES.WHITE,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  spellWordOptionUsed: {
-    backgroundColor: CORES.SURFACE_MUTED,
-    borderColor: CORES.BORDER_LIGHT,
-  },
-  spellWordOptionText: {
-    color: CORES.PRIMARY,
-    fontSize: 13,
-    fontWeight: "700",
-  },
-  spellWordOptionTextUsed: {
-    color: "#93C5FD",
-  },
-  slide13SuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+const ex13 = (CORES) =>
+  StyleSheet.create({
+    spellWordBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    spellWordAudioCard: {
+      width: "88%",
+      marginBottom: 12,
+    },
+    spellWordAudioButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: CORES.EX_BLUE,
+      width: "100%",
+      height: 40,
+      borderRadius: 8,
+      paddingHorizontal: 16,
+      gap: 12,
+    },
+    spellWordAnswerBox: {
+      width: "88%",
+      minHeight: 58,
+      borderRadius: 8,
+      borderWidth: 1.5,
+      borderColor: CORES.PRIMARY,
+      backgroundColor: CORES.SURFACE,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 8,
+      paddingVertical: 8,
+      gap: 6,
+      marginBottom: 18,
+    },
+    spellWordAnswerBoxCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    spellWordAnswerBoxWrong: {
+      borderColor: CORES.DANGER,
+    },
+    spellWordPlaceholder: {
+      color: CORES.PRIMARY,
+      fontSize: 14,
+    },
+    spellWordSelectedLetter: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: CORES.EX_BLUE,
+      backgroundColor: CORES.EX_BLUE,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    spellWordSelectedLetterCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    spellWordSelectedLetterText: {
+      color: CORES.WHITE,
+      fontSize: 13,
+      fontWeight: "700",
+    },
+    spellWordSelectedLetterTextCorrect: {
+      color: CORES.SUCCESS_DARK,
+    },
+    spellWordOptionsRow: {
+      width: "88%",
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      gap: 10,
+    },
+    spellWordOption: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: CORES.EX_BLUE,
+      backgroundColor: CORES.SURFACE,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    spellWordOptionUsed: {
+      backgroundColor: CORES.SURFACE_MUTED,
+      borderColor: CORES.BORDER_LIGHT,
+    },
+    spellWordOptionText: {
+      color: CORES.PRIMARY,
+      fontSize: 13,
+      fontWeight: "700",
+    },
+    spellWordOptionTextUsed: {
+      color: CORES.EX_BLUE_LIGHT,
+    },
+    slide13SuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex13;
 

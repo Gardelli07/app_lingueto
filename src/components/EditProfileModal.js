@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import ImagePicker from "react-native-image-crop-picker";
 import Svg, { Path } from "react-native-svg";
-import CORES from "../util/cores";
+import { useTheme, useThemedStyles } from "../theme";
 import { API_URL } from "../services/api";
 import { atualizarFotoPerfil, atualizarNomeExibicao } from "../services/perfil";
 
@@ -31,6 +31,8 @@ export default function EditProfileModal({ visible, user, onClose, onSaved }) {
   const displayName = user?.nome_exibicao?.trim() || user?.login || "";
   const currentAvatarUri = user?.foto_url ? `${API_URL}${user.foto_url}` : null;
 
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [nome, setNome] = useState(displayName);
   const [novaFotoLocal, setNovaFotoLocal] = useState(null);
   const [salvando, setSalvando] = useState(false);
@@ -54,7 +56,7 @@ export default function EditProfileModal({ visible, user, onClose, onSaved }) {
         cropperToolbarColor: CORES.PROFILE_BLUE,
         cropperToolbarWidgetColor: CORES.WHITE,
         cropperActiveWidgetColor: CORES.PROFILE_BLUE,
-        cropperStatusBarLight: false,
+        cropperStatusBarLight: CORES.mode === "dark",
       });
       setNovaFotoLocal({ uri: image.path, mimeType: image.mime });
     } catch (error) {
@@ -151,7 +153,7 @@ export default function EditProfileModal({ visible, user, onClose, onSaved }) {
             disabled={salvando}
           >
             {salvando ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={CORES.ON_ACCENT} />
             ) : (
               <Text style={styles.saveText}>Salvar</Text>
             )}
@@ -166,10 +168,11 @@ export default function EditProfileModal({ visible, user, onClose, onSaved }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (CORES) =>
+  StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: "rgba(15,23,35,0.55)",
+    backgroundColor: CORES.OVERLAY,
     alignItems: "center",
     justifyContent: "center",
     padding: 24,
@@ -177,10 +180,12 @@ const styles = StyleSheet.create({
   card: {
     width: "100%",
     maxWidth: 360,
-    backgroundColor: CORES.WHITE,
+    backgroundColor: CORES.SURFACE_HIGH,
     borderRadius: 24,
     padding: 24,
     alignItems: "center",
+    borderWidth: CORES.mode === "dark" ? 1 : 0,
+    borderColor: CORES.BORDER,
   },
   title: {
     fontSize: 19,
@@ -193,13 +198,13 @@ const styles = StyleSheet.create({
     width: 88,
     height: 88,
     borderRadius: 44,
-    backgroundColor: CORES.PROFILE_BLUE,
+    backgroundColor: CORES.ACCENT_FILL,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
   },
   avatarImg: { width: 88, height: 88 },
-  avatarInitial: { color: "#fff", fontSize: 36, fontWeight: "900" },
+  avatarInitial: { color: CORES.ON_ACCENT, fontSize: 36, fontWeight: "900" },
   cameraBadge: {
     position: "absolute",
     right: -2,
@@ -207,11 +212,11 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: CORES.PROFILE_BLUE,
+    backgroundColor: CORES.ACCENT_FILL,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
-    borderColor: CORES.WHITE,
+    borderColor: CORES.SURFACE_HIGH,
   },
   avatarHint: {
     marginTop: 10,
@@ -232,7 +237,8 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: "#DDE5F0",
+    borderColor: CORES.BORDER_STRONG,
+    backgroundColor: CORES.INPUT_BG,
     paddingHorizontal: 16,
     fontSize: 16,
     fontWeight: "700",
@@ -242,13 +248,13 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 52,
     borderRadius: 14,
-    backgroundColor: CORES.PROFILE_BLUE,
+    backgroundColor: CORES.ACCENT_FILL,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 22,
   },
   saveBtnDisabled: { opacity: 0.7 },
-  saveText: { color: "#fff", fontWeight: "900", fontSize: 16 },
+  saveText: { color: CORES.ON_ACCENT, fontWeight: "900", fontSize: 16 },
   cancelBtn: { marginTop: 14, padding: 4 },
   cancelText: { color: CORES.PROFILE_MUTED_LIGHT, fontWeight: "700", fontSize: 14 },
-});
+  });

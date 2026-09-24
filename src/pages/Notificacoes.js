@@ -15,14 +15,17 @@ import {
   marcarNotificacaoLida,
   marcarTodasNotificacoesLidas,
 } from "../services/notificacoesFeed";
-import CORES from "../util/cores";
+import { useTheme, useThemedStyles } from "../theme";
 
-const IconArrowLeft = ({ size = 20, color = CORES.PROFILE_NAVY }) => (
-  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+const IconArrowLeft = ({ size = 20, color }) => {
+  const CORES = useTheme();
+  return (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color || CORES.PROFILE_NAVY} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
     <Path d="M19 12H5" />
     <Path d="M12 19l-7-7 7-7" />
   </Svg>
-);
+  );
+};
 
 const ICON_POR_TIPO = {
   pedido_amizade: "👋",
@@ -48,6 +51,8 @@ function formatRelativeTime(isoString) {
 }
 
 export default function Notificacoes({ navigation }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [notificacoes, setNotificacoes] = useState([]);
   const [carregando, setCarregando] = useState(true);
 
@@ -89,7 +94,7 @@ export default function Notificacoes({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safe} edges={["top", "left", "right"]}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={CORES.statusBarStyle} />
 
       <View style={styles.header}>
         <Pressable onPress={() => navigation.goBack()} hitSlop={10} style={styles.backBtn}>
@@ -131,40 +136,42 @@ export default function Notificacoes({ navigation }) {
   );
 }
 
-const shadow = {
-  shadowColor: "#2E4A78",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.05,
-  shadowRadius: 14,
-  elevation: 3,
+const makeStyles = (CORES) => {
+  const shadow = {
+    shadowColor: CORES.SHADOW,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: CORES.mode === "dark" ? 0.28 : 0.05,
+    shadowRadius: 14,
+    elevation: 3,
+  };
+
+  return StyleSheet.create({
+    safe: { flex: 1, backgroundColor: CORES.PROFILE_BG },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+    },
+    backBtn: { width: 32, height: 32, alignItems: "center", justifyContent: "center" },
+    headerTitle: { fontSize: 16, fontWeight: "800", color: CORES.PROFILE_NAVY },
+    markAllText: { fontSize: 13, fontWeight: "800", color: CORES.PROFILE_BLUE },
+    markAllTextDisabled: { color: CORES.PROFILE_ARROW },
+
+    centered: { flex: 1, alignItems: "center", justifyContent: "center" },
+    list: { padding: 16, paddingTop: 4, paddingBottom: 28 },
+    emptyText: { color: CORES.PROFILE_MUTED, fontSize: 14, fontWeight: "600", textAlign: "center", marginTop: 30 },
+
+    card: {
+      flexDirection: "row", alignItems: "flex-start", gap: 12,
+      backgroundColor: CORES.SURFACE, borderRadius: 16, padding: 14, marginBottom: 10, ...shadow,
+    },
+    cardUnread: { backgroundColor: CORES.EX_BLUE_BG },
+    cardIcon: { fontSize: 22, marginTop: 2 },
+    cardTitle: { fontSize: 14.5, fontWeight: "800", color: CORES.PROFILE_NAVY },
+    cardBody: { fontSize: 13, fontWeight: "600", color: CORES.PROFILE_MUTED, marginTop: 2, lineHeight: 18 },
+    cardTime: { fontSize: 11.5, fontWeight: "600", color: CORES.PROFILE_MUTED_LIGHT, marginTop: 6 },
+    dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: CORES.ACCENT_FILL_COMUNIDADE, marginTop: 6 },
+  });
 };
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: CORES.PROFILE_BG },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  backBtn: { width: 32, height: 32, alignItems: "center", justifyContent: "center" },
-  headerTitle: { fontSize: 16, fontWeight: "800", color: CORES.PROFILE_NAVY },
-  markAllText: { fontSize: 13, fontWeight: "800", color: CORES.PROFILE_BLUE },
-  markAllTextDisabled: { color: CORES.PROFILE_ARROW },
-
-  centered: { flex: 1, alignItems: "center", justifyContent: "center" },
-  list: { padding: 16, paddingTop: 4, paddingBottom: 28 },
-  emptyText: { color: CORES.PROFILE_MUTED, fontSize: 14, fontWeight: "600", textAlign: "center", marginTop: 30 },
-
-  card: {
-    flexDirection: "row", alignItems: "flex-start", gap: 12,
-    backgroundColor: CORES.WHITE, borderRadius: 16, padding: 14, marginBottom: 10, ...shadow,
-  },
-  cardUnread: { backgroundColor: "#F5F9FF" },
-  cardIcon: { fontSize: 22, marginTop: 2 },
-  cardTitle: { fontSize: 14.5, fontWeight: "800", color: CORES.PROFILE_NAVY },
-  cardBody: { fontSize: 13, fontWeight: "600", color: CORES.PROFILE_MUTED, marginTop: 2, lineHeight: 18 },
-  cardTime: { fontSize: 11.5, fontWeight: "600", color: CORES.PROFILE_MUTED_LIGHT, marginTop: 6 },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: CORES.COMUNIDADE_ACCENT, marginTop: 6 },
-});

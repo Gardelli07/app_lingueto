@@ -8,7 +8,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise7({
   activity,
@@ -17,6 +17,7 @@ export function Exercise7({
   next,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const idealMoveCount = activity.correctOrder?.length || 0;
 
@@ -56,7 +57,7 @@ export function Exercise7({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -291,93 +292,94 @@ export function Exercise7({
   );
 }
 
-const ex7 = StyleSheet.create({
-  dialogOrderBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  dialogOrderAnswerBox: {
-    width: "88%",
-    minHeight: 140,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: "#7BA9D6",
-    backgroundColor: CORES.WHITE,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    gap: 8,
-    marginBottom: 10,
-  },
-  dialogOrderAnswerBoxCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  dialogOrderAnswerBoxWrong: {
-    borderColor: CORES.DANGER,
-  },
-  dialogOrderPlaceholder: {
-    color: CORES.PRIMARY,
-    fontSize: 14,
-  },
-  dialogOrderSelectedPhrase: {
-    minHeight: 30,
-    alignSelf: "flex-start",
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: "#7BA9D6",
-    backgroundColor: "#7BA9D6",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-  },
-  dialogOrderSelectedPhraseCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  dialogOrderSelectedPhraseText: {
-    color: CORES.WHITE,
-    fontSize: 13,
-  },
-  dialogOrderSelectedPhraseTextCorrect: {
-    color: CORES.SUCCESS_DARK,
-    fontWeight: "700",
-  },
-  dialogOrderOptionsList: {
-    width: "88%",
-    gap: 8,
-  },
-  dialogOrderOption: {
-    width: "100%",
-    minHeight: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#7BA9D6",
-    backgroundColor: "#7BA9D6",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-  },
-  dialogOrderOptionUsed: {
-    backgroundColor: CORES.SURFACE_MUTED,
-    borderColor: CORES.BORDER_LIGHT,
-  },
-  dialogOrderOptionText: {
-    color: CORES.WHITE,
-    fontSize: 13,
-    textAlign: "center",
-  },
-  dialogOrderOptionTextUsed: {
-    color: "#93C5FD",
-  },
-  slide8SuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+const ex7 = (CORES) =>
+  StyleSheet.create({
+    dialogOrderBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    dialogOrderAnswerBox: {
+      width: "88%",
+      minHeight: 140,
+      borderRadius: 10,
+      borderWidth: 1.5,
+      borderColor: CORES.EX_BLUE,
+      backgroundColor: CORES.SURFACE,
+      paddingHorizontal: 10,
+      paddingVertical: 10,
+      gap: 8,
+      marginBottom: 10,
+    },
+    dialogOrderAnswerBoxCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    dialogOrderAnswerBoxWrong: {
+      borderColor: CORES.DANGER,
+    },
+    dialogOrderPlaceholder: {
+      color: CORES.PRIMARY,
+      fontSize: 14,
+    },
+    dialogOrderSelectedPhrase: {
+      minHeight: 30,
+      alignSelf: "flex-start",
+      borderRadius: 15,
+      borderWidth: 1,
+      borderColor: CORES.EX_BLUE,
+      backgroundColor: CORES.EX_BLUE,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 12,
+      paddingVertical: 5,
+    },
+    dialogOrderSelectedPhraseCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    dialogOrderSelectedPhraseText: {
+      color: CORES.WHITE,
+      fontSize: 13,
+    },
+    dialogOrderSelectedPhraseTextCorrect: {
+      color: CORES.SUCCESS_DARK,
+      fontWeight: "700",
+    },
+    dialogOrderOptionsList: {
+      width: "88%",
+      gap: 8,
+    },
+    dialogOrderOption: {
+      width: "100%",
+      minHeight: 32,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: CORES.EX_BLUE,
+      backgroundColor: CORES.EX_BLUE,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 14,
+      paddingVertical: 6,
+    },
+    dialogOrderOptionUsed: {
+      backgroundColor: CORES.SURFACE_MUTED,
+      borderColor: CORES.BORDER_LIGHT,
+    },
+    dialogOrderOptionText: {
+      color: CORES.WHITE,
+      fontSize: 13,
+      textAlign: "center",
+    },
+    dialogOrderOptionTextUsed: {
+      color: CORES.EX_BLUE_LIGHT,
+    },
+    slide8SuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex7;
 

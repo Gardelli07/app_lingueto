@@ -12,7 +12,7 @@ import {
 import Slider from "@react-native-community/slider";
 import { createAudioPlayer } from "expo-audio";
 import * as Speech from "expo-speech";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise14({
   activity,
@@ -22,6 +22,7 @@ export function Exercise14({
   speak,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const formatPrompt = (prompt) => {
     if (!prompt || typeof prompt !== "string" || prompt.includes("\n")) {
       return prompt;
@@ -555,154 +556,155 @@ export function Exercise14({
   );
 }
 
-const ex14 = StyleSheet.create({
-  mediaWrapper: {
-    width: "88%",
-    maxWidth: 520,
-    marginBottom: 14,
-  },
-  mediaCard: {
-    width: "100%",
-    aspectRatio: 16 / 9,
-    backgroundColor: CORES.SURFACE_MUTED,
-    borderTopLeftRadius: 18,
-    borderTopRightRadius: 18,
-    overflow: "hidden",
-  },
-  mediaImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  audioButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: CORES.PRIMARY,
-    width: "100%",
-    height: 48,
-    borderBottomLeftRadius: 18,
-    borderBottomRightRadius: 18,
-    paddingHorizontal: 16,
-    gap: 12,
-  },
-  audioPlayButton: {
-    width: 32,
-    height: 32,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  audioIcon: {
-    color: CORES.WHITE_SHORT,
-    fontSize: 18,
-    fontWeight: "800",
-    textAlign: "center",
-  },
-  audioBar: {
-    flex: 1,
-    height: 36,
-    justifyContent: "center",
-  },
-  audioSlider: {
-    width: "100%",
-    height: 36,
-  },
-  audioProgress: {
-    height: 4,
-    borderRadius: 4,
-    backgroundColor: CORES.WHITE_SHORT,
-  },
-  resultBar: {
-    width: "88%",
-    maxWidth: 520,
-    minHeight: 46,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 14,
-  },
-  resultBarText: {
-    fontSize: 20,
-    fontFamily: "serif",
-    fontWeight: "500",
-    color: CORES.TEXT_DARK,
-    textAlign: "center",
-    width: "100%",
-  },
-  resultBarTextCorrect: {
-    color: CORES.SUCCESS_TEXT,
-  },
-  resultBarTextWrong: {
-    color: CORES.DANGER_TEXT,
-  },
-  resultUnderline: {
-    width: "55%",
-    height: 2,
-    marginTop: 2,
-    borderRadius: 2,
-    backgroundColor: "#D1D5DB",
-  },
-  resultUnderlineCorrect: {
-    backgroundColor: CORES.SUCCESS,
-  },
-  resultUnderlineWrong: {
-    backgroundColor: CORES.DANGER,
-  },
-  optionsRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    gap: 12,
-    marginTop: 10,
-    width: "88%",
-  },
-  optionsRowStacked: {
-    flexDirection: "column",
-    alignItems: "stretch",
-    width: "88%",
-  },
-  optionPill: {
-    borderWidth: 1,
-    borderColor: "#CBD5E1",
-    borderRadius: 20,
-    backgroundColor: CORES.WHITE_SHORT,
-    maxWidth: "100%",
-    flexShrink: 1,
-  },
-  optionPillStacked: {
-    width: "100%",
-    alignSelf: "stretch",
-    maxWidth: "100%",
-  },
-  optionPillTouch: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-  },
-  optionText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#333",
-    textAlign: "center",
-    flexShrink: 1,
-  },
-  optionTextStacked: {
-    textAlign: "center",
-    width: "100%",
-  },
-  optionCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  optionCorrectText: {
-    color: CORES.SUCCESS_TEXT,
-    fontWeight: "700",
-  },
-  optionBlinkWrong: {
-    backgroundColor: CORES.DANGER_BG,
-    borderColor: CORES.DANGER,
-  },
-});
+const ex14 = (CORES) =>
+  StyleSheet.create({
+    mediaWrapper: {
+      width: "88%",
+      maxWidth: 520,
+      marginBottom: 14,
+    },
+    mediaCard: {
+      width: "100%",
+      aspectRatio: 16 / 9,
+      backgroundColor: CORES.SURFACE_MUTED,
+      borderTopLeftRadius: 18,
+      borderTopRightRadius: 18,
+      overflow: "hidden",
+    },
+    mediaImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    audioButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: CORES.PRIMARY,
+      width: "100%",
+      height: 48,
+      borderBottomLeftRadius: 18,
+      borderBottomRightRadius: 18,
+      paddingHorizontal: 16,
+      gap: 12,
+    },
+    audioPlayButton: {
+      width: 32,
+      height: 32,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    audioIcon: {
+      color: CORES.WHITE_SHORT,
+      fontSize: 18,
+      fontWeight: "800",
+      textAlign: "center",
+    },
+    audioBar: {
+      flex: 1,
+      height: 36,
+      justifyContent: "center",
+    },
+    audioSlider: {
+      width: "100%",
+      height: 36,
+    },
+    audioProgress: {
+      height: 4,
+      borderRadius: 4,
+      backgroundColor: CORES.WHITE_SHORT,
+    },
+    resultBar: {
+      width: "88%",
+      maxWidth: 520,
+      minHeight: 46,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 14,
+    },
+    resultBarText: {
+      fontSize: 20,
+      fontFamily: "serif",
+      fontWeight: "500",
+      color: CORES.TEXT_DARK,
+      textAlign: "center",
+      width: "100%",
+    },
+    resultBarTextCorrect: {
+      color: CORES.SUCCESS_TEXT,
+    },
+    resultBarTextWrong: {
+      color: CORES.DANGER_TEXT,
+    },
+    resultUnderline: {
+      width: "55%",
+      height: 2,
+      marginTop: 2,
+      borderRadius: 2,
+      backgroundColor: CORES.EX_DISABLED,
+    },
+    resultUnderlineCorrect: {
+      backgroundColor: CORES.SUCCESS,
+    },
+    resultUnderlineWrong: {
+      backgroundColor: CORES.DANGER_FILL,
+    },
+    optionsRow: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      gap: 12,
+      marginTop: 10,
+      width: "88%",
+    },
+    optionsRowStacked: {
+      flexDirection: "column",
+      alignItems: "stretch",
+      width: "88%",
+    },
+    optionPill: {
+      borderWidth: 1,
+      borderColor: CORES.BORDER,
+      borderRadius: 20,
+      backgroundColor: CORES.SURFACE,
+      maxWidth: "100%",
+      flexShrink: 1,
+    },
+    optionPillStacked: {
+      width: "100%",
+      alignSelf: "stretch",
+      maxWidth: "100%",
+    },
+    optionPillTouch: {
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      alignItems: "center",
+      justifyContent: "center",
+      width: "100%",
+    },
+    optionText: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: CORES.TEXT,
+      textAlign: "center",
+      flexShrink: 1,
+    },
+    optionTextStacked: {
+      textAlign: "center",
+      width: "100%",
+    },
+    optionCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    optionCorrectText: {
+      color: CORES.SUCCESS_TEXT,
+      fontWeight: "700",
+    },
+    optionBlinkWrong: {
+      backgroundColor: CORES.DANGER_BG,
+      borderColor: CORES.DANGER,
+    },
+  });
 
 export default ex14;
 

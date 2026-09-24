@@ -23,7 +23,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { createAudioPlayer } from "expo-audio";
-import CORES from "../util/cores";
+import { useTheme, useThemedStyles } from "../theme";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../services/api";
 import {
@@ -124,6 +124,8 @@ function mapComment(raw) {
 /*  Componentes menores                                               */
 /* ------------------------------------------------------------------ */
 function Avatar({ initial, color, size = 44, uri }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   if (uri) {
     return (
       <Image
@@ -140,6 +142,8 @@ function Avatar({ initial, color, size = 44, uri }) {
 }
 
 function Waveform({ playing }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const played = Math.floor(WAVE.length * (playing ? 0.7 : 0.38));
   return (
     <View style={styles.wave}>
@@ -151,7 +155,7 @@ function Waveform({ playing }) {
             marginHorizontal: 1.2,
             height: h,
             borderRadius: 2,
-            backgroundColor: i < played ? CORES.COMUNIDADE_ACCENT : "#C7D0E0",
+            backgroundColor: i < played ? CORES.COMUNIDADE_ACCENT : CORES.TRACK,
           }}
         />
       ))}
@@ -160,6 +164,8 @@ function Waveform({ playing }) {
 }
 
 function AudioBody({ audioUrl, duration }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [playing, setPlaying] = useState(false);
   const playerRef = useRef(null);
   const subscriptionRef = useRef(null);
@@ -217,7 +223,7 @@ function AudioBody({ audioUrl, duration }) {
         onPress={togglePlayback}
         style={styles.playBtn}
       >
-        <Feather name={playing ? "pause" : "play"} size={16} color="#fff" style={playing ? null : { marginLeft: 2 }} />
+        <Feather name={playing ? "pause" : "play"} size={16} color={CORES.ON_ACCENT} style={playing ? null : { marginLeft: 2 }} />
       </TouchableOpacity>
       <Waveform playing={playing} />
       <Text style={styles.duration}>{duration}</Text>
@@ -229,6 +235,8 @@ function AudioBody({ audioUrl, duration }) {
 /*  Card do post                                                      */
 /* ------------------------------------------------------------------ */
 function PostCard({ post, isMine, onToggleLike, onOpenComments, onDeletePost, onReportPost, onOpenProfile }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const commentCount = post.commentsTotal;
   const commentLabel =
     commentCount === 0 ? "Comentar" : commentCount === 1 ? "Ver comentário" : "Ver comentários";
@@ -295,8 +303,8 @@ function PostCard({ post, isMine, onToggleLike, onOpenComments, onDeletePost, on
           style={[
             styles.actionBtn,
             {
-              backgroundColor: post.liked ? CORES.COMUNIDADE_ACCENT_SOFT : "#F4F6FB",
-              borderColor: post.liked ? CORES.COMUNIDADE_ACCENT_BORDER : "#EEF1F7",
+              backgroundColor: post.liked ? CORES.COMUNIDADE_ACCENT_SOFT : CORES.COMUNIDADE_BUBBLE,
+              borderColor: post.liked ? CORES.COMUNIDADE_ACCENT_BORDER : CORES.COMUNIDADE_BUBBLE_LINE,
             },
           ]}
         >
@@ -309,7 +317,7 @@ function PostCard({ post, isMine, onToggleLike, onOpenComments, onDeletePost, on
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => onOpenComments(post.id)}
-          style={[styles.actionBtn, { backgroundColor: "#F4F6FB", borderColor: "#EEF1F7" }]}
+          style={[styles.actionBtn, { backgroundColor: CORES.COMUNIDADE_BUBBLE, borderColor: CORES.COMUNIDADE_BUBBLE_LINE }]}
         >
           <Feather name="message-circle" size={16} color={CORES.COMUNIDADE_MUTED} />
           <Text style={[styles.actionText, { color: CORES.COMUNIDADE_MUTED }]}>{commentCount}</Text>
@@ -328,6 +336,8 @@ function PostCard({ post, isMine, onToggleLike, onOpenComments, onDeletePost, on
 /*  Bottom-sheet de comentários                                       */
 /* ------------------------------------------------------------------ */
 function CommentsSheet({ post, comments, loading, error, sending, currentUserId, onClose, onSend, onRetry, onDeleteComment, onReportComment, onOpenProfile }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [draft, setDraft] = useState("");
   const visible = !!post;
 
@@ -455,7 +465,7 @@ function CommentsSheet({ post, comments, loading, error, sending, currentUserId,
               editable={!sending}
             />
             <TouchableOpacity onPress={handleSend} style={styles.sendBtn} activeOpacity={0.85} disabled={sending}>
-              {sending ? <ActivityIndicator color="#fff" size="small" /> : <Feather name="send" size={18} color="#fff" />}
+              {sending ? <ActivityIndicator color={CORES.ON_ACCENT} size="small" /> : <Feather name="send" size={18} color={CORES.ON_ACCENT} />}
             </TouchableOpacity>
           </View>
         </View>
@@ -468,6 +478,8 @@ function CommentsSheet({ post, comments, loading, error, sending, currentUserId,
 /*  Bottom-sheet de novo post                                         */
 /* ------------------------------------------------------------------ */
 function NewPostSheet({ visible, text, sending, onChangeText, onClose, onSubmit }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={styles.scrim} onPress={onClose} />
@@ -507,7 +519,7 @@ function NewPostSheet({ visible, text, sending, onChangeText, onClose, onSubmit 
               disabled={!text.trim() || sending}
             >
               {sending ? (
-                <ActivityIndicator color="#fff" size="small" />
+                <ActivityIndicator color={CORES.ON_ACCENT} size="small" />
               ) : (
                 <Text style={styles.publishBtnText}>Publicar</Text>
               )}
@@ -523,6 +535,8 @@ function NewPostSheet({ visible, text, sending, onChangeText, onClose, onSubmit 
 /*  Tela principal                                                    */
 /* ------------------------------------------------------------------ */
 export default function CommunityScreen({ navigation }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { user } = useAuth();
   const currentUserId = extractUserId(user);
   const ownAvatarUrl = resolveMediaUrl(user?.foto_url);
@@ -880,7 +894,7 @@ export default function CommunityScreen({ navigation }) {
         activeOpacity={0.85}
         onPress={() => setComposerVisible(true)}
       >
-        <Feather name="edit-3" size={20} color="#fff" />
+        <Feather name="edit-3" size={20} color={CORES.ON_ACCENT} />
       </TouchableOpacity>
 
       <CommentsSheet
@@ -920,196 +934,200 @@ export default function CommunityScreen({ navigation }) {
 /* ------------------------------------------------------------------ */
 /*  Estilos                                                           */
 /* ------------------------------------------------------------------ */
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: CORES.COMUNIDADE_BG },
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    safe: { flex: 1, backgroundColor: CORES.COMUNIDADE_BG },
 
-  /* header */
-  header: {
-    backgroundColor: CORES.WHITE,
-    paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: CORES.COMUNIDADE_LINE,
-  },
-  headerRow: { flexDirection: "row", alignItems: "center" },
-  headerTitle: { fontSize: 26, fontWeight: "800", color: CORES.COMUNIDADE_TEXT, letterSpacing: -0.5 },
-  headerSub: { fontSize: 13.5, fontWeight: "500", color: CORES.COMUNIDADE_MUTED, marginTop: 3 },
-  headerIcon: {
-    width: 42, height: 42, borderRadius: 14, backgroundColor: "#F1F4FB",
-    alignItems: "center", justifyContent: "center",
-  },
-  /* feed */
-  feed: { padding: 16, paddingBottom: 28 },
-  footer: { textAlign: "center", fontSize: 12.5, fontWeight: "600", color: "#B0B8C7", paddingVertical: 10 },
-  centerState: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 30 },
+    /* header */
+    header: {
+      backgroundColor: CORES.SURFACE,
+      paddingHorizontal: 20,
+      paddingTop: 8,
+      paddingBottom: 14,
+      borderBottomWidth: 1,
+      borderBottomColor: CORES.COMUNIDADE_LINE,
+    },
+    headerRow: { flexDirection: "row", alignItems: "center" },
+    headerTitle: { fontSize: 26, fontWeight: "800", color: CORES.COMUNIDADE_TEXT, letterSpacing: -0.5 },
+    headerSub: { fontSize: 13.5, fontWeight: "500", color: CORES.COMUNIDADE_MUTED, marginTop: 3 },
+    headerIcon: {
+      width: 42, height: 42, borderRadius: 14, backgroundColor: CORES.COMUNIDADE_BUBBLE,
+      alignItems: "center", justifyContent: "center",
+    },
+    /* feed */
+    feed: { padding: 16, paddingBottom: 28 },
+    footer: { textAlign: "center", fontSize: 12.5, fontWeight: "600", color: CORES.COMUNIDADE_MUTED_2, paddingVertical: 10 },
+    centerState: { flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 30 },
 
-  /* fab */
-  fab: {
-    position: "absolute",
-    right: 20,
-    bottom: 24,
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    backgroundColor: CORES.COMUNIDADE_ACCENT,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#101828",
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
-  },
+    /* fab */
+    fab: {
+      position: "absolute",
+      right: 20,
+      bottom: 24,
+      width: 54,
+      height: 54,
+      borderRadius: 27,
+      backgroundColor: CORES.ACCENT_FILL_COMUNIDADE,
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: CORES.SHADOW,
+      shadowOpacity: 0.2,
+      shadowRadius: 10,
+      shadowOffset: { width: 0, height: 6 },
+      elevation: 4,
+    },
 
-  /* card */
-  card: {
-    backgroundColor: CORES.WHITE,
-    borderRadius: 22,
-    padding: 16,
-    marginBottom: 14,
-    shadowColor: "#101828",
-    shadowOpacity: 0.05,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 2,
-  },
-  cardHeader: { flexDirection: "row", alignItems: "center" },
-  cardHeaderTouchable: { flex: 1, flexDirection: "row", alignItems: "center" },
-  avatar: { alignItems: "center", justifyContent: "center" },
-  avatarText: { color: "#fff", fontWeight: "800" },
-  name: { fontSize: 15.5, fontWeight: "800", color: CORES.COMUNIDADE_TEXT },
-  metaText: { fontSize: 12.5, fontWeight: "500", color: CORES.COMUNIDADE_MUTED_2, marginTop: 1 },
-  deleteBtn: { padding: 6, marginLeft: 8 },
-  promptBox: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 7,
-    backgroundColor: "#F3F5FA",
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "#D8DEEA",
-    borderRadius: 14,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    marginTop: 13,
-    marginBottom: 10,
-  },
-  promptText: {
-    flex: 1,
-    fontSize: 12.5,
-    fontWeight: "600",
-    fontStyle: "italic",
-    color: CORES.COMUNIDADE_TEXT_2,
-    lineHeight: 18,
-  },
+    /* card */
+    card: {
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 22,
+      padding: 16,
+      marginBottom: 14,
+      // no tema escuro a sombra some no fundo; a borda faz a separacao
+      borderWidth: CORES.mode === "dark" ? 1 : 0,
+      borderColor: CORES.BORDER,
+      shadowColor: CORES.SHADOW,
+      shadowOpacity: CORES.mode === "dark" ? 0.3 : 0.05,
+      shadowRadius: 14,
+      shadowOffset: { width: 0, height: 8 },
+      elevation: 2,
+    },
+    cardHeader: { flexDirection: "row", alignItems: "center" },
+    cardHeaderTouchable: { flex: 1, flexDirection: "row", alignItems: "center" },
+    avatar: { alignItems: "center", justifyContent: "center" },
+    avatarText: { color: CORES.ON_ACCENT, fontWeight: "800" },
+    name: { fontSize: 15.5, fontWeight: "800", color: CORES.COMUNIDADE_TEXT },
+    metaText: { fontSize: 12.5, fontWeight: "500", color: CORES.COMUNIDADE_MUTED_2, marginTop: 1 },
+    deleteBtn: { padding: 6, marginLeft: 8 },
+    promptBox: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 7,
+      backgroundColor: CORES.COMUNIDADE_BUBBLE,
+      borderWidth: 1,
+      borderStyle: "dashed",
+      borderColor: CORES.BORDER_STRONG,
+      borderRadius: 14,
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      marginTop: 13,
+      marginBottom: 10,
+    },
+    promptText: {
+      flex: 1,
+      fontSize: 12.5,
+      fontWeight: "600",
+      fontStyle: "italic",
+      color: CORES.COMUNIDADE_TEXT_2,
+      lineHeight: 18,
+    },
 
-  /* text bubble */
-  bubble: {
-    backgroundColor: CORES.COMUNIDADE_BUBBLE,
-    borderWidth: 1,
-    borderColor: CORES.COMUNIDADE_BUBBLE_LINE,
-    borderRadius: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 15,
-    marginTop: 13,
-  },
-  bubbleText: { fontSize: 15.5, fontWeight: "600", color: "#1D2939", lineHeight: 23 },
+    /* text bubble */
+    bubble: {
+      backgroundColor: CORES.COMUNIDADE_BUBBLE,
+      borderWidth: 1,
+      borderColor: CORES.COMUNIDADE_BUBBLE_LINE,
+      borderRadius: 16,
+      paddingVertical: 14,
+      paddingHorizontal: 15,
+      marginTop: 13,
+    },
+    bubbleText: { fontSize: 15.5, fontWeight: "600", color: CORES.COMUNIDADE_TEXT, lineHeight: 23 },
 
-  /* audio */
-  audioBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(46,107,246,0.06)",
-    borderRadius: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    marginTop: 13,
-  },
-  playBtn: {
-    width: 42, height: 42, borderRadius: 21, backgroundColor: CORES.COMUNIDADE_ACCENT,
-    alignItems: "center", justifyContent: "center", marginRight: 12,
-  },
-  wave: { flex: 1, flexDirection: "row", alignItems: "flex-end", height: 34 },
-  duration: { fontSize: 12.5, fontWeight: "700", color: CORES.COMUNIDADE_ACCENT, marginLeft: 10, minWidth: 30, textAlign: "right" },
+    /* audio */
+    audioBox: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: CORES.COMUNIDADE_ACCENT_SOFT,
+      borderRadius: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 14,
+      marginTop: 13,
+    },
+    playBtn: {
+      width: 42, height: 42, borderRadius: 21, backgroundColor: CORES.ACCENT_FILL_COMUNIDADE,
+      alignItems: "center", justifyContent: "center", marginRight: 12,
+    },
+    wave: { flex: 1, flexDirection: "row", alignItems: "flex-end", height: 34 },
+    duration: { fontSize: 12.5, fontWeight: "700", color: CORES.COMUNIDADE_ACCENT, marginLeft: 10, minWidth: 30, textAlign: "right" },
 
-  /* actions */
-  actions: { flexDirection: "row", alignItems: "center", marginTop: 14 },
-  actionBtn: {
-    flexDirection: "row", alignItems: "center", gap: 7,
-    paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1.5, marginRight: 8,
-  },
-  actionText: { fontSize: 13.5, fontWeight: "800" },
-  actionLink: { fontSize: 12.5, fontWeight: "700", color: CORES.COMUNIDADE_MUTED_2 },
+    /* actions */
+    actions: { flexDirection: "row", alignItems: "center", marginTop: 14 },
+    actionBtn: {
+      flexDirection: "row", alignItems: "center", gap: 7,
+      paddingVertical: 8, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1.5, marginRight: 8,
+    },
+    actionText: { fontSize: 13.5, fontWeight: "800" },
+    actionLink: { fontSize: 12.5, fontWeight: "700", color: CORES.COMUNIDADE_MUTED_2 },
 
-  /* sheet */
-  scrim: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(16,24,40,0.45)" },
-  sheetWrap: { flex: 1, justifyContent: "flex-end" },
-  sheet: {
-    height: "74%",
-    backgroundColor: CORES.WHITE,
-    borderTopLeftRadius: 26,
-    borderTopRightRadius: 26,
-    overflow: "hidden",
-  },
-  grabber: { width: 40, height: 5, borderRadius: 999, backgroundColor: "#DCE1EA", alignSelf: "center", marginTop: 10, marginBottom: 4 },
-  sheetHeader: {
-    flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-    paddingHorizontal: 20, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: "#F0F2F6",
-  },
-  sheetTitle: { fontSize: 17, fontWeight: "800", color: CORES.COMUNIDADE_TEXT },
-  closeBtn: { width: 30, height: 30, borderRadius: 15, backgroundColor: "#F1F4FB", alignItems: "center", justifyContent: "center" },
-  context: {
-    flexDirection: "row", alignItems: "center",
-    paddingHorizontal: 20, paddingVertical: 12,
-    backgroundColor: "#F7F9FC", borderBottomWidth: 1, borderBottomColor: "#F0F2F6",
-  },
-  contextName: { fontSize: 13, fontWeight: "800", color: CORES.COMUNIDADE_TEXT },
-  contextSnippet: { fontSize: 12.5, fontWeight: "500", color: CORES.COMUNIDADE_MUTED_2, marginTop: 1 },
-  empty: { textAlign: "center", paddingVertical: 40, color: "#B0B8C7", fontSize: 14, fontWeight: "600" },
-  retryBtn: { marginTop: 12, paddingVertical: 10, paddingHorizontal: 20, borderRadius: 999, backgroundColor: CORES.COMUNIDADE_ACCENT_SOFT },
-  retryText: { color: CORES.COMUNIDADE_ACCENT, fontWeight: "800", fontSize: 13.5 },
-  commentRow: { flexDirection: "row", alignItems: "flex-start", paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: "#F4F6FA" },
-  commentTouchable: { flex: 1, flexDirection: "row", alignItems: "flex-start" },
-  commentDeleteBtn: { padding: 4, marginLeft: 6 },
-  commentHead: { flexDirection: "row", alignItems: "baseline", gap: 8 },
-  commentName: { fontSize: 13.5, fontWeight: "800", color: CORES.COMUNIDADE_TEXT },
-  commentTime: { fontSize: 11.5, fontWeight: "600", color: "#B0B8C7" },
-  commentText: { fontSize: 14, fontWeight: "500", color: "#344054", lineHeight: 21, marginTop: 3 },
-  inputBar: {
-    flexDirection: "row", alignItems: "center", gap: 10,
-    paddingHorizontal: 16, paddingTop: 12, paddingBottom: 16,
-    borderTopWidth: 1, borderTopColor: "#F0F2F6", backgroundColor: CORES.WHITE,
-  },
-  input: {
-    flex: 1, height: 42, borderWidth: 1.5, borderColor: "#E7EBF2", borderRadius: 999,
-    paddingHorizontal: 16, fontSize: 14, color: CORES.COMUNIDADE_TEXT, backgroundColor: "#F7F9FC",
-  },
-  sendBtn: { width: 42, height: 42, borderRadius: 21, backgroundColor: CORES.COMUNIDADE_ACCENT, alignItems: "center", justifyContent: "center" },
+    /* sheet */
+    scrim: { ...StyleSheet.absoluteFillObject, backgroundColor: CORES.OVERLAY },
+    sheetWrap: { flex: 1, justifyContent: "flex-end" },
+    sheet: {
+      height: "74%",
+      backgroundColor: CORES.SURFACE,
+      borderTopLeftRadius: 26,
+      borderTopRightRadius: 26,
+      overflow: "hidden",
+    },
+    grabber: { width: 40, height: 5, borderRadius: 999, backgroundColor: CORES.BORDER_STRONG, alignSelf: "center", marginTop: 10, marginBottom: 4 },
+    sheetHeader: {
+      flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+      paddingHorizontal: 20, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: CORES.COMUNIDADE_LINE,
+    },
+    sheetTitle: { fontSize: 17, fontWeight: "800", color: CORES.COMUNIDADE_TEXT },
+    closeBtn: { width: 30, height: 30, borderRadius: 15, backgroundColor: CORES.COMUNIDADE_BUBBLE, alignItems: "center", justifyContent: "center" },
+    context: {
+      flexDirection: "row", alignItems: "center",
+      paddingHorizontal: 20, paddingVertical: 12,
+      backgroundColor: CORES.INPUT_BG, borderBottomWidth: 1, borderBottomColor: CORES.COMUNIDADE_LINE,
+    },
+    contextName: { fontSize: 13, fontWeight: "800", color: CORES.COMUNIDADE_TEXT },
+    contextSnippet: { fontSize: 12.5, fontWeight: "500", color: CORES.COMUNIDADE_MUTED_2, marginTop: 1 },
+    empty: { textAlign: "center", paddingVertical: 40, color: CORES.COMUNIDADE_MUTED_2, fontSize: 14, fontWeight: "600" },
+    retryBtn: { marginTop: 12, paddingVertical: 10, paddingHorizontal: 20, borderRadius: 999, backgroundColor: CORES.COMUNIDADE_ACCENT_SOFT },
+    retryText: { color: CORES.COMUNIDADE_ACCENT, fontWeight: "800", fontSize: 13.5 },
+    commentRow: { flexDirection: "row", alignItems: "flex-start", paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: CORES.COMUNIDADE_LINE },
+    commentTouchable: { flex: 1, flexDirection: "row", alignItems: "flex-start" },
+    commentDeleteBtn: { padding: 4, marginLeft: 6 },
+    commentHead: { flexDirection: "row", alignItems: "baseline", gap: 8 },
+    commentName: { fontSize: 13.5, fontWeight: "800", color: CORES.COMUNIDADE_TEXT },
+    commentTime: { fontSize: 11.5, fontWeight: "600", color: CORES.COMUNIDADE_MUTED_2 },
+    commentText: { fontSize: 14, fontWeight: "500", color: CORES.COMUNIDADE_TEXT_2, lineHeight: 21, marginTop: 3 },
+    inputBar: {
+      flexDirection: "row", alignItems: "center", gap: 10,
+      paddingHorizontal: 16, paddingTop: 12, paddingBottom: 16,
+      borderTopWidth: 1, borderTopColor: CORES.COMUNIDADE_LINE, backgroundColor: CORES.SURFACE,
+    },
+    input: {
+      flex: 1, height: 42, borderWidth: 1.5, borderColor: CORES.COMUNIDADE_BUBBLE_LINE, borderRadius: 999,
+      paddingHorizontal: 16, fontSize: 14, color: CORES.COMUNIDADE_TEXT, backgroundColor: CORES.INPUT_BG,
+    },
+    sendBtn: { width: 42, height: 42, borderRadius: 21, backgroundColor: CORES.ACCENT_FILL_COMUNIDADE, alignItems: "center", justifyContent: "center" },
 
-  /* novo post */
-  newPostSheet: {
-    minHeight: 260,
-    backgroundColor: CORES.WHITE,
-    borderTopLeftRadius: 26,
-    borderTopRightRadius: 26,
-    overflow: "hidden",
-  },
-  newPostInput: {
-    minHeight: 110,
-    borderWidth: 1.5,
-    borderColor: "#E7EBF2",
-    borderRadius: 16,
-    padding: 14,
-    fontSize: 15,
-    color: CORES.COMUNIDADE_TEXT,
-    backgroundColor: "#F7F9FC",
-    textAlignVertical: "top",
-  },
-  newPostFooter: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 20 },
-  publishBtn: {
-    height: 48, borderRadius: 999, backgroundColor: CORES.COMUNIDADE_ACCENT,
-    alignItems: "center", justifyContent: "center",
-  },
-  publishBtnText: { color: "#fff", fontWeight: "800", fontSize: 15 },
-});
+    /* novo post */
+    newPostSheet: {
+      minHeight: 260,
+      backgroundColor: CORES.SURFACE,
+      borderTopLeftRadius: 26,
+      borderTopRightRadius: 26,
+      overflow: "hidden",
+    },
+    newPostInput: {
+      minHeight: 110,
+      borderWidth: 1.5,
+      borderColor: CORES.COMUNIDADE_BUBBLE_LINE,
+      borderRadius: 16,
+      padding: 14,
+      fontSize: 15,
+      color: CORES.COMUNIDADE_TEXT,
+      backgroundColor: CORES.INPUT_BG,
+      textAlignVertical: "top",
+    },
+    newPostFooter: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 20 },
+    publishBtn: {
+      height: 48, borderRadius: 999, backgroundColor: CORES.ACCENT_FILL_COMUNIDADE,
+      alignItems: "center", justifyContent: "center",
+    },
+    publishBtnText: { color: CORES.ON_ACCENT, fontWeight: "800", fontSize: 15 },
+  });

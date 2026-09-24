@@ -11,6 +11,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Speech from "expo-speech";
 import { Santander } from "../../../util/images";
+import { useThemedStyles } from "../../../theme";
 
 export function useSpeech() {
   const speak = ({
@@ -90,6 +91,7 @@ function useSlideNavigation({
   totalSlides,
   progressAnim,
 }) {
+  const styles = useThemedStyles(makeStyles);
   const lockRef = useRef(false);
 
   const next = () => {
@@ -140,6 +142,7 @@ function useSlideNavigation({
 /* ================= SCREEN ================= */
 
 export default function Base({ route, navigation }) {
+  const styles = useThemedStyles(makeStyles);
   const lesson = route?.params?.lesson;
   const lessons = route?.params?.lessons;
 
@@ -251,6 +254,7 @@ function useNav() {
 /* ================= SLIDES ================= */
 
 function Slide1() {
+  const styles = useThemedStyles(makeStyles);
   const { renderNextButton } = useNav();
 
   return (
@@ -300,6 +304,7 @@ function Slide1() {
 }
 
 function Slide2() {
+  const styles = useThemedStyles(makeStyles);
   const { renderPrevButton, renderNextButton } = useNav();
   const [mostrarTraducao, setMostrarTraducao] = useState(false);
 
@@ -363,6 +368,7 @@ const vocabulary = [
 ];
 
 function Slide3() {
+  const styles = useThemedStyles(makeStyles);
   const { renderPrevButton, renderNextButton } = useNav();
 
   const [playingIndex, setPlayingIndex] = useState(null);
@@ -460,6 +466,7 @@ function Slide3() {
 }
 
 function Slide4() {
+  const styles = useThemedStyles(makeStyles);
   const { renderPrevButton, renderNextButton } = useNav();
 
   return (
@@ -473,6 +480,7 @@ function Slide4() {
 }
 
 function Slide5() {
+  const styles = useThemedStyles(makeStyles);
   const { renderPrevButton, renderNextButton } = useNav();
 
   return (
@@ -486,6 +494,7 @@ function Slide5() {
 }
 
 function Slide6() {
+  const styles = useThemedStyles(makeStyles);
   const { renderPrevButton, renderNextButton } = useNav();
 
   return (
@@ -500,6 +509,7 @@ function Slide6() {
 }
 
 function Slide7() {
+  const styles = useThemedStyles(makeStyles);
   const { renderPrevButton, renderNextButton } = useNav();
 
   return (
@@ -514,6 +524,7 @@ function Slide7() {
 }
 
 function Slide8() {
+  const styles = useThemedStyles(makeStyles);
   const { renderPrevButton, renderNextButton } = useNav();
 
   return (
@@ -535,282 +546,283 @@ function Slide8() {
 
 /* ================= STYLES ================= */
 
-const styles = StyleSheet.create({
-  /* ================= BASE ================= */
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    /* ================= BASE ================= */
 
-  slide: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#F5F5F5",
-    margin: 10,
-  },
+    slide: {
+      flex: 1,
+      alignItems: "center",
+      backgroundColor: CORES.BACKGROUND,
+      margin: 10,
+    },
 
-  buttonRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 24,
-  },
+    buttonRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginTop: 24,
+    },
 
-  /* ================= PROGRESS ================= */
+    /* ================= PROGRESS ================= */
 
-  progressBarContainer: {
-    height: 4,
-    backgroundColor: "#e0e0e0ab",
-    width: "100%",
-  },
+    progressBarContainer: {
+      height: 4,
+      backgroundColor: CORES.TRACK,
+      width: "100%",
+    },
 
-  progressBarFill: {
-    height: "100%",
-    backgroundColor: "#ef4444",
-    borderRadius: 2,
-  },
+    progressBarFill: {
+      height: "100%",
+      backgroundColor: CORES.DANGER_FILL,
+      borderRadius: 2,
+    },
 
-  /* ================= BOTÕES ================= */
+    /* ================= BOTÕES ================= */
 
-  nextButton: {
-    backgroundColor: "#ef4444",
-    width: 180,
-    height: 48,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+    nextButton: {
+      backgroundColor: CORES.DANGER_FILL,
+      width: 180,
+      height: 48,
+      borderRadius: 12,
+      alignItems: "center",
+      justifyContent: "center",
+    },
 
-  nextButtonText: {
-    color: "#fff",
-    fontWeight: "700",
-    fontSize: 16,
-  },
+    nextButtonText: {
+      color: CORES.ON_ACCENT,
+      fontWeight: "700",
+      fontSize: 16,
+    },
 
-  prevButton: {
-    backgroundColor: "#FFFFFF",
-    width: 180,
-    height: 48,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#000000",
-  },
+    prevButton: {
+      backgroundColor: CORES.SURFACE,
+      width: 180,
+      height: 48,
+      borderRadius: 12,
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 1,
+      borderColor: CORES.TEXT,
+    },
 
-  prevButtonText: {
-    color: "#000000",
-    fontWeight: "700",
-    fontSize: 16,
-  },
+    prevButtonText: {
+      color: CORES.TEXT,
+      fontWeight: "700",
+      fontSize: 16,
+    },
 
-  nextLessonButton: {
-    backgroundColor: "#0f73ff",
-    width: 180,
-    height: 48,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+    nextLessonButton: {
+      backgroundColor: CORES.EX_BLUE_STRONG,
+      width: 180,
+      height: 48,
+      borderRadius: 12,
+      alignItems: "center",
+      justifyContent: "center",
+    },
 
-  nextLessonButtonText: {
-    color: "#fff",
-    fontWeight: "700",
-    fontSize: 16,
-  },
+    nextLessonButtonText: {
+      color: CORES.ON_ACCENT,
+      fontWeight: "700",
+      fontSize: 16,
+    },
 
-  /* ================= SLIDE 1 ================= */
+    /* ================= SLIDE 1 ================= */
 
-  introContainer: {
-    flex: 1,
-    alignItems: "center",
-    padding: 20,
-    backgroundColor: "#e0e0e0ab",
-  },
+    introContainer: {
+      flex: 1,
+      alignItems: "center",
+      padding: 20,
+      backgroundColor: CORES.TRACK,
+    },
 
-  imagePlaceholder: {
-    width: 145,
-    height: 145,
-    borderRadius: 18,
-    borderWidth: 2.5,
-    borderColor: "#ef4444",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 14,
-  },
+    imagePlaceholder: {
+      width: 145,
+      height: 145,
+      borderRadius: 18,
+      borderWidth: 2.5,
+      borderColor: CORES.DANGER,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 14,
+    },
 
-  image: {
-    width: 140,
-    height: 140,
-    borderRadius: 18,
-  },
+    image: {
+      width: 140,
+      height: 140,
+      borderRadius: 18,
+    },
 
-  introTitle: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: "#111827",
-    marginBottom: 6,
-    textAlign: "center",
-  },
+    introTitle: {
+      fontSize: 24,
+      fontWeight: "800",
+      color: CORES.TEXT,
+      marginBottom: 6,
+      textAlign: "center",
+    },
 
-  introSubtitle: {
-    fontSize: 14,
-    color: "#6b7280",
-    marginBottom: 20,
-  },
+    introSubtitle: {
+      fontSize: 14,
+      color: CORES.TEXT_MUTED,
+      marginBottom: 20,
+    },
 
-  goalBox: {
-    width: "100%",
-    borderWidth: 1.5,
-    borderColor: "#ef4444",
-    borderRadius: 14,
-    padding: 16,
-    marginBottom: 14,
-  },
+    goalBox: {
+      width: "100%",
+      borderWidth: 1.5,
+      borderColor: CORES.DANGER,
+      borderRadius: 14,
+      padding: 16,
+      marginBottom: 14,
+    },
 
-  goalTitle: {
-    fontWeight: "700",
-    color: "#ef4444",
-    marginBottom: 6,
-  },
+    goalTitle: {
+      fontWeight: "700",
+      color: CORES.DANGER,
+      marginBottom: 6,
+    },
 
-  goalText: {
-    fontSize: 14,
-    color: "#111827",
-    lineHeight: 20,
-  },
+    goalText: {
+      fontSize: 14,
+      color: CORES.TEXT,
+      lineHeight: 20,
+    },
 
-  resultBox: {
-    width: "100%",
-    borderWidth: 1.5,
-    borderColor: "#ef4444",
-    borderRadius: 14,
-    padding: 16,
-    marginBottom: 24,
-  },
+    resultBox: {
+      width: "100%",
+      borderWidth: 1.5,
+      borderColor: CORES.DANGER,
+      borderRadius: 14,
+      padding: 16,
+      marginBottom: 24,
+    },
 
-  resultText: {
-    fontSize: 14,
-    color: "#111827",
-    lineHeight: 20,
-  },
+    resultText: {
+      fontSize: 14,
+      color: CORES.TEXT,
+      lineHeight: 20,
+    },
 
-  startButton: {
-    backgroundColor: "#dc2626",
-    width: "100%",
-    height: 52,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+    startButton: {
+      backgroundColor: CORES.DANGER_FILL,
+      width: "100%",
+      height: 52,
+      borderRadius: 14,
+      alignItems: "center",
+      justifyContent: "center",
+    },
 
-  startButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "700",
-  },
+    startButtonText: {
+      color: CORES.ON_ACCENT,
+      fontSize: 16,
+      fontWeight: "700",
+    },
 
-  /* ================= SLIDE 2 ================= */
+    /* ================= SLIDE 2 ================= */
 
-  header: {
-    alignItems: "center",
-  },
+    header: {
+      alignItems: "center",
+    },
 
-  title: {
-    fontSize: 25,
-    fontWeight: "700",
-    color: "#111827",
-    textAlign: "center",
-  },
+    title: {
+      fontSize: 25,
+      fontWeight: "700",
+      color: CORES.TEXT,
+      textAlign: "center",
+    },
 
-  subtitle: {
-    fontSize: 15,
-    color: "#6B7280",
-    marginTop: 4,
-    textAlign: "center",
-    marginBottom: 12,
-  },
+    subtitle: {
+      fontSize: 15,
+      color: CORES.TEXT_MUTED,
+      marginTop: 4,
+      textAlign: "center",
+      marginBottom: 12,
+    },
 
-  card: {
-    borderWidth: 1.5,
-    borderColor: "#EF4444",
-    borderRadius: 18,
-    padding: 20,
-  },
+    card: {
+      borderWidth: 1.5,
+      borderColor: CORES.DANGER,
+      borderRadius: 18,
+      padding: 20,
+    },
 
-  textEn: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#111827",
-    textAlign: "center",
-    lineHeight: 22,
-    marginBottom: 16,
-  },
+    textEn: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: CORES.TEXT,
+      textAlign: "center",
+      lineHeight: 22,
+      marginBottom: 16,
+    },
 
-  translationBox: {
-    backgroundColor: "#EFF6FF",
-    borderRadius: 12,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: "#3B82F6",
-    marginBottom: 14,
-  },
+    translationBox: {
+      backgroundColor: CORES.EX_BLUE_BG,
+      borderRadius: 12,
+      padding: 14,
+      borderWidth: 1,
+      borderColor: CORES.BRAND_STRONG,
+      marginBottom: 14,
+    },
 
-  textPt: {
-    fontSize: 14,
-    color: "#1F2937",
-    lineHeight: 20,
-  },
+    textPt: {
+      fontSize: 14,
+      color: CORES.TEXT,
+      lineHeight: 20,
+    },
 
-  translateButton: {
-    backgroundColor: "#3B82F6",
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: "center",
-  },
+    translateButton: {
+      backgroundColor: CORES.BRAND_STRONG,
+      paddingVertical: 12,
+      borderRadius: 10,
+      alignItems: "center",
+    },
 
-  translateButtonText: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: "600",
-  },
+    translateButtonText: {
+      color: CORES.SURFACE,
+      fontSize: 14,
+      fontWeight: "600",
+    },
 
-  /* ================= SLIDE 3 ================= */
+    /* ================= SLIDE 3 ================= */
 
-  cardatividade: {
-    width: "100%",
-    flex: 1, // ✅ permite crescer
-    backgroundColor: "#F5F5F5",
-    borderRadius: 14,
-  },
+    cardatividade: {
+      width: "100%",
+      flex: 1, // ✅ permite crescer
+      backgroundColor: CORES.BACKGROUND,
+      borderRadius: 14,
+    },
 
-  vocabCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 14,
-    padding: 12,
-    marginBottom: 12,
-    borderWidth: 2,
-    borderColor: "#EF4444",
-  },
+    vocabCard: {
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 14,
+      padding: 12,
+      marginBottom: 12,
+      borderWidth: 2,
+      borderColor: CORES.DANGER,
+    },
 
-  cardActive: {
-    backgroundColor: "#FFF7ED",
-    borderRadius: 14,
-    padding: 12,
-    marginBottom: 12,
-  },
+    cardActive: {
+      backgroundColor: CORES.FB_ORANGE_BG,
+      borderRadius: 14,
+      padding: 12,
+      marginBottom: 12,
+    },
 
-  cardContent: {
-    flexDirection: "row",
-    alignItems: "center", // ícone + texto alinhados no centro
-    justifyContent: "center",
-  },
+    cardContent: {
+      flexDirection: "row",
+      alignItems: "center", // ícone + texto alinhados no centro
+      justifyContent: "center",
+    },
 
-  speaker: {
-    fontSize: 22,
-    textAlign: "center",
-  },
+    speaker: {
+      fontSize: 22,
+      textAlign: "center",
+    },
 
-  playing: {
-    fontSize: 12,
-    color: "#16a34a",
-    fontWeight: "600",
-    textAlign: "center",
-  },
-});
+    playing: {
+      fontSize: 12,
+      color: CORES.SUCCESS_TEXT,
+      fontWeight: "600",
+      textAlign: "center",
+    },
+  });

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import CORES from "../util/cores";
+import { useTheme, useThemedStyles } from "../theme";
 
 function clamp(value, min, max) {
   if (Number.isNaN(value)) return min;
@@ -26,6 +26,8 @@ export default function StudyTimeModal({
   onConfirm,
   onCancel,
 }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [hourText, setHourText] = useState(pad(initialHour));
   const [minuteText, setMinuteText] = useState(pad(initialMinute));
   const minuteRef = useRef(null);
@@ -75,6 +77,7 @@ export default function StudyTimeModal({
               keyboardType="number-pad"
               maxLength={2}
               style={styles.timeInput}
+              placeholderTextColor={CORES.PROFILE_MUTED_LIGHT}
               selectTextOnFocus
               placeholder="20"
             />
@@ -87,6 +90,7 @@ export default function StudyTimeModal({
               keyboardType="number-pad"
               maxLength={2}
               style={styles.timeInput}
+              placeholderTextColor={CORES.PROFILE_MUTED_LIGHT}
               selectTextOnFocus
               placeholder="00"
             />
@@ -108,71 +112,75 @@ export default function StudyTimeModal({
   );
 }
 
-const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: "rgba(15,23,35,0.55)",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-  },
-  card: {
-    width: "100%",
-    maxWidth: 360,
-    backgroundColor: CORES.WHITE,
-    borderRadius: 24,
-    padding: 24,
-    alignItems: "center",
-  },
-  emoji: { fontSize: 34, marginBottom: 6 },
-  title: {
-    fontSize: 19,
-    fontWeight: "900",
-    color: CORES.PROFILE_NAVY,
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  description: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: CORES.PROFILE_MUTED,
-    textAlign: "center",
-    lineHeight: 20,
-    marginBottom: 20,
-  },
-  timeRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    marginBottom: 8,
-  },
-  timeInput: {
-    width: 64,
-    height: 64,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: "#DDE5F0",
-    textAlign: "center",
-    fontSize: 26,
-    fontWeight: "900",
-    color: CORES.PROFILE_NAVY,
-  },
-  colon: { fontSize: 26, fontWeight: "900", color: CORES.PROFILE_NAVY },
-  hint: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: CORES.PROFILE_MUTED_LIGHT,
-    marginBottom: 20,
-  },
-  confirmBtn: {
-    width: "100%",
-    height: 52,
-    borderRadius: 14,
-    backgroundColor: CORES.PROFILE_BLUE,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  confirmText: { color: "#fff", fontWeight: "900", fontSize: 16 },
-  cancelBtn: { marginTop: 14, padding: 4 },
-  cancelText: { color: CORES.PROFILE_MUTED_LIGHT, fontWeight: "700", fontSize: 14 },
-});
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    backdrop: {
+      flex: 1,
+      backgroundColor: CORES.OVERLAY,
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 24,
+    },
+    card: {
+      width: "100%",
+      maxWidth: 360,
+      backgroundColor: CORES.SURFACE_HIGH,
+      borderRadius: 24,
+      padding: 24,
+      alignItems: "center",
+      borderWidth: CORES.mode === "dark" ? 1 : 0,
+      borderColor: CORES.BORDER,
+    },
+    emoji: { fontSize: 34, marginBottom: 6 },
+    title: {
+      fontSize: 19,
+      fontWeight: "900",
+      color: CORES.PROFILE_NAVY,
+      textAlign: "center",
+      marginBottom: 8,
+    },
+    description: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: CORES.PROFILE_MUTED,
+      textAlign: "center",
+      lineHeight: 20,
+      marginBottom: 20,
+    },
+    timeRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      marginBottom: 8,
+    },
+    timeInput: {
+      width: 64,
+      height: 64,
+      borderRadius: 16,
+      borderWidth: 2,
+      borderColor: CORES.BORDER_STRONG,
+      backgroundColor: CORES.INPUT_BG,
+      textAlign: "center",
+      fontSize: 26,
+      fontWeight: "900",
+      color: CORES.PROFILE_NAVY,
+    },
+    colon: { fontSize: 26, fontWeight: "900", color: CORES.PROFILE_NAVY },
+    hint: {
+      fontSize: 12,
+      fontWeight: "600",
+      color: CORES.PROFILE_MUTED_LIGHT,
+      marginBottom: 20,
+    },
+    confirmBtn: {
+      width: "100%",
+      height: 52,
+      borderRadius: 14,
+      backgroundColor: CORES.ACCENT_FILL,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    confirmText: { color: CORES.ON_ACCENT, fontWeight: "900", fontSize: 16 },
+    cancelBtn: { marginTop: 14, padding: 4 },
+    cancelText: { color: CORES.PROFILE_MUTED_LIGHT, fontWeight: "700", fontSize: 14 },
+  });

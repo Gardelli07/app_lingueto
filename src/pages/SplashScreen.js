@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { useVideoPlayer, VideoView } from "expo-video";
-import CORES from "../util/cores";
+import { useTheme, useThemedStyles } from "../theme";
 import { useAuth } from "../context/AuthContext";
 import { syncCourseProgressFromServer } from "../util/courseCatalog";
 import { syncAulasPlusProgressFromServer } from "./aulas/aulasplus/progress";
@@ -9,6 +9,7 @@ import { syncAulasPlusProgressFromServer } from "./aulas/aulasplus/progress";
 const splashVideo = require("../../assets/splash.mp4");
 
 export default function SplashScreen({ navigation }) {
+  const styles = useThemedStyles(makeStyles);
   const { user, carregando } = useAuth();
   const player = useVideoPlayer(splashVideo, (p) => {
     p.muted = true;
@@ -71,12 +72,13 @@ export default function SplashScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: CORES.PRIMARY,
-  },
-  video: {
-    flex: 1,
-  },
-});
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: CORES.PRIMARY,
+    },
+    video: {
+      flex: 1,
+    },
+  });

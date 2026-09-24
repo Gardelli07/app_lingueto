@@ -9,7 +9,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise4({
   activity,
@@ -18,6 +18,7 @@ export function Exercise4({
   next,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -38,7 +39,7 @@ export function Exercise4({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -277,88 +278,89 @@ export function Exercise4({
   );
 }
 
-const ex4 = StyleSheet.create({
-  correctSentenceBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  correctSentenceMediaCard: {
-    width: "88%",
-    maxWidth: 520,
-    aspectRatio: 16 / 9,
-    borderRadius: 18,
-    overflow: "hidden",
-    marginBottom: 12,
-    backgroundColor: CORES.SURFACE_MUTED,
-  },
-  correctSentenceImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  correctSentencePromptPill: {
-    width: "88%",
-    minHeight: 36,
-    borderRadius: 18,
-    backgroundColor: CORES.PRIMARY,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 16,
-    marginBottom: 12,
-  },
-  correctSentencePromptText: {
-    color: CORES.WHITE,
-    fontSize: 15,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  correctSentenceOptionsList: {
-    width: "88%",
-    gap: 8,
-  },
-  correctSentenceOptionWrap: {
-    width: "100%",
-  },
-  correctSentenceOption: {
-    width: "100%",
-    minHeight: 34,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: CORES.PRIMARY,
-    backgroundColor: CORES.WHITE,
-  },
-  correctSentenceOptionTouch: {
-    flex: 1,
-    minHeight: 34,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 16,
-  },
-  correctSentenceOptionText: {
-    fontSize: 14,
-    color: CORES.PRIMARY,
-    textAlign: "center",
-    textDecorationLine: "underline",
-  },
-  correctSentenceOptionCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  correctSentenceOptionWrong: {
-    borderColor: CORES.DANGER,
-  },
-  correctSentenceOptionTextCorrect: {
-    color: CORES.SUCCESS_DARK,
-    fontWeight: "700",
-    textDecorationLine: "none",
-  },
-  slide5SuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+const ex4 = (CORES) =>
+  StyleSheet.create({
+    correctSentenceBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    correctSentenceMediaCard: {
+      width: "88%",
+      maxWidth: 520,
+      aspectRatio: 16 / 9,
+      borderRadius: 18,
+      overflow: "hidden",
+      marginBottom: 12,
+      backgroundColor: CORES.SURFACE_MUTED,
+    },
+    correctSentenceImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+    },
+    correctSentencePromptPill: {
+      width: "88%",
+      minHeight: 36,
+      borderRadius: 18,
+      backgroundColor: CORES.PRIMARY,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 16,
+      marginBottom: 12,
+    },
+    correctSentencePromptText: {
+      color: CORES.WHITE,
+      fontSize: 15,
+      fontWeight: "700",
+      textAlign: "center",
+    },
+    correctSentenceOptionsList: {
+      width: "88%",
+      gap: 8,
+    },
+    correctSentenceOptionWrap: {
+      width: "100%",
+    },
+    correctSentenceOption: {
+      width: "100%",
+      minHeight: 34,
+      borderRadius: 18,
+      borderWidth: 1,
+      borderColor: CORES.PRIMARY,
+      backgroundColor: CORES.SURFACE,
+    },
+    correctSentenceOptionTouch: {
+      flex: 1,
+      minHeight: 34,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 16,
+    },
+    correctSentenceOptionText: {
+      fontSize: 14,
+      color: CORES.PRIMARY,
+      textAlign: "center",
+      textDecorationLine: "underline",
+    },
+    correctSentenceOptionCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    correctSentenceOptionWrong: {
+      borderColor: CORES.DANGER,
+    },
+    correctSentenceOptionTextCorrect: {
+      color: CORES.SUCCESS_DARK,
+      fontWeight: "700",
+      textDecorationLine: "none",
+    },
+    slide5SuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex4;
 

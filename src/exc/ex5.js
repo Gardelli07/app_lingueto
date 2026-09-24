@@ -8,7 +8,7 @@ import {
   View,
   StyleSheet,
 } from "react-native";
-import CORES from "../util/cores";
+import { useTheme } from "../theme";
 
 export function Exercise5({
   activity,
@@ -17,6 +17,7 @@ export function Exercise5({
   next,
   onAttempt,
 }) {
+  const CORES = useTheme();
   const bottomSafeSpace = 3;
   const alertTranslateY = useRef(new Animated.Value(64)).current;
   const alertOpacity = useRef(new Animated.Value(0)).current;
@@ -36,7 +37,7 @@ export function Exercise5({
 
   const wrongBackground = blinkAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: [CORES.WHITE, CORES.DANGER_LIGHT],
+    outputRange: [CORES.SURFACE, CORES.DANGER_LIGHT],
   });
 
   useEffect(() => {
@@ -297,111 +298,112 @@ export function Exercise5({
   );
 }
 
-const ex5 = StyleSheet.create({
-  completePhraseBlock: {
-    width: "100%",
-    alignItems: "center",
-  },
-  completePhraseSentencePill: {
-    width: "88%",
-    minHeight: 38,
-    borderRadius: 19,
-    backgroundColor: CORES.PRIMARY,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-    justifyContent: "center",
-    alignContent: "center",
-    gap: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    marginBottom: 14,
-  },
-  completePhraseSentenceText: {
-    color: CORES.WHITE,
-    fontSize: 15,
-    fontWeight: "700",
-    lineHeight: 20,
-    flexShrink: 1,
-    textAlign: "center",
-  },
-  completePhraseBlank: {
-    minWidth: 68,
-    maxWidth: "100%",
-    minHeight: 28,
-    borderRadius: 14,
-    backgroundColor: CORES.WHITE,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 3,
-    flexShrink: 1,
-  },
-  completePhraseBlankCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderWidth: 1,
-    borderColor: CORES.SUCCESS,
-  },
-  completePhraseBlankWrong: {
-    borderWidth: 1,
-    borderColor: CORES.DANGER,
-  },
-  completePhraseBlankText: {
-    color: CORES.PRIMARY,
-    fontSize: 14,
-    fontWeight: "700",
-    lineHeight: 18,
-    textAlign: "center",
-    flexShrink: 1,
-  },
-  completePhraseBlankTextCorrect: {
-    color: CORES.SUCCESS_DARK,
-  },
-  completePhraseOptionsRow: {
-    flexDirection: "row",
-    gap: 16,
-  },
-  completePhraseOptionWrap: {
-    minWidth: 70,
-  },
-  completePhraseOption: {
-    minWidth: 70,
-    minHeight: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: CORES.PRIMARY,
-    backgroundColor: CORES.WHITE,
-  },
-  completePhraseOptionTouch: {
-    flex: 1,
-    minHeight: 32,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 14,
-  },
-  completePhraseOptionText: {
-    fontSize: 14,
-    color: CORES.PRIMARY,
-    textAlign: "center",
-  },
-  completePhraseOptionCorrect: {
-    backgroundColor: CORES.SUCCESS_BG,
-    borderColor: CORES.SUCCESS,
-  },
-  completePhraseOptionWrong: {
-    borderColor: CORES.DANGER,
-  },
-  completePhraseOptionTextCorrect: {
-    color: CORES.SUCCESS_DARK,
-    fontWeight: "700",
-  },
-  slide6SuccessAlertCard: {
-    marginHorizontal: 12,
-    marginBottom: 0,
-    zIndex: 200,
-    elevation: 30,
-  },
-});
+const ex5 = (CORES) =>
+  StyleSheet.create({
+    completePhraseBlock: {
+      width: "100%",
+      alignItems: "center",
+    },
+    completePhraseSentencePill: {
+      width: "88%",
+      minHeight: 38,
+      borderRadius: 19,
+      backgroundColor: CORES.PRIMARY,
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignItems: "center",
+      justifyContent: "center",
+      alignContent: "center",
+      gap: 8,
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      marginBottom: 14,
+    },
+    completePhraseSentenceText: {
+      color: CORES.WHITE,
+      fontSize: 15,
+      fontWeight: "700",
+      lineHeight: 20,
+      flexShrink: 1,
+      textAlign: "center",
+    },
+    completePhraseBlank: {
+      minWidth: 68,
+      maxWidth: "100%",
+      minHeight: 28,
+      borderRadius: 14,
+      backgroundColor: CORES.SURFACE,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 12,
+      paddingVertical: 3,
+      flexShrink: 1,
+    },
+    completePhraseBlankCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderWidth: 1,
+      borderColor: CORES.SUCCESS,
+    },
+    completePhraseBlankWrong: {
+      borderWidth: 1,
+      borderColor: CORES.DANGER,
+    },
+    completePhraseBlankText: {
+      color: CORES.PRIMARY,
+      fontSize: 14,
+      fontWeight: "700",
+      lineHeight: 18,
+      textAlign: "center",
+      flexShrink: 1,
+    },
+    completePhraseBlankTextCorrect: {
+      color: CORES.SUCCESS_DARK,
+    },
+    completePhraseOptionsRow: {
+      flexDirection: "row",
+      gap: 16,
+    },
+    completePhraseOptionWrap: {
+      minWidth: 70,
+    },
+    completePhraseOption: {
+      minWidth: 70,
+      minHeight: 32,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: CORES.PRIMARY,
+      backgroundColor: CORES.SURFACE,
+    },
+    completePhraseOptionTouch: {
+      flex: 1,
+      minHeight: 32,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 14,
+    },
+    completePhraseOptionText: {
+      fontSize: 14,
+      color: CORES.PRIMARY,
+      textAlign: "center",
+    },
+    completePhraseOptionCorrect: {
+      backgroundColor: CORES.SUCCESS_BG,
+      borderColor: CORES.SUCCESS,
+    },
+    completePhraseOptionWrong: {
+      borderColor: CORES.DANGER,
+    },
+    completePhraseOptionTextCorrect: {
+      color: CORES.SUCCESS_DARK,
+      fontWeight: "700",
+    },
+    slide6SuccessAlertCard: {
+      marginHorizontal: 12,
+      marginBottom: 0,
+      zIndex: 200,
+      elevation: 30,
+    },
+  });
 
 export default ex5;
 /*

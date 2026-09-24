@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="721af8ae-618c-4403-8b7f-4ffb11947bc0"></script>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<!-- fonte de icones base64 removida -->
+
+/*# sourceMappingURL=materialdesignicons.css.map */</style>
+<style>
+  body { margin:0; background:#DDE3EC; font-family:-apple-system,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif; }
+  a { color:#2563EB; text-decoration:none; }
+  a:hover { color:#16305C; }
+</style>
+</helmet>
+
+<section style="padding:56px;display:flex;flex-direction:column;gap:56px">
+
+  <div style="max-width:900px;display:flex;flex-direction:column;gap:8px">
+    <div style="font-size:12px;font-weight:900;letter-spacing:1.2px;color:#7E8CA0">LINGUETO · REDESIGN</div>
+    <div style="font-size:38px;font-weight:900;color:#16305C;line-height:1.05">Desafios — duelo 1x1</div>
+    <div style="font-size:15px;font-weight:600;color:#5B6C84;line-height:1.5;text-wrap:pretty">Mesma família visual de “Meus erros”: card raio 20, padding 16, chips pill 11px/900, ação pill de 44px, faixa de resumo com gradiente. Artboards 390x844. Toda cor nova usa o prefixo <code style="font-family:ui-monospace,Menlo,monospace">DES_</code> e vem no par claro/escuro.</div>
+  </div>
+
+  <!-- ================= DUELO ATIVO ================= -->
+  <div style="display:flex;gap:36px;flex-wrap:wrap">
+
+    <!-- A · duelo ativo claro -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:15px;font-weight:900;color:#16305C">1 · Duelo ativo</span><span style="font-size:12px;font-weight:700;color:#7E8CA0">claro · meta de XP · eu na frente</span></div>
+      <div style="width:390px;height:844px;background:#EEF1F7;border-radius:34px;overflow:hidden;position:relative;box-shadow:0 12px 34px rgba(22,48,92,0.16)">
+        <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px"><span style="font-size:13px;font-weight:800;color:#16305C">9:41</span><span style="font-size:13px;color:#16305C"><i class="mdi mdi-signal-cellular-3"></i> <i class="mdi mdi-wifi"></i> <i class="mdi mdi-battery-70"></i></span></div>
+        <div style="display:flex;align-items:center;gap:4px;padding:6px 12px 10px"><div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:99px"><i class="mdi mdi-arrow-left" style="font-size:24px;color:#16305C"></i></div><div style="font-size:19px;font-weight:900;color:#16305C">Desafios</div></div>
+
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:12px">
+
+          <!-- arena -->
+          <div style="border-radius:22px;padding:16px;background:linear-gradient(135deg,#24447E 0%,#3F76C4 100%);box-shadow:0 8px 20px rgba(37,99,235,0.26)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,0.18)"><i class="mdi mdi-sword-cross" style="font-size:13px;color:#FFFFFF"></i><span style="font-size:11px;font-weight:900;letter-spacing:0.4px;color:#FFFFFF">DUELO ATIVO</span></div>
+              <div style="flex:1"></div>
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:rgba(247,195,77,0.22)"><i class="mdi mdi-clock-outline" style="font-size:13px;color:#FFE1A3"></i><span style="font-size:11px;font-weight:900;color:#FFE1A3">5 DIAS RESTANTES</span></div>
+            </div>
+
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-top:16px">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="width:60px;height:60px;border-radius:99px;background:#FFFFFF;display:flex;align-items:center;justify-content:center;border:3px solid #FFD98A"><span style="font-size:22px;font-weight:900;color:#24447E">V</span></div>
+                <div style="font-size:13px;font-weight:900;color:#FFFFFF">Você</div>
+                <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:26px;font-weight:900;color:#FFFFFF;line-height:26px">340</span><span style="font-size:12px;font-weight:800;color:#CFE0F7">/ 500 XP</span></div>
+              </div>
+              <div style="width:42px;display:flex;flex-direction:column;align-items:center;padding-top:16px"><div style="width:38px;height:38px;border-radius:99px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.28)"><span style="font-size:14px;font-weight:900;color:#FFFFFF">VS</span></div></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="width:60px;height:60px;border-radius:99px;background:repeating-linear-gradient(45deg,#C9D8EE 0 6px,#B7CAE6 6px 12px);border:3px solid rgba(255,255,255,0.35)"></div>
+                <div style="font-size:13px;font-weight:900;color:#FFFFFF;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ nomeRival }}</div>
+                <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:26px;font-weight:900;color:#FFD98A;line-height:26px">250</span><span style="font-size:12px;font-weight:800;color:#CFE0F7">/ 500 XP</span></div>
+              </div>
+            </div>
+
+            <!-- cabo de guerra -->
+            <div style="margin-top:16px;position:relative;height:16px;border-radius:99px;background:rgba(11,26,52,0.35);display:flex;overflow:hidden">
+              <div style="width:34%;background:#7FB2FF;border-radius:99px"></div>
+              <div style="flex:1"></div>
+              <div style="width:25%;background:#F2A93B;border-radius:99px"></div>
+              <div style="position:absolute;left:calc(50% - 1px);top:0;width:2px;height:16px;background:rgba(255,255,255,0.55)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:7px"><span style="font-size:11px;font-weight:800;color:#CFE0F7">68%</span><span style="font-size:11px;font-weight:800;color:#CFE0F7">50%</span></div>
+
+            <div style="margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px;height:32px;border-radius:99px;background:rgba(61,220,132,0.20)"><i class="mdi mdi-trending-up" style="font-size:15px;color:#9BF3C4"></i><span style="font-size:12px;font-weight:900;color:#9BF3C4">Você está na frente por 90 XP</span></div>
+          </div>
+
+          <!-- meta -->
+          <div style="background:#FFFFFF;border-radius:20px;padding:16px;box-shadow:0 4px 12px rgba(46,74,120,0.10)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:#E6F4EC"><i class="mdi mdi-lightning-bolt" style="font-size:13px;color:#2E9E5B"></i><span style="font-size:11px;font-weight:900;letter-spacing:0.3px;color:#2E9E5B">CORRIDA DE XP</span></div>
+              <div style="flex:1"></div>
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:#F1F5FA"><i class="mdi mdi-calendar-blank-outline" style="font-size:13px;color:#7E8CA0"></i><span style="font-size:11px;font-weight:900;color:#7E8CA0">7 DIAS</span></div>
+            </div>
+            <div style="margin-top:12px;font-size:17px;font-weight:900;color:#16305C;line-height:21px">Corrida de 500 XP</div>
+            <div style="margin-top:3px;font-size:12px;font-weight:700;color:#9AA6B8">Some 500 XP antes do seu rival. Vale tudo: aulas, Aulas Plus, outros desafios.</div>
+
+            <div style="margin-top:12px;display:flex;align-items:center;gap:10px">
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;background:#FDF1DF"><i class="mdi mdi-trophy-variant" style="font-size:18px;color:#B4791E"></i><div><div style="font-size:18px;font-weight:900;color:#B4791E;line-height:19px">+75 XP</div><div style="font-size:10px;font-weight:800;letter-spacing:0.4px;color:#B4791E;opacity:0.8">PRA QUEM VENCER</div></div></div>
+              <div style="flex:1;display:flex;align-items:center;gap:6px"><i class="mdi mdi-information-outline" style="font-size:14px;color:#9AA6B8"></i><span style="font-size:11px;font-weight:700;color:#9AA6B8;line-height:14px">Só conta o XP feito depois do aceite.</span></div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:center;gap:6px;padding-top:2px"><i class="mdi mdi-bell-outline" style="font-size:14px;color:#9AA6B8"></i><span style="font-size:11.5px;font-weight:700;color:#9AA6B8">Avisamos por notificação quando alguém bater a meta.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B · duelo ativo escuro -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:15px;font-weight:900;color:#16305C">2 · Duelo ativo</span><span style="font-size:12px;font-weight:700;color:#7E8CA0">escuro · meta de aulas · eu atrás · prazo urgente</span></div>
+      <div style="width:390px;height:844px;background:#0F111E;border-radius:34px;overflow:hidden;position:relative;box-shadow:0 12px 34px rgba(22,48,92,0.28)">
+        <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px"><span style="font-size:13px;font-weight:800;color:#F5F6FC">9:41</span><span style="font-size:13px;color:#F5F6FC"><i class="mdi mdi-signal-cellular-3"></i> <i class="mdi mdi-wifi"></i> <i class="mdi mdi-battery-70"></i></span></div>
+        <div style="display:flex;align-items:center;gap:4px;padding:6px 12px 10px"><div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:99px"><i class="mdi mdi-arrow-left" style="font-size:24px;color:#F5F6FC"></i></div><div style="font-size:19px;font-weight:900;color:#F5F6FC">Desafios</div></div>
+
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:12px">
+          <div style="border-radius:22px;padding:16px;background:linear-gradient(135deg,#232850 0%,#3A4BC7 100%);border:1px solid rgba(255,255,255,0.08)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,0.14)"><i class="mdi mdi-sword-cross" style="font-size:13px;color:#FFFFFF"></i><span style="font-size:11px;font-weight:900;letter-spacing:0.4px;color:#FFFFFF">DUELO ATIVO</span></div>
+              <div style="flex:1"></div>
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:rgba(255,107,107,0.22)"><i class="mdi mdi-fire" style="font-size:13px;color:#FF8F8F"></i><span style="font-size:11px;font-weight:900;color:#FF8F8F">FALTAM 8 H</span></div>
+            </div>
+
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-top:16px">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="width:60px;height:60px;border-radius:99px;background:#4A5CE0;display:flex;align-items:center;justify-content:center;border:3px solid #F7C34D"><span style="font-size:22px;font-weight:900;color:#FFFFFF">V</span></div>
+                <div style="font-size:13px;font-weight:900;color:#F5F6FC">Você</div>
+                <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:26px;font-weight:900;color:#F5F6FC;line-height:26px">2</span><span style="font-size:12px;font-weight:800;color:#C2C7E0">/ 5 aulas</span></div>
+              </div>
+              <div style="width:42px;display:flex;flex-direction:column;align-items:center;padding-top:16px"><div style="width:38px;height:38px;border-radius:99px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.22)"><span style="font-size:14px;font-weight:900;color:#FFFFFF">VS</span></div></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="width:60px;height:60px;border-radius:99px;background:repeating-linear-gradient(45deg,#3A3F63 0 6px,#2C3153 6px 12px);border:3px solid rgba(255,255,255,0.28)"></div>
+                <div style="font-size:13px;font-weight:900;color:#F5F6FC;max-width:112px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Ana Beatriz Nascimento</div>
+                <div style="display:flex;align-items:baseline;gap:4px"><span style="font-size:26px;font-weight:900;color:#FFA45C;line-height:26px">4</span><span style="font-size:12px;font-weight:800;color:#C2C7E0">/ 5 aulas</span></div>
+              </div>
+            </div>
+
+            <div style="margin-top:16px;position:relative;height:16px;border-radius:99px;background:rgba(0,0,0,0.32);display:flex;overflow:hidden">
+              <div style="width:20%;background:#8FA0FF;border-radius:99px"></div>
+              <div style="flex:1"></div>
+              <div style="width:40%;background:#FFA45C;border-radius:99px"></div>
+              <div style="position:absolute;left:calc(50% - 1px);top:0;width:2px;height:16px;background:rgba(255,255,255,0.45)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:7px"><span style="font-size:11px;font-weight:800;color:#C2C7E0">40%</span><span style="font-size:11px;font-weight:800;color:#C2C7E0">80%</span></div>
+
+            <div style="margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px;height:32px;border-radius:99px;background:rgba(255,164,92,0.20)"><i class="mdi mdi-arrow-down-right" style="font-size:15px;color:#FFC49A"></i><span style="font-size:12px;font-weight:900;color:#FFC49A">Faltam 2 aulas pra virar o jogo</span></div>
+          </div>
+
+          <div style="background:#1A1E36;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:16px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:rgba(167,139,250,0.18)"><i class="mdi mdi-target" style="font-size:13px;color:#A78BFA"></i><span style="font-size:11px;font-weight:900;letter-spacing:0.3px;color:#A78BFA">AULAS CAPRICHADAS</span></div>
+              <div style="flex:1"></div>
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:rgba(255,255,255,0.07)"><i class="mdi mdi-calendar-blank-outline" style="font-size:13px;color:#9EA3C4"></i><span style="font-size:11px;font-weight:900;color:#9EA3C4">10 DIAS</span></div>
+            </div>
+            <div style="margin-top:12px;font-size:17px;font-weight:900;color:#F5F6FC;line-height:21px">5 aulas com 90%+ de precisão</div>
+
+            <div style="margin-top:10px;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:rgba(167,139,250,0.14);border:1px solid rgba(167,139,250,0.30)">
+              <i class="mdi mdi-alert-circle-outline" style="font-size:17px;color:#A78BFA"></i>
+              <span style="font-size:12px;font-weight:800;color:#D9CDFF;line-height:16px">Só contam aulas terminadas com <span style="color:#FFFFFF">90% ou mais</span> de acerto. Abaixo disso não soma.</span>
+            </div>
+
+            <div style="margin-top:12px;display:flex;align-items:center;gap:10px">
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:14px;background:rgba(247,195,77,0.16)"><i class="mdi mdi-trophy-variant" style="font-size:18px;color:#F7C34D"></i><div><div style="font-size:18px;font-weight:900;color:#F7C34D;line-height:19px">+100 XP</div><div style="font-size:10px;font-weight:800;letter-spacing:0.4px;color:#F7C34D;opacity:0.85">PRA QUEM VENCER</div></div></div>
+              <div style="flex:1;display:flex;align-items:center;gap:6px"><i class="mdi mdi-information-outline" style="font-size:14px;color:#6E7396"></i><span style="font-size:11px;font-weight:700;color:#6E7396;line-height:14px">Só contam aulas feitas depois do aceite.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C · convites -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:15px;font-weight:900;color:#16305C">3 · Convites</span><span style="font-size:12px;font-weight:700;color:#7E8CA0">recebido e enviado · claro</span></div>
+      <div style="width:390px;height:844px;background:#EEF1F7;border-radius:34px;overflow:hidden;position:relative;box-shadow:0 12px 34px rgba(22,48,92,0.16)">
+        <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px"><span style="font-size:13px;font-weight:800;color:#16305C">9:41</span><span style="font-size:13px;color:#16305C"><i class="mdi mdi-signal-cellular-3"></i> <i class="mdi mdi-wifi"></i> <i class="mdi mdi-battery-70"></i></span></div>
+        <div style="display:flex;align-items:center;gap:4px;padding:6px 12px 10px"><div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:99px"><i class="mdi mdi-arrow-left" style="font-size:24px;color:#16305C"></i></div><div style="font-size:19px;font-weight:900;color:#16305C">Desafios</div></div>
+
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:900;letter-spacing:0.7px;color:#7E8CA0">CONVITE RECEBIDO</span><div style="flex:1;height:1px;background:#E1E7F0"></div></div>
+
+          <div style="background:#FFFFFF;border-radius:20px;padding:16px;box-shadow:0 4px 12px rgba(46,74,120,0.10)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:#EEF4FF"><i class="mdi mdi-sword-cross" style="font-size:13px;color:#2563EB"></i><span style="font-size:11px;font-weight:900;letter-spacing:0.4px;color:#2563EB">TE DESAFIARAM</span></div>
+              <div style="flex:1"></div>
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:#FDF1DF"><i class="mdi mdi-timer-sand" style="font-size:13px;color:#B4791E"></i><span style="font-size:11px;font-weight:900;color:#B4791E">EXPIRA EM 21 H</span></div>
+            </div>
+
+            <div style="margin-top:14px;display:flex;align-items:center;gap:12px">
+              <div style="width:56px;height:56px;border-radius:99px;background:repeating-linear-gradient(45deg,#C9D8EE 0 6px,#B7CAE6 6px 12px);border:3px solid #FFFFFF;box-shadow:0 2px 8px rgba(46,74,120,0.18)"></div>
+              <div style="width:30px;height:30px;border-radius:99px;background:#F1F5FA;display:flex;align-items:center;justify-content:center;margin-left:-24px;border:2px solid #FFFFFF"><span style="font-size:11px;font-weight:900;color:#7E8CA0">VS</span></div>
+              <div style="width:44px;height:44px;border-radius:99px;background:#3F6FA8;display:flex;align-items:center;justify-content:center"><span style="font-size:17px;font-weight:900;color:#FFFFFF">V</span></div>
+              <div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:900;color:#16305C;line-height:20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ nomeRival }} te desafiou</div><div style="font-size:12px;font-weight:700;color:#9AA6B8;margin-top:2px">4.820 XP no total</div></div>
+            </div>
+
+            <div style="margin-top:14px;border-radius:16px;background:#F7F9FC;padding:12px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="display:flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;background:#E6F4EC"><i class="mdi mdi-lightning-bolt" style="font-size:12px;color:#2E9E5B"></i><span style="font-size:10.5px;font-weight:900;color:#2E9E5B">CORRIDA DE XP</span></div>
+                <div style="flex:1"></div>
+                <div style="font-size:15px;font-weight:900;color:#B4791E">+50 XP</div>
+              </div>
+              <div style="margin-top:8px;font-size:15px;font-weight:900;color:#16305C">Duelo relâmpago</div>
+              <div style="margin-top:6px;display:flex;gap:8px">
+                <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:#F1F5FA"><i class="mdi mdi-flag-checkered" style="font-size:12px;color:#7E8CA0"></i><span style="font-size:11px;font-weight:800;color:#7E8CA0">100 XP</span></div>
+                <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:#F1F5FA"><i class="mdi mdi-calendar-blank-outline" style="font-size:12px;color:#7E8CA0"></i><span style="font-size:11px;font-weight:800;color:#7E8CA0">1 dia</span></div>
+              </div>
+            </div>
+
+            <div style="margin-top:14px;display:flex;gap:10px">
+              <div style="flex:1;height:44px;border-radius:99px;background:#3F6FA8;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 10px rgba(63,111,168,0.28)"><i class="mdi mdi-check-bold" style="font-size:17px;color:#FFFFFF"></i><span style="font-size:14px;font-weight:800;color:#FFFFFF">Aceitar duelo</span></div>
+              <div style="width:112px;height:44px;border-radius:99px;background:#F1F5FA;display:flex;align-items:center;justify-content:center"><span style="font-size:14px;font-weight:800;color:#7E8CA0">Recusar</span></div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:11px;font-weight:900;letter-spacing:0.7px;color:#7E8CA0">CONVITE ENVIADO</span><div style="flex:1;height:1px;background:#E1E7F0"></div></div>
+
+          <div style="background:#FFFFFF;border-radius:20px;padding:16px;box-shadow:0 4px 12px rgba(46,74,120,0.10)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:#FFF6E5"><i class="mdi mdi-timer-sand" style="font-size:13px;color:#B4791E"></i><span style="font-size:11px;font-weight:900;letter-spacing:0.4px;color:#B4791E">AGUARDANDO RESPOSTA</span></div>
+              <div style="flex:1"></div>
+              <span style="font-size:11px;font-weight:900;color:#9AA6B8">EXPIRA EM 19 H</span>
+            </div>
+
+            <div style="margin-top:14px;display:flex;align-items:center;gap:12px">
+              <div style="width:44px;height:44px;border-radius:99px;background:#3F6FA8;display:flex;align-items:center;justify-content:center"><span style="font-size:17px;font-weight:900;color:#FFFFFF">V</span></div>
+              <div style="width:30px;height:30px;border-radius:99px;background:#F1F5FA;display:flex;align-items:center;justify-content:center;margin-left:-18px;border:2px solid #FFFFFF"><span style="font-size:11px;font-weight:900;color:#7E8CA0">VS</span></div>
+              <div style="width:56px;height:56px;border-radius:99px;background:#E7EDF6;display:flex;align-items:center;justify-content:center;border:3px dashed #C2CDDD;margin-left:-6px"><span style="font-size:20px;font-weight:900;color:#9AA6B8">J</span></div>
+              <div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:900;color:#16305C;line-height:20px">Você desafiou João</div><div style="font-size:12px;font-weight:700;color:#9AA6B8;margin-top:2px">Maratona de 1000 XP · 14 dias</div></div>
+            </div>
+
+            <div style="margin-top:14px;display:flex;align-items:center;gap:10px;border-radius:16px;background:#FFF9EE;padding:12px">
+              <div style="width:34px;height:34px;border-radius:99px;background:#FDF1DF;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-bell-ring-outline" style="font-size:17px;color:#B4791E"></i></div>
+              <span style="font-size:12px;font-weight:700;color:#8A6D2C;line-height:16px;flex:1">O duelo começa quando João aceitar. Se não responder em 24 h, o convite cai sozinho.</span>
+            </div>
+
+            <div style="margin-top:14px;height:44px;border-radius:99px;background:#F1F5FA;display:flex;align-items:center;justify-content:center;gap:7px"><i class="mdi mdi-close" style="font-size:16px;color:#7E8CA0"></i><span style="font-size:14px;font-weight:800;color:#7E8CA0">Cancelar convite</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SELEÇÃO ================= -->
+  <div style="display:flex;gap:36px;flex-wrap:wrap">
+
+    <!-- D · seleção claro -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:15px;font-weight:900;color:#16305C">4 · Sem desafio — seleção</span><span style="font-size:12px;font-weight:700;color:#7E8CA0">claro · botão desabilitado</span></div>
+      <div style="width:390px;height:844px;background:#EEF1F7;border-radius:34px;overflow:hidden;position:relative;box-shadow:0 12px 34px rgba(22,48,92,0.16)">
+        <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px"><span style="font-size:13px;font-weight:800;color:#16305C">9:41</span><span style="font-size:13px;color:#16305C"><i class="mdi mdi-signal-cellular-3"></i> <i class="mdi mdi-wifi"></i> <i class="mdi mdi-battery-70"></i></span></div>
+        <div style="display:flex;align-items:center;gap:4px;padding:6px 12px 10px"><div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:99px"><i class="mdi mdi-arrow-left" style="font-size:24px;color:#16305C"></i></div><div style="font-size:19px;font-weight:900;color:#16305C">Desafios</div></div>
+
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:14px">
+          <sc-if value="{{ mostrarEstatisticas }}" hint-placeholder-val="{{ true }}">
+          <div style="border-radius:22px;padding:16px 18px;background:linear-gradient(135deg,#3E6FB8 0%,#2563EB 100%);display:flex;align-items:center;gap:16px;box-shadow:0 6px 16px rgba(37,99,235,0.24)">
+            <div><div style="display:flex;align-items:baseline;gap:5px"><span style="font-size:32px;font-weight:900;color:#FFFFFF;line-height:34px">8</span><span style="font-size:13px;font-weight:800;color:#FFFFFF">vitórias</span></div><div style="font-size:11.5px;font-weight:700;color:#DCE8FB;margin-top:2px">em 12 desafios</div></div>
+            <div style="width:1px;height:40px;background:rgba(255,255,255,0.28)"></div>
+            <div><div style="display:flex;align-items:baseline;gap:3px"><span style="font-size:32px;font-weight:900;color:#FFFFFF;line-height:34px">67</span><span style="font-size:15px;font-weight:900;color:#FFFFFF">%</span></div><div style="font-size:11.5px;font-weight:700;color:#DCE8FB;margin-top:2px">de aproveitamento</div></div>
+            <div style="margin-left:auto;width:44px;height:44px;border-radius:99px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center"><i class="mdi mdi-sword-cross" style="font-size:22px;color:#FFFFFF"></i></div>
+          </div>
+          </sc-if>
+
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:20px;height:20px;border-radius:99px;background:#DDE7F4;display:flex;align-items:center;justify-content:center"><span style="font-size:11px;font-weight:900;color:#16305C">1</span></div><span style="font-size:12px;font-weight:800;letter-spacing:0.7px;color:#7E8CA0">ESCOLHA O RIVAL</span><div style="flex:1;height:1px;background:#E1E7F0"></div></div>
+
+          <div style="display:flex;gap:10px;overflow:hidden">
+            <div style="flex:0 0 auto;width:92px;border-radius:18px;background:#EEF4FF;border:2px solid #2E6BF6;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative">
+              <div style="width:52px;height:52px;border-radius:99px;background:repeating-linear-gradient(45deg,#C9D8EE 0 6px,#B7CAE6 6px 12px)"></div>
+              <div style="position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:99px;background:#2E6BF6;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-check-bold" style="font-size:12px;color:#FFFFFF"></i></div>
+              <div style="font-size:12px;font-weight:900;color:#16305C;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Marina</div>
+              <div style="padding:2px 8px;border-radius:99px;background:#E6F4EC"><span style="font-size:10px;font-weight:900;color:#2E9E5B">4.820 XP</span></div>
+            </div>
+            <sc-for list="{{ amigos }}" as="a" hint-placeholder-count="3">
+              <div style="flex:0 0 auto;width:92px;border-radius:18px;background:#FFFFFF;border:2px solid transparent;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(46,74,120,0.08)">
+                <div style="width:52px;height:52px;border-radius:99px;background:#3F6FA8;display:flex;align-items:center;justify-content:center"><span style="font-size:20px;font-weight:900;color:#FFFFFF">{{ a.inicial }}</span></div>
+                <div style="font-size:12px;font-weight:900;color:#16305C;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.nome }}</div>
+                <div style="padding:2px 8px;border-radius:99px;background:#F1F5FA"><span style="font-size:10px;font-weight:900;color:#7E8CA0">{{ a.xp }}</span></div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:20px;height:20px;border-radius:99px;background:#DDE7F4;display:flex;align-items:center;justify-content:center"><span style="font-size:11px;font-weight:900;color:#16305C">2</span></div><span style="font-size:12px;font-weight:800;letter-spacing:0.7px;color:#7E8CA0">ESCOLHA A META</span><div style="flex:1;height:1px;background:#E1E7F0"></div></div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ metasClaro }}" as="m" hint-placeholder-count="4">
+              <div style="background:#FFFFFF;border-radius:18px;border:2px solid transparent;padding:12px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 12px rgba(46,74,120,0.08)">
+                <sc-if value="{{ m.isXp }}" hint-placeholder-val="{{ true }}">
+                  <div style="width:40px;height:40px;border-radius:14px;background:#E6F4EC;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-lightning-bolt" style="font-size:20px;color:#2E9E5B"></i></div>
+                </sc-if>
+                <sc-if value="{{ m.isAcc }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:40px;height:40px;border-radius:14px;background:#EFE9FE;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-target" style="font-size:20px;color:#6D45D9"></i></div>
+                </sc-if>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:14.5px;font-weight:900;color:#16305C;line-height:18px">{{ m.titulo }}</div>
+                  <div style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap">
+                    <div style="padding:3px 9px;border-radius:99px;background:#F1F5FA"><span style="font-size:10.5px;font-weight:900;color:#3A557A">{{ m.alvo }}</span></div>
+                    <sc-if value="{{ m.isAcc }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:3px 9px;border-radius:99px;background:#EFE9FE"><span style="font-size:10.5px;font-weight:900;color:#6D45D9">mín. {{ m.precisao }}</span></div>
+                    </sc-if>
+                    <div style="padding:3px 9px;border-radius:99px;background:#F1F5FA"><span style="font-size:10.5px;font-weight:900;color:#7E8CA0">{{ m.prazo }}</span></div>
+                  </div>
+                </div>
+                <div style="text-align:right"><div style="font-size:15px;font-weight:900;color:#B4791E">{{ m.xp }}</div><div style="font-size:9.5px;font-weight:800;letter-spacing:0.3px;color:#C2A05A">PRÊMIO</div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 16px 22px;background:linear-gradient(180deg,rgba(238,241,247,0) 0%,#EEF1F7 34%)">
+          <div style="height:52px;border-radius:99px;background:#DCE3ED;display:flex;align-items:center;justify-content:center;gap:8px"><i class="mdi mdi-sword-cross" style="font-size:19px;color:#A3AFC0"></i><span style="font-size:15px;font-weight:800;color:#A3AFC0">Escolha uma meta</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- E · seleção escuro -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:15px;font-weight:900;color:#16305C">5 · Sem desafio — seleção</span><span style="font-size:12px;font-weight:700;color:#7E8CA0">escuro · meta escolhida · botão ativo</span></div>
+      <div style="width:390px;height:844px;background:#0F111E;border-radius:34px;overflow:hidden;position:relative;box-shadow:0 12px 34px rgba(22,48,92,0.28)">
+        <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px"><span style="font-size:13px;font-weight:800;color:#F5F6FC">9:41</span><span style="font-size:13px;color:#F5F6FC"><i class="mdi mdi-signal-cellular-3"></i> <i class="mdi mdi-wifi"></i> <i class="mdi mdi-battery-70"></i></span></div>
+        <div style="display:flex;align-items:center;gap:4px;padding:6px 12px 10px"><div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:99px"><i class="mdi mdi-arrow-left" style="font-size:24px;color:#F5F6FC"></i></div><div style="font-size:19px;font-weight:900;color:#F5F6FC">Desafios</div></div>
+
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:14px">
+          <div style="border-radius:22px;padding:16px 18px;background:linear-gradient(135deg,#3A4BC7 0%,#5B6EF5 100%);display:flex;align-items:center;gap:16px">
+            <div><div style="display:flex;align-items:baseline;gap:5px"><span style="font-size:32px;font-weight:900;color:#FFFFFF;line-height:34px">8</span><span style="font-size:13px;font-weight:800;color:#FFFFFF">vitórias</span></div><div style="font-size:11.5px;font-weight:700;color:#DBDFFF;margin-top:2px">em 12 desafios</div></div>
+            <div style="width:1px;height:40px;background:rgba(255,255,255,0.28)"></div>
+            <div><div style="display:flex;align-items:baseline;gap:3px"><span style="font-size:32px;font-weight:900;color:#FFFFFF;line-height:34px">67</span><span style="font-size:15px;font-weight:900;color:#FFFFFF">%</span></div><div style="font-size:11.5px;font-weight:700;color:#DBDFFF;margin-top:2px">de aproveitamento</div></div>
+            <div style="margin-left:auto;width:44px;height:44px;border-radius:99px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center"><i class="mdi mdi-sword-cross" style="font-size:22px;color:#FFFFFF"></i></div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:20px;height:20px;border-radius:99px;background:rgba(110,130,255,0.22);display:flex;align-items:center;justify-content:center"><span style="font-size:11px;font-weight:900;color:#8FA0FF">1</span></div><span style="font-size:12px;font-weight:800;letter-spacing:0.7px;color:#9EA3C4">ESCOLHA O RIVAL</span><div style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></div></div>
+
+          <div style="display:flex;gap:10px;overflow:hidden">
+            <div style="flex:0 0 auto;width:92px;border-radius:18px;background:rgba(110,130,255,0.14);border:2px solid #6E82FF;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative">
+              <div style="width:52px;height:52px;border-radius:99px;background:repeating-linear-gradient(45deg,#3A3F63 0 6px,#2C3153 6px 12px)"></div>
+              <div style="position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:99px;background:#6E82FF;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-check-bold" style="font-size:12px;color:#FFFFFF"></i></div>
+              <div style="font-size:12px;font-weight:900;color:#F5F6FC;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Ana Beatriz Nascimento</div>
+              <div style="padding:2px 8px;border-radius:99px;background:rgba(61,220,132,0.16)"><span style="font-size:10px;font-weight:900;color:#3DDC84">7.1k XP</span></div>
+            </div>
+            <sc-for list="{{ amigosEscuro }}" as="a" hint-placeholder-count="3">
+              <div style="flex:0 0 auto;width:92px;border-radius:18px;background:#1A1E36;border:2px solid rgba(255,255,255,0.08);padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="width:52px;height:52px;border-radius:99px;background:#4A5CE0;display:flex;align-items:center;justify-content:center"><span style="font-size:20px;font-weight:900;color:#FFFFFF">{{ a.inicial }}</span></div>
+                <div style="font-size:12px;font-weight:900;color:#F5F6FC;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.nome }}</div>
+                <div style="padding:2px 8px;border-radius:99px;background:rgba(255,255,255,0.07)"><span style="font-size:10px;font-weight:900;color:#9EA3C4">{{ a.xp }}</span></div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:20px;height:20px;border-radius:99px;background:rgba(110,130,255,0.22);display:flex;align-items:center;justify-content:center"><span style="font-size:11px;font-weight:900;color:#8FA0FF">2</span></div><span style="font-size:12px;font-weight:800;letter-spacing:0.7px;color:#9EA3C4">ESCOLHA A META</span><div style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></div></div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:rgba(110,130,255,0.12);border-radius:18px;border:2px solid #6E82FF;padding:12px;display:flex;align-items:center;gap:12px">
+              <div style="width:40px;height:40px;border-radius:14px;background:rgba(61,220,132,0.18);display:flex;align-items:center;justify-content:center;position:relative"><i class="mdi mdi-lightning-bolt" style="font-size:20px;color:#3DDC84"></i></div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:14.5px;font-weight:900;color:#F5F6FC;line-height:18px">Corrida de 500 XP</div>
+                <div style="margin-top:5px;display:flex;gap:6px"><div style="padding:3px 9px;border-radius:99px;background:rgba(255,255,255,0.10)"><span style="font-size:10.5px;font-weight:900;color:#DFE2F2">500 XP</span></div><div style="padding:3px 9px;border-radius:99px;background:rgba(255,255,255,0.07)"><span style="font-size:10.5px;font-weight:900;color:#9EA3C4">7 dias</span></div></div>
+              </div>
+              <div style="width:24px;height:24px;border-radius:99px;background:#6E82FF;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-check-bold" style="font-size:14px;color:#FFFFFF"></i></div>
+            </div>
+
+            <sc-for list="{{ metasEscuro }}" as="m" hint-placeholder-count="3">
+              <div style="background:#1A1E36;border-radius:18px;border:2px solid rgba(255,255,255,0.08);padding:12px;display:flex;align-items:center;gap:12px">
+                <sc-if value="{{ m.isXp }}" hint-placeholder-val="{{ true }}">
+                  <div style="width:40px;height:40px;border-radius:14px;background:rgba(61,220,132,0.16);display:flex;align-items:center;justify-content:center"><i class="mdi mdi-lightning-bolt" style="font-size:20px;color:#3DDC84"></i></div>
+                </sc-if>
+                <sc-if value="{{ m.isAcc }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:40px;height:40px;border-radius:14px;background:rgba(167,139,250,0.16);display:flex;align-items:center;justify-content:center"><i class="mdi mdi-target" style="font-size:20px;color:#A78BFA"></i></div>
+                </sc-if>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:14.5px;font-weight:900;color:#F5F6FC;line-height:18px">{{ m.titulo }}</div>
+                  <div style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap">
+                    <div style="padding:3px 9px;border-radius:99px;background:rgba(255,255,255,0.07)"><span style="font-size:10.5px;font-weight:900;color:#C2C7E0">{{ m.alvo }}</span></div>
+                    <sc-if value="{{ m.isAcc }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:3px 9px;border-radius:99px;background:rgba(167,139,250,0.16)"><span style="font-size:10.5px;font-weight:900;color:#A78BFA">mín. {{ m.precisao }}</span></div>
+                    </sc-if>
+                    <div style="padding:3px 9px;border-radius:99px;background:rgba(255,255,255,0.07)"><span style="font-size:10.5px;font-weight:900;color:#9EA3C4">{{ m.prazo }}</span></div>
+                  </div>
+                </div>
+                <div style="text-align:right"><div style="font-size:15px;font-weight:900;color:#F7C34D">{{ m.xp }}</div><div style="font-size:9.5px;font-weight:800;letter-spacing:0.3px;color:#B99741">PRÊMIO</div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 16px 22px;background:linear-gradient(180deg,rgba(15,17,30,0) 0%,#0F111E 34%)">
+          <div style="height:52px;border-radius:99px;background:#4A5CE0;display:flex;align-items:center;justify-content:center;gap:8px"><i class="mdi mdi-sword-cross" style="font-size:19px;color:#FFFFFF"></i><span style="font-size:15px;font-weight:800;color:#FFFFFF">Desafiar Ana Beatriz</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F · sem amigos -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:15px;font-weight:900;color:#16305C">6 · Sem amigos</span><span style="font-size:12px;font-weight:700;color:#7E8CA0">claro</span></div>
+      <div style="width:390px;height:844px;background:#EEF1F7;border-radius:34px;overflow:hidden;position:relative;box-shadow:0 12px 34px rgba(22,48,92,0.16)">
+        <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px"><span style="font-size:13px;font-weight:800;color:#16305C">9:41</span><span style="font-size:13px;color:#16305C"><i class="mdi mdi-signal-cellular-3"></i> <i class="mdi mdi-wifi"></i> <i class="mdi mdi-battery-70"></i></span></div>
+        <div style="display:flex;align-items:center;gap:4px;padding:6px 12px 10px"><div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:99px"><i class="mdi mdi-arrow-left" style="font-size:24px;color:#16305C"></i></div><div style="font-size:19px;font-weight:900;color:#16305C">Desafios</div></div>
+
+        <div style="padding:78px 30px 0;display:flex;flex-direction:column;align-items:center;gap:18px">
+          <div style="width:132px;height:132px;border-radius:99px;background:#E7EFFA;display:flex;align-items:center;justify-content:center">
+            <div style="width:96px;height:96px;border-radius:99px;background:#DDE7F4;display:flex;align-items:center;justify-content:center">
+              <div style="width:66px;height:66px;border-radius:99px;background:#3F6FA8;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(63,111,168,0.38)"><i class="mdi mdi-account-multiple-plus" style="font-size:32px;color:#FFFFFF"></i></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;padding:5px 14px;border-radius:99px;background:#FDF1DF"><i class="mdi mdi-sword-cross" style="font-size:14px;color:#B4791E"></i><span style="font-size:12px;font-weight:900;letter-spacing:0.5px;color:#B4791E">DUELO É COISA DE DOIS</span></div>
+          <div style="font-size:24px;font-weight:900;color:#16305C;text-align:center;line-height:28px">Ninguém pra desafiar<br>ainda</div>
+          <div style="font-size:14px;font-weight:600;color:#7E8CA0;text-align:center;line-height:20px;text-wrap:pretty">Adicione alguém como amigo na comunidade e o duelo 1x1 abre aqui. Dá pra apostar até 100 XP por rodada.</div>
+          <div style="height:48px;padding:0 22px;border-radius:99px;background:#3F6FA8;display:flex;align-items:center;gap:8px;box-shadow:0 6px 14px rgba(63,111,168,0.28)"><i class="mdi mdi-account-search" style="font-size:20px;color:#FFFFFF"></i><span style="font-size:15px;font-weight:800;color:#FFFFFF">Ir para a comunidade</span></div>
+          <div style="margin-top:6px;width:100%;border-radius:20px;background:#FFFFFF;padding:14px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 12px rgba(46,74,120,0.08)">
+            <div style="width:36px;height:36px;border-radius:12px;background:#EEF4FF;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-lightbulb-on-outline" style="font-size:19px;color:#2563EB"></i></div>
+            <span style="font-size:12px;font-weight:700;color:#7E8CA0;line-height:16px;flex:1">Enquanto isso, o XP das suas aulas continua contando pro seu total.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- G · carregando -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:15px;font-weight:900;color:#16305C">7 · Carregando</span><span style="font-size:12px;font-weight:700;color:#7E8CA0">skeleton · claro</span></div>
+      <div style="width:390px;height:844px;background:#EEF1F7;border-radius:34px;overflow:hidden;position:relative;box-shadow:0 12px 34px rgba(22,48,92,0.16)">
+        <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px"><span style="font-size:13px;font-weight:800;color:#16305C">9:41</span><span style="font-size:13px;color:#16305C"><i class="mdi mdi-signal-cellular-3"></i> <i class="mdi mdi-wifi"></i> <i class="mdi mdi-battery-70"></i></span></div>
+        <div style="display:flex;align-items:center;gap:4px;padding:6px 12px 10px"><div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:99px"><i class="mdi mdi-arrow-left" style="font-size:24px;color:#16305C"></i></div><div style="font-size:19px;font-weight:900;color:#16305C">Desafios</div></div>
+
+        <div style="padding:0 16px;display:flex;flex-direction:column;gap:14px">
+          <div style="height:92px;border-radius:22px;background:#DFE6F1"></div>
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:140px;height:10px;border-radius:99px;background:#DFE6F1"></div><div style="flex:1;height:1px;background:#E1E7F0"></div></div>
+          <div style="display:flex;gap:10px">
+            <div style="width:92px;height:118px;border-radius:18px;background:#FFFFFF;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(46,74,120,0.06)"><div style="width:52px;height:52px;border-radius:99px;background:#DFE6F1"></div><div style="width:52px;height:10px;border-radius:99px;background:#EDF1F7"></div><div style="width:44px;height:14px;border-radius:99px;background:#EDF1F7"></div></div>
+            <div style="width:92px;height:118px;border-radius:18px;background:#FFFFFF;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.75;box-shadow:0 4px 12px rgba(46,74,120,0.06)"><div style="width:52px;height:52px;border-radius:99px;background:#DFE6F1"></div><div style="width:52px;height:10px;border-radius:99px;background:#EDF1F7"></div><div style="width:44px;height:14px;border-radius:99px;background:#EDF1F7"></div></div>
+            <div style="width:92px;height:118px;border-radius:18px;background:#FFFFFF;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.45;box-shadow:0 4px 12px rgba(46,74,120,0.06)"><div style="width:52px;height:52px;border-radius:99px;background:#DFE6F1"></div><div style="width:52px;height:10px;border-radius:99px;background:#EDF1F7"></div><div style="width:44px;height:14px;border-radius:99px;background:#EDF1F7"></div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:120px;height:10px;border-radius:99px;background:#DFE6F1"></div><div style="flex:1;height:1px;background:#E1E7F0"></div></div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:#FFFFFF;border-radius:18px;padding:12px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 12px rgba(46,74,120,0.06)"><div style="width:40px;height:40px;border-radius:14px;background:#DFE6F1"></div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="width:65%;height:12px;border-radius:99px;background:#DFE6F1"></div><div style="width:40%;height:10px;border-radius:99px;background:#EDF1F7"></div></div><div style="width:52px;height:14px;border-radius:99px;background:#EDF1F7"></div></div>
+            <div style="background:#FFFFFF;border-radius:18px;padding:12px;display:flex;align-items:center;gap:12px;opacity:0.75;box-shadow:0 4px 12px rgba(46,74,120,0.06)"><div style="width:40px;height:40px;border-radius:14px;background:#DFE6F1"></div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="width:55%;height:12px;border-radius:99px;background:#DFE6F1"></div><div style="width:36%;height:10px;border-radius:99px;background:#EDF1F7"></div></div><div style="width:52px;height:14px;border-radius:99px;background:#EDF1F7"></div></div>
+            <div style="background:#FFFFFF;border-radius:18px;padding:12px;display:flex;align-items:center;gap:12px;opacity:0.45;box-shadow:0 4px 12px rgba(46,74,120,0.06)"><div style="width:40px;height:40px;border-radius:14px;background:#DFE6F1"></div><div style="flex:1;display:flex;flex-direction:column;gap:8px"><div style="width:60%;height:12px;border-radius:99px;background:#DFE6F1"></div><div style="width:30%;height:10px;border-radius:99px;background:#EDF1F7"></div></div><div style="width:52px;height:14px;border-radius:99px;background:#EDF1F7"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ZOOM COMPONENTES ================= -->
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:15px;font-weight:900;color:#16305C">8 · Componentes</span><span style="font-size:12px;font-weight:700;color:#7E8CA0">estados lado a lado</span></div>
+
+    <div style="background:#EEF1F7;border-radius:28px;padding:28px;display:flex;flex-wrap:wrap;gap:34px;box-shadow:0 8px 24px rgba(22,48,92,0.10)">
+
+      <div style="display:flex;flex-direction:column;gap:12px;width:390px">
+        <div style="font-size:11px;font-weight:900;letter-spacing:0.8px;color:#7E8CA0">CARD DE META · XP</div>
+        <div style="background:#FFFFFF;border-radius:18px;border:2px solid transparent;padding:12px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 12px rgba(46,74,120,0.08)">
+          <div style="width:40px;height:40px;border-radius:14px;background:#E6F4EC;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-lightning-bolt" style="font-size:20px;color:#2E9E5B"></i></div>
+          <div style="flex:1"><div style="font-size:14.5px;font-weight:900;color:#16305C">Maratona de 1000 XP</div><div style="margin-top:5px;display:flex;gap:6px"><div style="padding:3px 9px;border-radius:99px;background:#F1F5FA"><span style="font-size:10.5px;font-weight:900;color:#3A557A">1000 XP</span></div><div style="padding:3px 9px;border-radius:99px;background:#F1F5FA"><span style="font-size:10.5px;font-weight:900;color:#7E8CA0">14 dias</span></div></div></div>
+          <div style="text-align:right"><div style="font-size:15px;font-weight:900;color:#B4791E">+100 XP</div><div style="font-size:9.5px;font-weight:800;color:#C2A05A">PRÊMIO</div></div>
+        </div>
+        <div style="background:#EEF4FF;border-radius:18px;border:2px solid #2E6BF6;padding:12px;display:flex;align-items:center;gap:12px">
+          <div style="width:40px;height:40px;border-radius:14px;background:#E6F4EC;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-lightning-bolt" style="font-size:20px;color:#2E9E5B"></i></div>
+          <div style="flex:1"><div style="font-size:14.5px;font-weight:900;color:#16305C">Maratona de 1000 XP</div><div style="margin-top:5px;display:flex;gap:6px"><div style="padding:3px 9px;border-radius:99px;background:#DDE7F4"><span style="font-size:10.5px;font-weight:900;color:#16305C">1000 XP</span></div><div style="padding:3px 9px;border-radius:99px;background:#DDE7F4"><span style="font-size:10.5px;font-weight:900;color:#3A557A">14 dias</span></div></div></div>
+          <div style="width:24px;height:24px;border-radius:99px;background:#2E6BF6;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-check-bold" style="font-size:14px;color:#FFFFFF"></i></div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#9AA6B8">normal · selecionado (borda 2px + tinta + check)</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;width:390px">
+        <div style="font-size:11px;font-weight:900;letter-spacing:0.8px;color:#7E8CA0">CARD DE META · AULAS COM PRECISÃO</div>
+        <div style="background:#FFFFFF;border-radius:18px;border:2px solid transparent;padding:12px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 12px rgba(46,74,120,0.08)">
+          <div style="width:40px;height:40px;border-radius:14px;background:#EFE9FE;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-target" style="font-size:20px;color:#6D45D9"></i></div>
+          <div style="flex:1"><div style="font-size:14.5px;font-weight:900;color:#16305C">Perfeccionista</div><div style="margin-top:5px;display:flex;gap:6px"><div style="padding:3px 9px;border-radius:99px;background:#F1F5FA"><span style="font-size:10.5px;font-weight:900;color:#3A557A">5 aulas</span></div><div style="padding:3px 9px;border-radius:99px;background:#EFE9FE"><span style="font-size:10.5px;font-weight:900;color:#6D45D9">mín. 100%</span></div><div style="padding:3px 9px;border-radius:99px;background:#F1F5FA"><span style="font-size:10.5px;font-weight:900;color:#7E8CA0">14 dias</span></div></div></div>
+          <div style="text-align:right"><div style="font-size:15px;font-weight:900;color:#B4791E">+100 XP</div><div style="font-size:9.5px;font-weight:800;color:#C2A05A">PRÊMIO</div></div>
+        </div>
+        <div style="background:#F5F0FE;border-radius:18px;border:2px solid #6D45D9;padding:12px;display:flex;align-items:center;gap:12px">
+          <div style="width:40px;height:40px;border-radius:14px;background:#E4DAFB;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-target" style="font-size:20px;color:#6D45D9"></i></div>
+          <div style="flex:1"><div style="font-size:14.5px;font-weight:900;color:#16305C">Perfeccionista</div><div style="margin-top:5px;display:flex;gap:6px"><div style="padding:3px 9px;border-radius:99px;background:#E4DAFB"><span style="font-size:10.5px;font-weight:900;color:#4B2E9E">5 aulas</span></div><div style="padding:3px 9px;border-radius:99px;background:#E4DAFB"><span style="font-size:10.5px;font-weight:900;color:#4B2E9E">mín. 100%</span></div><div style="padding:3px 9px;border-radius:99px;background:#E4DAFB"><span style="font-size:10.5px;font-weight:900;color:#6D45D9">14 dias</span></div></div></div>
+          <div style="width:24px;height:24px;border-radius:99px;background:#6D45D9;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-check-bold" style="font-size:14px;color:#FFFFFF"></i></div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#9AA6B8">a exigência de precisão vira chip fixo, nunca some</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:11px;font-weight:900;letter-spacing:0.8px;color:#7E8CA0">ITEM DE AMIGO</div>
+        <div style="display:flex;gap:10px">
+          <div style="width:92px;border-radius:18px;background:#FFFFFF;border:2px solid transparent;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(46,74,120,0.08)"><div style="width:52px;height:52px;border-radius:99px;background:repeating-linear-gradient(45deg,#C9D8EE 0 6px,#B7CAE6 6px 12px)"></div><div style="font-size:12px;font-weight:900;color:#16305C">Rafa</div><div style="padding:2px 8px;border-radius:99px;background:#F1F5FA"><span style="font-size:10px;font-weight:900;color:#7E8CA0">910 XP</span></div></div>
+          <div style="width:92px;border-radius:18px;background:#EEF4FF;border:2px solid #2E6BF6;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative"><div style="width:52px;height:52px;border-radius:99px;background:repeating-linear-gradient(45deg,#C9D8EE 0 6px,#B7CAE6 6px 12px)"></div><div style="position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:99px;background:#2E6BF6;display:flex;align-items:center;justify-content:center"><i class="mdi mdi-check-bold" style="font-size:12px;color:#FFFFFF"></i></div><div style="font-size:12px;font-weight:900;color:#16305C">Rafa</div><div style="padding:2px 8px;border-radius:99px;background:#E6F4EC"><span style="font-size:10px;font-weight:900;color:#2E9E5B">910 XP</span></div></div>
+          <div style="width:92px;border-radius:18px;background:#FFFFFF;border:2px solid transparent;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(46,74,120,0.08)"><div style="width:52px;height:52px;border-radius:99px;background:#3F6FA8;display:flex;align-items:center;justify-content:center"><span style="font-size:20px;font-weight:900;color:#FFFFFF">A</span></div><div style="font-size:12px;font-weight:900;color:#16305C;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Ana Beatriz Nascimento</div><div style="padding:2px 8px;border-radius:99px;background:#F1F5FA"><span style="font-size:10px;font-weight:900;color:#7E8CA0">7.1k XP</span></div></div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#9AA6B8;max-width:300px">com foto · selecionado · sem foto e nome longo (uma linha, reticências)</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;width:390px">
+        <div style="font-size:11px;font-weight:900;letter-spacing:0.8px;color:#7E8CA0">MEDIDOR · CABO DE GUERRA</div>
+        <div style="background:#24447E;border-radius:18px;padding:14px">
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;font-weight:900;color:#FFFFFF">Você 68%</span><span style="font-size:11px;font-weight:900;color:#FFD98A">Marina 50%</span></div>
+          <div style="margin-top:8px;position:relative;height:16px;border-radius:99px;background:rgba(11,26,52,0.35);display:flex;overflow:hidden"><div style="width:34%;background:#7FB2FF;border-radius:99px"></div><div style="flex:1"></div><div style="width:25%;background:#F2A93B;border-radius:99px"></div><div style="position:absolute;left:calc(50% - 1px);top:0;width:2px;height:16px;background:rgba(255,255,255,0.55)"></div></div>
+          <div style="margin-top:10px;height:28px;border-radius:99px;background:rgba(61,220,132,0.20);display:flex;align-items:center;justify-content:center;gap:6px"><i class="mdi mdi-trending-up" style="font-size:14px;color:#9BF3C4"></i><span style="font-size:11.5px;font-weight:900;color:#9BF3C4">Você está na frente por 90 XP</span></div>
+        </div>
+        <div style="background:#24447E;border-radius:18px;padding:14px">
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;font-weight:900;color:#FFFFFF">Você 40%</span><span style="font-size:11px;font-weight:900;color:#FFD98A">Marina 80%</span></div>
+          <div style="margin-top:8px;position:relative;height:16px;border-radius:99px;background:rgba(11,26,52,0.35);display:flex;overflow:hidden"><div style="width:20%;background:#7FB2FF;border-radius:99px"></div><div style="flex:1"></div><div style="width:40%;background:#F2A93B;border-radius:99px"></div><div style="position:absolute;left:calc(50% - 1px);top:0;width:2px;height:16px;background:rgba(255,255,255,0.55)"></div></div>
+          <div style="margin-top:10px;height:28px;border-radius:99px;background:rgba(255,164,92,0.22);display:flex;align-items:center;justify-content:center;gap:6px"><i class="mdi mdi-arrow-down-right" style="font-size:14px;color:#FFC49A"></i><span style="font-size:11.5px;font-weight:900;color:#FFC49A">Faltam 2 aulas pra virar o jogo</span></div>
+        </div>
+        <div style="background:#24447E;border-radius:18px;padding:14px">
+          <div style="display:flex;justify-content:space-between"><span style="font-size:11px;font-weight:900;color:#FFFFFF">Você 60%</span><span style="font-size:11px;font-weight:900;color:#FFD98A">Marina 60%</span></div>
+          <div style="margin-top:8px;position:relative;height:16px;border-radius:99px;background:rgba(11,26,52,0.35);display:flex;overflow:hidden"><div style="width:30%;background:#7FB2FF;border-radius:99px"></div><div style="flex:1"></div><div style="width:30%;background:#F2A93B;border-radius:99px"></div><div style="position:absolute;left:calc(50% - 1px);top:0;width:2px;height:16px;background:rgba(255,255,255,0.55)"></div></div>
+          <div style="margin-top:10px;height:28px;border-radius:99px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;gap:6px"><i class="mdi mdi-equal" style="font-size:14px;color:#FFFFFF"></i><span style="font-size:11.5px;font-weight:900;color:#FFFFFF">Empate técnico — 300 XP cada</span></div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#9AA6B8">eu na frente · eu atrás · empate. Cada lado cresce da sua borda até o centro; o vão do meio é o que falta.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;width:330px">
+        <div style="font-size:11px;font-weight:900;letter-spacing:0.8px;color:#7E8CA0">BOTÃO DE AÇÃO · 44–52 PX</div>
+        <div style="height:52px;border-radius:99px;background:#DCE3ED;display:flex;align-items:center;justify-content:center;gap:8px"><i class="mdi mdi-sword-cross" style="font-size:19px;color:#A3AFC0"></i><span style="font-size:15px;font-weight:800;color:#A3AFC0">Escolha um amigo</span></div>
+        <div style="height:52px;border-radius:99px;background:#3F6FA8;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 14px rgba(63,111,168,0.28)"><i class="mdi mdi-sword-cross" style="font-size:19px;color:#FFFFFF"></i><span style="font-size:15px;font-weight:800;color:#FFFFFF">Desafiar Marina</span></div>
+        <div style="height:52px;border-radius:99px;background:#35608F;display:flex;align-items:center;justify-content:center;gap:10px"><div style="width:20px;height:20px;border-radius:99px;border:2.5px solid rgba(255,255,255,0.35);border-top-color:#FFFFFF"></div><span style="font-size:15px;font-weight:800;color:rgba(255,255,255,0.85)">Enviando…</span></div>
+        <div style="display:flex;gap:10px"><div style="flex:1;height:44px;border-radius:99px;background:#35608F;display:flex;align-items:center;justify-content:center"><div style="width:18px;height:18px;border-radius:99px;border:2.5px solid rgba(255,255,255,0.35);border-top-color:#FFFFFF"></div></div><div style="width:112px;height:44px;border-radius:99px;background:#F1F5FA;display:flex;align-items:center;justify-content:center"><span style="font-size:14px;font-weight:800;color:#C2CDDD">Recusar</span></div></div>
+        <div style="font-size:11px;font-weight:700;color:#9AA6B8">desabilitado (rótulo diz o que falta) · habilitado · processando · par de ações em processamento</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PALETA ================= -->
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:15px;font-weight:900;color:#16305C">9 · Cores novas</span><span style="font-size:12px;font-weight:700;color:#7E8CA0">prefixo DES_ · claro · escuro</span></div>
+    <div style="background:#FFFFFF;border-radius:24px;padding:24px 26px;max-width:760px;box-shadow:0 8px 24px rgba(22,48,92,0.10)">
+      <div style="display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid #E1E7F0"><div style="width:22px;font-size:10px;font-weight:900;color:#9AA6B8">CLA</div><div style="width:22px;font-size:10px;font-weight:900;color:#9AA6B8">ESC</div><div style="flex:1;font-size:10px;font-weight:900;letter-spacing:0.6px;color:#9AA6B8">TOKEN</div><div style="font-size:10px;font-weight:900;color:#9AA6B8">VALORES</div></div>
+
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#24447E"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#232850,#232850)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_ARENA_FROM</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#24447E · #232850</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#3F76C4"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#3A4BC7,#3A4BC7)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_ARENA_TO</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#3F76C4 · #3A4BC7</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#CFE0F7"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#C2C7E0,#C2C7E0)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_ARENA_SUB</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#CFE0F7 · #C2C7E0</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:rgba(11,26,52,0.35)"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(0,0,0,0.32),rgba(0,0,0,0.32))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_ARENA_TRACK</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">rgba(11,26,52,.35) · rgba(0,0,0,.32)</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#7FB2FF"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#8FA0FF,#8FA0FF)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_ME</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#7FB2FF · #8FA0FF</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#F2A93B"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#FFA45C,#FFA45C)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_RIVAL</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#F2A93B · #FFA45C</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#FFD98A"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#FFC49A,#FFC49A)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_RIVAL_TXT</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#FFD98A · #FFC49A</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:rgba(61,220,132,0.20)"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(61,220,132,0.20),rgba(61,220,132,0.20))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_LEAD_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">rgba(61,220,132,.20) · idem</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#9BF3C4"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#9BF3C4,#9BF3C4)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_LEAD_TXT</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#9BF3C4 · idem</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:rgba(255,164,92,0.22)"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(255,164,92,0.20),rgba(255,164,92,0.20))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_BEHIND_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">rgba(255,164,92,.22) · .20</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#E6F4EC"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(61,220,132,0.16),rgba(61,220,132,0.16))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_TIPO_XP_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#E6F4EC · rgba(61,220,132,.16)</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#2E9E5B"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#3DDC84,#3DDC84)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_TIPO_XP_TXT</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#2E9E5B · #3DDC84</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#EFE9FE"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(167,139,250,0.16),rgba(167,139,250,0.16))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_TIPO_ACC_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#EFE9FE · rgba(167,139,250,.16)</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#6D45D9"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#A78BFA,#A78BFA)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_TIPO_ACC_TXT</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#6D45D9 · #A78BFA</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#F5F0FE"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(167,139,250,0.14),rgba(167,139,250,0.14))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_TIPO_ACC_SEL_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#F5F0FE · rgba(167,139,250,.14)</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#E4DAFB"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(167,139,250,0.24),rgba(167,139,250,0.24))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_TIPO_ACC_CHIP</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#E4DAFB · rgba(167,139,250,.24)</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#EEF4FF"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(110,130,255,0.13),rgba(110,130,255,0.13))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_SEL_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#EEF4FF · rgba(110,130,255,.13)</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#2E6BF6"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#6E82FF,#6E82FF)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_SEL_BORDER</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#2E6BF6 · #6E82FF</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#FDF1DF"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(247,195,77,0.16),rgba(247,195,77,0.16))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_PRIZE_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#FDF1DF · rgba(247,195,77,.16)</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#B4791E"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#F7C34D,#F7C34D)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_PRIZE_TXT</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#B4791E · #F7C34D</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#C2A05A"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#B99741,#B99741)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_PRIZE_LABEL</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#C2A05A · #B99741</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:rgba(247,195,77,0.22)"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(247,195,77,0.20),rgba(247,195,77,0.20))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_DEADLINE_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">rgba(247,195,77,.22) · .20</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#FFE1A3"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#F7C34D,#F7C34D)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_DEADLINE_TXT</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#FFE1A3 · #F7C34D</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:rgba(255,107,107,0.22)"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(255,107,107,0.22),rgba(255,107,107,0.22))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_URGENT_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">rgba(255,107,107,.22) · idem</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#FFC0C0"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#FF8F8F,#FF8F8F)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_URGENT_TXT</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#FFC0C0 · #FF8F8F</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#FFF9EE"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(247,195,77,0.09),rgba(247,195,77,0.09))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_WAIT_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#FFF9EE · rgba(247,195,77,.09)</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#8A6D2C"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#D9B667,#D9B667)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_WAIT_TXT</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#8A6D2C · #D9B667</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#DCE3ED"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(255,255,255,0.08),rgba(255,255,255,0.08))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_DISABLED_BG</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#DCE3ED · rgba(255,255,255,.08)</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#A3AFC0"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#6E7396,#6E7396)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_DISABLED_TXT</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#A3AFC0 · #6E7396</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#C9D8EE"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(#3A3F63,#3A3F63)"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_AVATAR_PH</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#C9D8EE · #3A3F63</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#DFE6F1"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(255,255,255,0.07),rgba(255,255,255,0.07))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_SKELETON</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#DFE6F1 · rgba(255,255,255,.07)</div></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0"><div style="width:22px;height:22px;border-radius:7px;background:#EDF1F7"></div><div style="width:22px;height:22px;border-radius:7px;background-color:#0F111E;background-image:linear-gradient(rgba(255,255,255,0.04),rgba(255,255,255,0.04))"></div><div style="flex:1;font-size:12px;font-weight:900;color:#16305C">DES_SKELETON_SOFT</div><div style="font-size:11px;font-weight:600;color:#7E8CA0;font-family:ui-monospace,Menlo,monospace">#EDF1F7 · rgba(255,255,255,.04)</div></div>
+
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid #E1E7F0;font-size:12px;font-weight:600;color:#7E8CA0;line-height:18px;text-wrap:pretty">Reaproveitados sem token novo: <span style="font-weight:800;color:#16305C">ERR_SUMMARY_FROM/TO</span> na faixa de estatísticas, <span style="font-weight:800;color:#16305C">ACCENT_FILL</span> e <span style="font-weight:800;color:#16305C">ERR_ACTION_PRESSED</span> nos botões, <span style="font-weight:800;color:#16305C">PROFILE_CHIP_BG</span> nos chips neutros e <span style="font-weight:800;color:#16305C">SURFACE / BORDER / PROFILE_NAVY / PROFILE_MUTED</span> na estrutura dos cards.</div>
+    </div>
+  </div>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;nomeRival&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Marina&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mostrarEstatisticas&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const metas = [
+      { titulo: "Duelo relâmpago", alvo: "100 XP", prazo: "1 dia", xp: "+50 XP", tipo: "xp" },
+      { titulo: "Corrida de fim de semana", alvo: "300 XP", prazo: "2 dias", xp: "+75 XP", tipo: "xp" },
+      { titulo: "Corrida de 500 XP", alvo: "500 XP", prazo: "7 dias", xp: "+75 XP", tipo: "xp" },
+      { titulo: "Maratona de 1000 XP", alvo: "1000 XP", prazo: "14 dias", xp: "+100 XP", tipo: "xp" },
+      { titulo: "Um passo de cada vez", alvo: "2 aulas", precisao: "70%", prazo: "3 dias", xp: "+50 XP", tipo: "acc" },
+      { titulo: "3 aulas perfeitas", alvo: "3 aulas", precisao: "100%", prazo: "7 dias", xp: "+50 XP", tipo: "acc" },
+      { titulo: "5 aulas com 90%+ de precisão", alvo: "5 aulas", precisao: "90%", prazo: "10 dias", xp: "+100 XP", tipo: "acc" },
+      { titulo: "Perfeccionista", alvo: "5 aulas", precisao: "100%", prazo: "14 dias", xp: "+100 XP", tipo: "acc" },
+    ].map((m) => ({ ...m, isXp: m.tipo === "xp", isAcc: m.tipo === "acc" }));
+
+    return {
+      nomeRival: this.props.nomeRival ?? "Marina",
+      mostrarEstatisticas: this.props.mostrarEstatisticas ?? true,
+      metasClaro: metas.slice(0, 5),
+      metasEscuro: metas.slice(4, 8),
+      amigos: [
+        { nome: "João", inicial: "J", xp: "1.2k XP" },
+        { nome: "Ana Beatriz Nascimento", inicial: "A", xp: "7.1k XP" },
+        { nome: "Rafa", inicial: "R", xp: "910 XP" },
+      ],
+      amigosEscuro: [
+        { nome: "João", inicial: "J", xp: "1.2k XP" },
+        { nome: "Rafa", inicial: "R", xp: "910 XP" },
+        { nome: "Camila", inicial: "C", xp: "3.4k XP" },
+      ],
+    };
+  }
+}
+
+</script>
+
+
+</body></html>

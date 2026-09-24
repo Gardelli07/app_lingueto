@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import CORES from "../util/cores";
+import { useTheme, useThemedStyles } from "../theme";
 
 const MOTIVOS = [
   { value: "spam", label: "Spam ou propaganda" },
@@ -26,6 +26,8 @@ const MOTIVOS = [
 // Sheet reutilizado para denunciar posts, comentarios e usuarios da
 // comunidade — quem abre decide o alvo (ver Comunidade.js/PerfilVisitado.js).
 export default function ReportSheet({ visible, sending, onClose, onSubmit }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [motivo, setMotivo] = useState(null);
   const [descricao, setDescricao] = useState("");
 
@@ -104,7 +106,7 @@ export default function ReportSheet({ visible, sending, onClose, onSubmit }) {
             disabled={!podeEnviar}
           >
             {sending ? (
-              <ActivityIndicator color="#fff" size="small" />
+              <ActivityIndicator color={CORES.ON_ACCENT} size="small" />
             ) : (
               <Text style={styles.submitBtnText}>Enviar denúncia</Text>
             )}
@@ -115,52 +117,53 @@ export default function ReportSheet({ visible, sending, onClose, onSubmit }) {
   );
 }
 
-const styles = StyleSheet.create({
-  scrim: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(16,24,40,0.45)" },
-  sheetWrap: { flex: 1, justifyContent: "flex-end" },
-  sheet: {
-    backgroundColor: CORES.WHITE,
-    borderTopLeftRadius: 26,
-    borderTopRightRadius: 26,
-    paddingBottom: 24,
-  },
-  grabber: { width: 40, height: 5, borderRadius: 999, backgroundColor: "#DCE1EA", alignSelf: "center", marginTop: 10, marginBottom: 4 },
-  header: {
-    flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-    paddingHorizontal: 20, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: "#F0F2F6",
-  },
-  title: { fontSize: 17, fontWeight: "800", color: CORES.COMUNIDADE_TEXT },
-  closeBtn: { width: 30, height: 30, borderRadius: 15, backgroundColor: "#F1F4FB", alignItems: "center", justifyContent: "center" },
-  subtitle: {
-    fontSize: 13.5, fontWeight: "700", color: CORES.COMUNIDADE_TEXT_2,
-    paddingHorizontal: 20, marginTop: 16, marginBottom: 8,
-  },
-  options: { paddingHorizontal: 20 },
-  option: { flexDirection: "row", alignItems: "center", paddingVertical: 10 },
-  radio: {
-    width: 20, height: 20, borderRadius: 10, borderWidth: 2, borderColor: "#D0D5DD",
-    alignItems: "center", justifyContent: "center", marginRight: 12,
-  },
-  radioSelected: { borderColor: CORES.COMUNIDADE_ACCENT },
-  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: CORES.COMUNIDADE_ACCENT },
-  optionLabel: { flex: 1, fontSize: 14.5, fontWeight: "600", color: CORES.COMUNIDADE_TEXT },
-  input: {
-    minHeight: 70,
-    borderWidth: 1.5,
-    borderColor: "#E7EBF2",
-    borderRadius: 16,
-    padding: 14,
-    marginHorizontal: 20,
-    marginTop: 8,
-    fontSize: 14.5,
-    color: CORES.COMUNIDADE_TEXT,
-    backgroundColor: "#F7F9FC",
-    textAlignVertical: "top",
-  },
-  submitBtn: {
-    height: 48, borderRadius: 999, backgroundColor: CORES.COMUNIDADE_ACCENT,
-    alignItems: "center", justifyContent: "center",
-    marginHorizontal: 20, marginTop: 16,
-  },
-  submitBtnText: { color: "#fff", fontWeight: "800", fontSize: 15 },
-});
+const makeStyles = (CORES) =>
+  StyleSheet.create({
+    scrim: { ...StyleSheet.absoluteFillObject, backgroundColor: CORES.OVERLAY },
+    sheetWrap: { flex: 1, justifyContent: "flex-end" },
+    sheet: {
+      backgroundColor: CORES.SURFACE_HIGH,
+      borderTopLeftRadius: 26,
+      borderTopRightRadius: 26,
+      paddingBottom: 24,
+    },
+    grabber: { width: 40, height: 5, borderRadius: 999, backgroundColor: CORES.BORDER_STRONG, alignSelf: "center", marginTop: 10, marginBottom: 4 },
+    header: {
+      flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+      paddingHorizontal: 20, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: CORES.COMUNIDADE_LINE,
+    },
+    title: { fontSize: 17, fontWeight: "800", color: CORES.COMUNIDADE_TEXT },
+    closeBtn: { width: 30, height: 30, borderRadius: 15, backgroundColor: CORES.COMUNIDADE_BUBBLE, alignItems: "center", justifyContent: "center" },
+    subtitle: {
+      fontSize: 13.5, fontWeight: "700", color: CORES.COMUNIDADE_TEXT_2,
+      paddingHorizontal: 20, marginTop: 16, marginBottom: 8,
+    },
+    options: { paddingHorizontal: 20 },
+    option: { flexDirection: "row", alignItems: "center", paddingVertical: 10 },
+    radio: {
+      width: 20, height: 20, borderRadius: 10, borderWidth: 2, borderColor: CORES.BORDER_STRONG,
+      alignItems: "center", justifyContent: "center", marginRight: 12,
+    },
+    radioSelected: { borderColor: CORES.COMUNIDADE_ACCENT },
+    radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: CORES.ACCENT_FILL_COMUNIDADE },
+    optionLabel: { flex: 1, fontSize: 14.5, fontWeight: "600", color: CORES.COMUNIDADE_TEXT },
+    input: {
+      minHeight: 70,
+      borderWidth: 1.5,
+      borderColor: CORES.COMUNIDADE_BUBBLE_LINE,
+      borderRadius: 16,
+      padding: 14,
+      marginHorizontal: 20,
+      marginTop: 8,
+      fontSize: 14.5,
+      color: CORES.COMUNIDADE_TEXT,
+      backgroundColor: CORES.INPUT_BG,
+      textAlignVertical: "top",
+    },
+    submitBtn: {
+      height: 48, borderRadius: 999, backgroundColor: CORES.ACCENT_FILL_COMUNIDADE,
+      alignItems: "center", justifyContent: "center",
+      marginHorizontal: 20, marginTop: 16,
+    },
+    submitBtnText: { color: CORES.ON_ACCENT, fontWeight: "800", fontSize: 15 },
+  });
