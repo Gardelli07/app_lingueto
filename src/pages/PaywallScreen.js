@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { ApiError } from '../services/api';
-import { validarCompraSandbox } from '../services/assinaturas';
+import {
+  COMPRA_SUPORTADA,
+  CompraError,
+  PRODUTO_ANUAL,
+  PRODUTO_MENSAL,
+  buscarProdutos,
+  comprar,
+  elegivelOfertaIntrodutoria,
+} from '../services/iap';
 import { useTheme, useThemedStyles } from '../theme';
 
 // Paleta local da tela, derivada do tema ativo.
@@ -57,57 +65,135 @@ const RAW_PLANS = {
 
 const PLAN_ORDER = ['free', 'premium'];
 
-const YEARLY_DISCOUNT_PCT = Math.round(
-  (1 - RAW_PLANS.premium.yearly.now / RAW_PLANS.premium.yearly.was) * 100
-);
-
 function fmt(n) {
   return 'R$ ' + n.toFixed(2).replace('.', ',');
 }
+
+// Precos fixos acima (RAW_PLANS) so aparecem onde a App Store nao vende
+// (Android, por enquanto). No iPhone o preco vem sempre do catalogo da loja.
+function precoDeReferencia(price, isYearly) {
+  if (price.now === 0) {
+    return { priceNow: 'R$ 0', priceWas: '', priceSubnote: 'para sempre', discountPct: null };
+  }
+  if (!isYearly) {
+    return {
+      priceNow: fmt(price.now) + '/mês',
+      priceWas: '',
+      priceSubnote: 'cobrado mensalmente',
+      discountPct: null,
+    };
+  }
+  return {
+    priceNow: fmt(price.now),
+    priceWas: price.was ? fmt(price.was) : '',
+    priceSubnote: price.was ? `no 1º ano · depois ${fmt(price.was)}/ano` : 'cobrado anualmente',
+    discountPct: price.was ? Math.round((1 - price.now / price.was) * 100) : null,
+  };
+}
+
+// Oferta do anual configurada na App Store: 1 ano pago adiantado com desconto.
+// Qualquer outro formato cai no preco cheio, que e o que a folha cobra.
+function ofertaDoPrimeiroAno(produto) {
+  const umAnoAdiantado =
+    produto.introductoryPricePaymentModeIOS === 'pay-up-front' &&
+    produto.introductoryPriceSubscriptionPeriodIOS === 'year' &&
+    Number(produto.introductoryPriceNumberOfPeriodsIOS) === 1;
+  if (!umAnoAdiantado || !produto.introductoryPriceIOS) return null;
+
+  const valor = Number(produto.introductoryPriceAsAmountIOS);
+  const cheio = Number(produto.price);
+  return {
+    displayPrice: produto.introductoryPriceIOS,
+    discountPct: valor > 0 && cheio > valor ? Math.round((1 - valor / cheio) * 100) : null,
+  };
+}
+
+function precoDaLoja(catalogo, isYearly) {
+  if (catalogo.status === 'carregando') {
+    return { priceNow: '…', priceWas: '', priceSubnote: 'buscando preço na App Store', discountPct: null };
+  }
+  const produto = catalogo.produtos[isYearly ? PRODUTO_ANUAL : PRODUTO_MENSAL];
+  if (!produto) {
+    return { priceNow: '—', priceWas: '', priceSubnote: 'preço indisponível no momento', discountPct: null };
+  }
+  if (!isYearly) {
+    return {
+      priceNow: `${produto.displayPrice}/mês`,
+      priceWas: '',
+      priceSubnote: 'cobrado mensalmente',
+      discountPct: null,
+    };
+  }
+  const oferta = catalogo.elegivelOferta ? ofertaDoPrimeiroAno(produto) : null;
+  if (!oferta) {
+    return { priceNow: produto.displayPrice, priceWas: '', priceSubnote: 'cobrado anualmente', discountPct: null };
+  }
+  return {
+    priceNow: oferta.displayPrice,
+    priceWas: produto.displayPrice,
+    priceSubnote: `no 1º ano · depois ${produto.displayPrice}/ano`,
+    discountPct: oferta.discountPct,
+  };
+}
+
+function precoDoPlano(plan, isYearly, catalogo) {
+  if (plan.key === 'premium' && COMPRA_SUPORTADA) return precoDaLoja(catalogo, isYearly);
+  return precoDeReferencia(isYearly ? plan.yearly : plan.monthly, isYearly);
+}
+
+const CATALOGO_INICIAL = { status: 'carregando', produtos: {}, elegivelOferta: false };
 
 export default function PaywallScreen({ navigation }) {
   const CORES = useTheme();
   const COLORS = paywallColors(CORES);
   const styles = useThemedStyles(makeStyles);
-  const { upgradeToFullAccessPlan } = useAuth();
+  const { restaurarCompras } = useAuth();
   const [billing, setBilling] = useState('monthly'); // 'monthly' | 'yearly'
   const [selected, setSelected] = useState('premium');
   const [submitting, setSubmitting] = useState(false);
+  const [restaurando, setRestaurando] = useState(false);
+  // status: 'carregando' | 'pronto' | 'erro'
+  const [catalogo, setCatalogo] = useState(CATALOGO_INICIAL);
+
+  const carregarCatalogo = useCallback(async () => {
+    if (!COMPRA_SUPORTADA) return;
+    setCatalogo(CATALOGO_INICIAL);
+    try {
+      const lista = await buscarProdutos();
+      const produtos = Object.fromEntries(lista.map((produto) => [produto.id, produto]));
+      const completo = !!(produtos[PRODUTO_MENSAL] && produtos[PRODUTO_ANUAL]);
+      const elegivelOferta = await elegivelOfertaIntrodutoria(produtos[PRODUTO_ANUAL]);
+      setCatalogo({ status: completo ? 'pronto' : 'erro', produtos, elegivelOferta });
+    } catch {
+      setCatalogo({ ...CATALOGO_INICIAL, status: 'erro' });
+    }
+  }, []);
+
+  useEffect(() => {
+    carregarCatalogo();
+  }, [carregarCatalogo]);
 
   const plans = useMemo(() => {
     const isYearly = billing === 'yearly';
     return PLAN_ORDER.map((key) => {
       const p = RAW_PLANS[key];
-      const price = isYearly ? p.yearly : p.monthly;
-      let priceNow, priceWas, priceSubnote;
-
-      if (price.now === 0) {
-        priceNow = 'R$ 0';
-        priceWas = '';
-        priceSubnote = 'para sempre';
-      } else if (!isYearly) {
-        priceNow = fmt(price.now) + '/mês';
-        priceWas = '';
-        priceSubnote = 'cobrado mensalmente';
-      } else {
-        priceNow = fmt(price.now);
-        priceWas = price.was ? fmt(price.was) : '';
-        priceSubnote = price.was
-          ? `no 1º ano · depois ${fmt(price.was)}/ano`
-          : 'cobrado anualmente';
-      }
-
-      const discountPct = price.was ? Math.round((1 - price.now / price.was) * 100) : null;
-
-      return { ...p, priceNow, priceWas, priceSubnote, discountPct };
+      return { ...p, ...precoDoPlano(p, isYearly, catalogo) };
     });
-  }, [billing]);
+  }, [billing, catalogo]);
+
+  const yearlyDiscountPct = precoDoPlano(RAW_PLANS.premium, true, catalogo).discountPct;
 
   const selectedPlan = plans.find((p) => p.key === selected);
-  const ctaLabel =
-    selected === 'free'
-      ? 'Continuar com o Free'
-      : `Começar agora → ${selectedPlan.priceNow}`;
+  const catalogoComErro = COMPRA_SUPORTADA && catalogo.status === 'erro';
+  const aguardandoCatalogo = COMPRA_SUPORTADA && catalogo.status === 'carregando';
+  let ctaLabel;
+  if (selected === 'free') ctaLabel = 'Continuar com o Free';
+  else if (catalogoComErro) ctaLabel = 'Tentar carregar os preços de novo';
+  else if (aguardandoCatalogo) ctaLabel = 'Começar agora';
+  else ctaLabel = `Começar agora → ${selectedPlan.priceNow}`;
+
+  const ocupado = submitting || restaurando;
+  const ctaDisabled = ocupado || (selected === 'premium' && aguardandoCatalogo);
 
   const handleClose = () => {
     navigation.goBack();
@@ -118,25 +204,87 @@ export default function PaywallScreen({ navigation }) {
       handleClose();
       return;
     }
-    if (submitting) return;
+    if (ocupado) return;
+    if (!COMPRA_SUPORTADA) {
+      Alert.alert(
+        'Assinatura indisponível',
+        'Por enquanto o Premium só pode ser assinado pelo iPhone. Em breve também no Android.',
+      );
+      return;
+    }
+    if (catalogoComErro) {
+      carregarCatalogo();
+      return;
+    }
 
     setSubmitting(true);
     try {
-      // Chama o endpoint real de assinaturas. Enquanto as lojas nao estao
-      // configuradas, o backend precisa estar rodando com
-      // MODO_SANDBOX_COMPRAS=true para aceitar essa compra simulada e criar
-      // o registro em `assinaturas` sem validar com a Apple/Google de verdade.
-      await validarCompraSandbox();
-      upgradeToFullAccessPlan();
-      handleClose();
+      // A folha da App Store abre aqui. O acesso e liberado pelo AuthContext
+      // depois que o backend valida a transacao; `comprar` devolve o resultado.
+      const { acessoCompleto } = await comprar(
+        billing === 'yearly' ? PRODUTO_ANUAL : PRODUTO_MENSAL,
+      );
+      if (acessoCompleto) {
+        Alert.alert('Assinatura ativa', 'Tudo pronto! O Premium já está liberado na sua conta.');
+        handleClose();
+      } else {
+        Alert.alert(
+          'Compra recebida',
+          'Ainda não conseguimos liberar o seu acesso. Toque em "Restaurar compras" em alguns instantes.',
+        );
+      }
     } catch (error) {
-      const message =
-        error instanceof ApiError
-          ? error.message
-          : 'Não foi possível confirmar a assinatura. Tente novamente.';
-      Alert.alert('Não foi possível assinar', message);
+      if (error instanceof CompraError) {
+        if (error.code !== 'cancelada') {
+          Alert.alert(
+            error.code === 'pendente' ? 'Compra pendente' : 'Não foi possível assinar',
+            error.message,
+          );
+        }
+      } else if (error instanceof ApiError) {
+        // A App Store cobrou, mas o backend nao validou (rede, servidor). A
+        // transacao fica pendente e e reenviada; o usuario nao paga de novo.
+        Alert.alert(
+          'Não foi possível liberar o acesso',
+          `${error.message}\n\nSe a compra foi concluída, você não será cobrado de novo: toque em "Restaurar compras" para liberar.`,
+        );
+      } else {
+        Alert.alert('Não foi possível assinar', 'Não foi possível confirmar a assinatura. Tente novamente.');
+      }
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleRestore = async () => {
+    if (ocupado) return;
+    setRestaurando(true);
+    try {
+      const resultado = await restaurarCompras();
+      if (!resultado) {
+        Alert.alert(
+          'Nenhuma assinatura encontrada',
+          'Não encontramos uma assinatura ativa do Lingueto neste Apple ID.',
+        );
+      } else if (resultado.acessoCompleto) {
+        Alert.alert('Compras restauradas', 'O Premium já está liberado na sua conta.');
+        handleClose();
+      } else {
+        Alert.alert(
+          'Assinatura inativa',
+          'Encontramos sua assinatura, mas ela não está mais ativa. Você pode assinar de novo abaixo.',
+        );
+      }
+    } catch (error) {
+      if (!(error instanceof CompraError && error.code === 'cancelada')) {
+        const message =
+          error instanceof CompraError || error instanceof ApiError
+            ? error.message
+            : 'Não foi possível restaurar as compras. Tente novamente.';
+        Alert.alert('Não foi possível restaurar', message);
+      }
+    } finally {
+      setRestaurando(false);
     }
   };
 
@@ -177,9 +325,11 @@ export default function PaywallScreen({ navigation }) {
             <Text style={[styles.tabText, billing === 'yearly' && styles.tabTextActive]}>
               Anual
             </Text>
-            <View style={styles.yearlyBadge}>
-              <Text style={styles.yearlyBadgeText}>-{YEARLY_DISCOUNT_PCT}%</Text>
-            </View>
+            {yearlyDiscountPct ? (
+              <View style={styles.yearlyBadge}>
+                <Text style={styles.yearlyBadgeText}>-{yearlyDiscountPct}%</Text>
+              </View>
+            ) : null}
           </TouchableOpacity>
         </View>
 
@@ -274,12 +424,12 @@ export default function PaywallScreen({ navigation }) {
             <Text style={styles.urgency}>OFERTA POR TEMPO LIMITADO</Text>
           ) : null}
           <TouchableOpacity
-            style={[styles.ctaBtn, submitting && styles.ctaBtnDisabled]}
+            style={[styles.ctaBtn, ctaDisabled && styles.ctaBtnDisabled]}
             activeOpacity={0.9}
             onPress={handleSubscribe}
-            disabled={submitting}
+            disabled={ctaDisabled}
           >
-            {submitting ? (
+            {submitting || (selected === 'premium' && aguardandoCatalogo) ? (
               <ActivityIndicator color={COLORS.onAccent} />
             ) : (
               <Text style={styles.ctaText}>{ctaLabel}</Text>
@@ -288,6 +438,19 @@ export default function PaywallScreen({ navigation }) {
           <Text style={styles.disclaimer}>
             Cancele quando quiser. Renovação automática até o cancelamento.
           </Text>
+          {COMPRA_SUPORTADA ? (
+            <TouchableOpacity
+              style={styles.restoreBtn}
+              onPress={handleRestore}
+              disabled={ocupado}
+            >
+              {restaurando ? (
+                <ActivityIndicator color={COLORS.blue} />
+              ) : (
+                <Text style={styles.restoreText}>Restaurar compras</Text>
+              )}
+            </TouchableOpacity>
+          ) : null}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -447,5 +610,7 @@ const makeStyles = (CORES) => {
     ctaBtnDisabled: { opacity: 0.7 },
     ctaText: { color: COLORS.onAccent, fontWeight: '700', fontSize: 16 },
     disclaimer: { textAlign: 'center', fontSize: 11, color: CORES.TEXT_FAINT, marginTop: 10 },
+    restoreBtn: { alignSelf: 'center', marginTop: 8, paddingVertical: 8, paddingHorizontal: 12 },
+    restoreText: { fontSize: 13, fontWeight: '700', color: COLORS.blue },
   });
 };

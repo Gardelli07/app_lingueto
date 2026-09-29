@@ -1,4 +1,3 @@
-import { Platform } from "react-native";
 import api from "./api";
 import { buscarAssinaturasAtivas, finalizarTransacao } from "./iap";
 
@@ -60,22 +59,4 @@ export async function restaurarComprasApple() {
   const resultado = await registrarCompraApple(maisRecente);
   await finalizarTransacao(maisRecente).catch(() => {});
   return resultado;
-}
-
-// TEMPORARIO: ainda usado pelo PaywallScreen ate ele passar a comprar pelo
-// StoreKit (services/iap.js). So funciona com o backend em
-// MODO_SANDBOX_COMPRAS=true — em producao a Apple rejeita esses ids falsos.
-function idSandbox() {
-  return `sandbox-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-}
-
-export function validarCompraSandbox() {
-  const plataforma = Platform.OS === "ios" ? "ios" : "android";
-
-  return api.post("/assinaturas/validar-compra", {
-    plataforma,
-    token_compra: idSandbox(),
-    id_produto: `sandbox_base_${plataforma}`,
-    ...(plataforma === "ios" ? { id_transacao: idSandbox() } : {}),
-  });
 }

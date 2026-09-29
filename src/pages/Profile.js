@@ -17,6 +17,7 @@ import Svg, { Path, Circle } from "react-native-svg";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../services/api";
 import { excluirConta } from "../services/usuarios";
+import { COMPRA_SUPORTADA, abrirGerenciarAssinaturas } from "../services/iap";
 import { getLevelProgress } from "../util/xp";
 import { clearAllLocalProgress } from "../util/courseCatalog";
 import { clearAllAulasPlusProgress } from "./aulas/aulasplus/progress";
@@ -196,7 +197,7 @@ function Row({ icon, label, right, isLast, onPress }) {
 const comingSoon = (title) => () => Alert.alert(title, "Em breve.");
 
 export default function ProfileScreen({ navigation }) {
-  const { user, signOut, downgradeToFreePlan, updateUser } = useAuth();
+  const { user, signOut, updateUser } = useAuth();
   const CORES = useTheme();
   const { isDark, setMode } = useThemeMode();
   const styles = useThemedStyles(makeStyles);
@@ -281,22 +282,20 @@ export default function ProfileScreen({ navigation }) {
 
   const levelProgress = getLevelProgress(totalXp);
 
-  // As lojas ainda nao estao configuradas, entao essa troca de plano e so
-  // local (AsyncStorage), pra permitir testar o app com tudo liberado antes
-  // da integracao real de compra existir.
+  // Cancelar ou trocar de plano e feito na App Store: a Apple nao deixa o app
+  // cancelar a assinatura por conta propria. O plano exibido vem do backend.
+  const podeGerenciarAssinatura = fullAccess && COMPRA_SUPORTADA;
   const handlePlanAction = () => {
-    if (fullAccess) {
-      Alert.alert(
-        "Voltar para o Gratuito",
-        "A integração com as lojas ainda não está pronta — isso só troca o plano localmente, para teste. Deseja continuar?",
-        [
-          { text: "Cancelar", style: "cancel" },
-          { text: "Voltar", onPress: downgradeToFreePlan },
-        ],
-      );
+    if (!fullAccess) {
+      navigation.navigate("Paywall");
       return;
     }
-    navigation.navigate("Paywall");
+    abrirGerenciarAssinaturas().catch(() => {
+      Alert.alert(
+        "Não foi possível abrir",
+        "Para gerenciar a assinatura, abra Ajustes > [seu nome] > Assinaturas.",
+      );
+    });
   };
 
   const handleResetLessons = () => {
@@ -469,20 +468,22 @@ export default function ProfileScreen({ navigation }) {
           <View style={styles.planTitleRow}>
             <IconCrown />
             <Text style={styles.planTitle}>
-              {fullAccess ? "Plano Base (tudo liberado)" : "Plano Gratuito"}
+              {fullAccess ? "Plano Premium" : "Plano Gratuito"}
             </Text>
           </View>
           <Text style={styles.planDesc}>
             {fullAccess
-              ? "Todas as lições, cursos e níveis estão liberados neste plano de teste."
+              ? "Todas as lições, cursos e níveis estão liberados na sua conta."
               : "Desbloqueie lições ilimitadas, correções prioritárias na comunidade e sem anúncios."}
           </Text>
-          <Pressable style={styles.planBtn} onPress={handlePlanAction}>
-            <Text style={styles.planBtnText}>
-              {fullAccess ? "Voltar para o Gratuito" : "Assinar o Premium"}
-            </Text>
-            <IconArrow />
-          </Pressable>
+          {!fullAccess || podeGerenciarAssinatura ? (
+            <Pressable style={styles.planBtn} onPress={handlePlanAction}>
+              <Text style={styles.planBtnText}>
+                {fullAccess ? "Gerenciar assinatura" : "Assinar o Premium"}
+              </Text>
+              <IconArrow />
+            </Pressable>
+          ) : null}
         </View>
 
         {/* aparência */}

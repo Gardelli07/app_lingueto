@@ -525,7 +525,7 @@ function Slide7() {
 
 function Slide8() {
   const styles = useThemedStyles(makeStyles);
-  const { renderPrevButton, renderNextButton } = useNav();
+  const { renderPrevButton, goToNextLesson } = useNav();
 
   return (
     <View style={styles.slide}>

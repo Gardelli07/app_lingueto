@@ -1,6 +1,18 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearTokens, setOnAuthFailure } from "../services/api";
+import {
+  buscarMinhaAssinatura,
+  registrarCompraApple,
+  restaurarComprasApple,
+} from "../services/assinaturas";
+import { COMPRA_SUPORTADA, observarCompras } from "../services/iap";
 import { setActiveUser } from "../util/userScope";
 import { PLAN_FREE, PLAN_FULL_ACCESS } from "../util/plans";
 import { useThemeMode } from "../theme";
@@ -58,16 +70,56 @@ export function AuthProvider({ children }) {
     setOnAuthFailure(signOut);
   }, []);
 
-  // Ate a compra pelas lojas (App Store / Play Store) ser configurada, a
-  // troca de plano acontece so localmente, para permitir testar o app com
-  // tudo liberado. Quando a integracao com as lojas existir, o plano deve
-  // passar a vir do backend (usuario.plano) apos confirmar a compra.
-  function upgradeToFullAccessPlan() {
-    updateUser({ plano: PLAN_FULL_ACCESS });
-  }
+  const idUsuario = user?.id ?? null;
 
-  function downgradeToFreePlan() {
-    updateUser({ plano: PLAN_FREE });
+  // O plano vem sempre do backend (acesso_completo de /assinaturas/minha:
+  // assinatura, contrato corporativo ou permissao manual) e fica salvo junto
+  // com o usuario, pra o app abrir offline com o ultimo acesso conhecido.
+  // Resposta que chega depois de trocar de conta ou sair e descartada.
+  const aplicarAcesso = useCallback((idDono, acessoCompleto) => {
+    setUser((prev) => {
+      if (!prev || prev.id !== idDono) return prev;
+      const next = {
+        ...prev,
+        plano: acessoCompleto ? PLAN_FULL_ACCESS : PLAN_FREE,
+      };
+      setActiveUser(next);
+      AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!idUsuario) return;
+    buscarMinhaAssinatura()
+      .then((resumo) => aplicarAcesso(idUsuario, !!resumo?.acesso_completo))
+      .catch(() => {});
+  }, [idUsuario, aplicarAcesso]);
+
+  // Toda transacao da App Store (compra do paywall, renovacao, compra que
+  // ficou pendente em outra sessao) e validada no backend e so entao libera o
+  // acesso. Roda so com usuario logado, porque a validacao vincula a compra a
+  // conta atual.
+  useEffect(() => {
+    if (!idUsuario || !COMPRA_SUPORTADA) return undefined;
+    try {
+      return observarCompras(async (compra) => {
+        const resultado = await registrarCompraApple(compra);
+        aplicarAcesso(idUsuario, resultado.acessoCompleto);
+        return resultado;
+      });
+    } catch {
+      // Build sem o modulo nativo do expo-iap: sem compra, o resto do app segue.
+      return undefined;
+    }
+  }, [idUsuario, aplicarAcesso]);
+
+  // "Restaurar compras" (exigido pela Apple). Devolve null se o Apple ID nao
+  // tiver assinatura ativa do Lingueto.
+  async function restaurarCompras() {
+    const resultado = await restaurarComprasApple();
+    if (resultado) aplicarAcesso(idUsuario, resultado.acessoCompleto);
+    return resultado;
   }
 
   return (
@@ -78,8 +130,7 @@ export function AuthProvider({ children }) {
         signIn,
         updateUser,
         signOut,
-        upgradeToFullAccessPlan,
-        downgradeToFreePlan,
+        restaurarCompras,
       }}
     >
       {children}

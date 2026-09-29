@@ -95,6 +95,19 @@ export async function buscarProdutos() {
   }
 }
 
+// A oferta do 1o ano so vale pra quem nunca assinou nada do grupo. Sem essa
+// checagem o paywall mostraria um preco que a folha da App Store nao cobra.
+// Na duvida (erro, produto sem grupo), responde que nao tem direito.
+export async function elegivelOfertaIntrodutoria(produto) {
+  const grupo = produto?.subscriptionGroupIdIOS;
+  if (!grupo) return false;
+  try {
+    return !!(await iap().isEligibleForIntroOfferIOS(grupo));
+  } catch {
+    return false;
+  }
+}
+
 // Compra iniciada por comprar(), esperando o observador terminar de
 // processa-la: { sku, resolve, reject }.
 let compraEmAndamento = null;
@@ -232,11 +245,18 @@ export async function finalizarTransacao(compra) {
 }
 
 // Tela de assinaturas do iOS (cancelar, trocar de plano). A Apple nao deixa
-// o app cancelar a assinatura por conta propria.
+// o app cancelar a assinatura por conta propria. A folha nativa do StoreKit
+// mostra a conta que fez a compra (inclusive a do sandbox); o link da App
+// Store fica de plano B porque sempre abre a Conta Apple principal do aparelho.
 export async function abrirGerenciarAssinaturas() {
   try {
-    await iap().deepLinkToSubscriptions();
-  } catch (error) {
-    throw paraCompraError(error);
+    await iap().showManageSubscriptionsIOS();
+  } catch (erroFolha) {
+    if (__DEV__) console.warn("[iap] folha de assinaturas falhou, abrindo a App Store:", erroFolha);
+    try {
+      await iap().deepLinkToSubscriptions();
+    } catch (error) {
+      throw paraCompraError(error);
+    }
   }
 }
