@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { clearTokens, setOnAuthFailure } from "../services/api";
+import { clearTokens, setOnAuthFailure, setOnSessionRenewed } from "../services/api";
 import {
   buscarMinhaAssinatura,
   registrarCompraApple,
@@ -68,6 +68,18 @@ export function AuthProvider({ children }) {
   // access_token expirar e o refresh_token tambem falhar (expirado/revogado).
   useEffect(() => {
     setOnAuthFailure(signOut);
+    // A cada renovacao de sessao o backend devolve o usuario de novo, com a
+    // foto_url reassinada. Sem isso a copia guardada no aparelho envelheceria
+    // ate a assinatura da url vencer e o avatar parar de carregar.
+    setOnSessionRenewed((usuario) => {
+      setUser((prev) => {
+        if (!prev || String(prev.id) !== String(usuario?.id)) return prev;
+        const next = { ...prev, ...usuario };
+        setActiveUser(next);
+        AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(next));
+        return next;
+      });
+    });
   }, []);
 
   const idUsuario = user?.id ?? null;

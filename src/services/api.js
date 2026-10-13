@@ -73,6 +73,15 @@ export function setOnAuthFailure(callback) {
   onAuthFailure = callback;
 }
 
+// Chamado a cada renovacao de sessao com o usuario que o backend devolve.
+// Serve para o app nao ficar com foto_url vencida: as urls de midia vem
+// assinadas com validade, e a copia do usuario guardada no aparelho poderia
+// passar semanas sem ser atualizada.
+let onSessionRenewed = null;
+export function setOnSessionRenewed(callback) {
+  onSessionRenewed = callback;
+}
+
 function buildUrl(base, endpoint, params) {
   const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
   const query = Object.entries(params || {})
@@ -170,6 +179,7 @@ async function refreshAccessToken(base) {
       }
 
       await setTokens(payload);
+      if (payload.usuario) onSessionRenewed?.(payload.usuario);
       return payload.access_token;
     })().finally(() => {
       refreshPromise = null;

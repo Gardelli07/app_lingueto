@@ -441,7 +441,7 @@ function PulseRing({ active, size }) {
 // that a JS timer could lag; the UI thread keeps its own clock regardless of
 // JS thread load, and only calls back into JS once per second - exactly
 // when the displayed number needs to change - via runOnJS.
-function RecordControl({ recorder, recording, recordedOk, recordedUri, onToggle, onPlay }) {
+function RecordControl({ recorder, recording, recordedOk, recordedUri, onToggle, onPlay, onPublish, publishStatus }) {
   const startTime = useSharedValue(0);
   const lastSecond = useSharedValue(-1);
   const [displaySeconds, setDisplaySeconds] = useState(0);
@@ -498,9 +498,25 @@ function RecordControl({ recorder, recording, recordedOk, recordedUri, onToggle,
         </View>
       </View>
       {recordedOk && !!recordedUri && (
-        <Pressable onPress={onPlay} style={styles.playbackButton}>
-          <Text style={styles.playbackButtonText}>▶ Play my recording</Text>
-        </Pressable>
+        <>
+          <Pressable onPress={onPlay} style={styles.playbackButton}>
+            <Text style={styles.playbackButtonText}>▶ Play my recording</Text>
+          </Pressable>
+          {/* a gravacao so vai para o feed publico se o aluno tocar aqui */}
+          <Pressable
+            onPress={onPublish}
+            disabled={publishStatus !== 'idle'}
+            style={[styles.playbackButton, publishStatus !== 'idle' && { opacity: 0.6 }]}
+          >
+            <Text style={styles.playbackButtonText}>
+              {publishStatus === 'publicado'
+                ? '✓ Publicado na comunidade'
+                : publishStatus === 'enviando'
+                  ? 'Publicando…'
+                  : '↑ Publicar na comunidade'}
+            </Text>
+          </Pressable>
+        </>
       )}
     </>
   );
@@ -548,6 +564,9 @@ export default function CoffeeShopLesson({ navigation, route }) {
   const [recording, setRecording] = useState(false);
   const [recordedOk, setRecordedOk] = useState(false);
   const [recordedUri, setRecordedUri] = useState(null);
+  const [recordedSeconds, setRecordedSeconds] = useState(0);
+  // "idle" | "enviando" | "publicado", referente a gravacao do stage atual
+  const [statusPublicacao, setStatusPublicacao] = useState('idle');
   const [tapConfirmed, setTapConfirmed] = useState(false);
   const [tapQuizCorrect, setTapQuizCorrect] = useState(false);
   const [tapQuizWrong, setTapQuizWrong] = useState(null);
@@ -671,6 +690,7 @@ export default function CoffeeShopLesson({ navigation, route }) {
     Speech.stop();
     setStageHistory(h => [...h, stage]);
     setStage(next);
+    setStatusPublicacao('idle');
     Object.entries(extraState).forEach(([k, v]) => {
       const setters = {
         priceSaying: setPriceSaying, recordedOk: setRecordedOk, diningOption: setDiningOption,
@@ -688,6 +708,7 @@ export default function CoffeeShopLesson({ navigation, route }) {
     const prev = stageHistory[stageHistory.length - 1];
     setStageHistory(h => h.slice(0, -1));
     setStage(prev);
+    setStatusPublicacao('idle');
   }
 
   function logTurn(speaker, text) { setTranscript(t => [...t, { speaker, text }]); }
@@ -824,12 +845,16 @@ export default function CoffeeShopLesson({ navigation, route }) {
   // mirrors Exercise16's audio-to-community flow (enviarArquivo ->
   // criarPostAudio), gated by exercisePosts so re-recording or revisiting a
   // stage never posts the same clip to the community twice
-  async function postAudioToCommunity(stageKey, uri, seconds) {
-    if (!lesson || !uri) return;
+  async function publicarNaComunidade() {
+    if (!lesson || !recordedUri || statusPublicacao !== 'idle') return;
+    const stageKey = stage;
     const slideKey = `aulasplus:${lesson.id}:${stageKey}`;
+    const uri = recordedUri;
+    const seconds = recordedSeconds;
+    setStatusPublicacao('enviando');
     try {
       const jaPostado = await getSlidePostId(slideKey);
-      if (jaPostado) return;
+      if (jaPostado) { setStatusPublicacao('publicado'); return; }
       const arquivo = await enviarArquivo(uri, {
         tipo: 'audio',
         mimeType: 'audio/m4a',
@@ -845,8 +870,11 @@ export default function CoffeeShopLesson({ navigation, route }) {
         aulaPrompt: recordingPromptForStage(stageKey),
       });
       if (novo?.id != null) await markSlidePosted(slideKey, novo.id);
+      setStatusPublicacao('publicado');
     } catch (error) {
       console.error('[CoffeeShopLesson] falha ao publicar audio na comunidade:', error?.status, error?.message, error);
+      setStatusPublicacao('idle');
+      Alert.alert('Não foi possível publicar', error?.message || 'Tente novamente em instantes.');
     }
   }
 
@@ -872,7 +900,7 @@ export default function CoffeeShopLesson({ navigation, route }) {
           setRecordedOk(true);
           setRecordSuccesses(n => { const next = n + 1; if (next >= 2) unlockBadge('speakingStar'); return next; });
           addXp(20);
-          postAudioToCommunity(stage, uri, seconds);
+          setRecordedSeconds(seconds);
         } else {
           // nothing was actually captured - don't reward it, let the learner retry
           setRecordedUri(null);
@@ -884,7 +912,7 @@ export default function CoffeeShopLesson({ navigation, route }) {
       // flip the UI on immediately so the recording indicator (and the stopwatch
       // effect inside RecordControl) don't wait on the native setup round trip below
       deleteRecordingFile(recordedUri); // about to be replaced by this new take
-      setRecording(true); setRecordedOk(false); setRecordedUri(null);
+      setRecording(true); setRecordedOk(false); setRecordedUri(null); setStatusPublicacao('idle');
       let audioModeSet = false;
       try {
         const { granted } = await requestRecordingPermissionsAsync();
@@ -1203,7 +1231,7 @@ export default function CoffeeShopLesson({ navigation, route }) {
           <View style={[styles.section, { alignItems: 'center' }]}>
             <View style={styles.sentenceBox}><Text style={styles.sentenceText}>{sentence}</Text></View>
             <ListenButton text={sentence} size={52} />
-            <RecordControl recorder={recorder} recording={recording} recordedOk={recordedOk} recordedUri={recordedUri} onToggle={toggleRecord} onPlay={playMyRecording} />
+            <RecordControl recorder={recorder} recording={recording} recordedOk={recordedOk} recordedUri={recordedUri} onToggle={toggleRecord} onPlay={playMyRecording} onPublish={publicarNaComunidade} publishStatus={statusPublicacao} />
             <PrimaryButton label="Make Your Order" onPress={makeYourOrder} disabled={!recordedOk} />
           </View>
         );
@@ -1229,7 +1257,7 @@ export default function CoffeeShopLesson({ navigation, route }) {
             <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
               <ListenButton text="No, that's all." />
             </View>
-            <RecordControl recorder={recorder} recording={recording} recordedOk={recordedOk} recordedUri={recordedUri} onToggle={toggleRecord} onPlay={playMyRecording} />
+            <RecordControl recorder={recorder} recording={recording} recordedOk={recordedOk} recordedUri={recordedUri} onToggle={toggleRecord} onPlay={playMyRecording} onPublish={publicarNaComunidade} publishStatus={statusPublicacao} />
             <PrimaryButton label="Continue" onPress={continueToDining} />
           </View>
         );
@@ -1277,7 +1305,7 @@ export default function CoffeeShopLesson({ navigation, route }) {
               <View style={{ alignItems: 'center', gap: 12, width: '100%' }}>
                 <View style={styles.sentenceBox}><Text style={styles.sentenceText}>{sentence}</Text></View>
                 <ListenButton text={sentence} size={52} />
-                <RecordControl recorder={recorder} recording={recording} recordedOk={recordedOk} recordedUri={recordedUri} onToggle={toggleRecord} onPlay={playMyRecording} />
+                <RecordControl recorder={recorder} recording={recording} recordedOk={recordedOk} recordedUri={recordedUri} onToggle={toggleRecord} onPlay={playMyRecording} onPublish={publicarNaComunidade} publishStatus={statusPublicacao} />
                 <PrimaryButton label="Continue" onPress={continueAfterPrice} disabled={!recordedOk} />
               </View>
             )}
@@ -1393,7 +1421,7 @@ export default function CoffeeShopLesson({ navigation, route }) {
               </View>
               {showChangePt && <Text style={styles.hintTextPt}>"Aqui está seu troco, {fmt(change)}."</Text>}
             </View>
-            <RecordControl recorder={recorder} recording={recording} recordedOk={recordedOk} recordedUri={recordedUri} onToggle={toggleRecord} onPlay={playMyRecording} />
+            <RecordControl recorder={recorder} recording={recording} recordedOk={recordedOk} recordedUri={recordedUri} onToggle={toggleRecord} onPlay={playMyRecording} onPublish={publicarNaComunidade} publishStatus={statusPublicacao} />
             <PrimaryButton label="Continue" onPress={cashContinue} />
           </View>
         );

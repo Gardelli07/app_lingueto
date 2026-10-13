@@ -58,6 +58,8 @@ export function Exercise16({
   const [playbackDuration, setPlaybackDuration] = useState(0);
   const [showTip, setShowTip] = useState(false);
   const [result, setResult] = useState(null);
+  // "idle" | "enviando" | "publicado"
+  const [statusPublicacao, setStatusPublicacao] = useState("idle");
 
   const isCorrect = result === "correct";
   const hasTip =
@@ -80,6 +82,20 @@ export function Exercise16({
       }
     };
   }, []);
+
+  // Refazendo uma aula que ja teve o audio publicado, o botao ja abre como
+  // "Publicado na comunidade" em vez de oferecer publicar de novo.
+  useEffect(() => {
+    let ativo = true;
+    getSlidePostId(slideKey)
+      .then((postId) => {
+        if (ativo && postId) setStatusPublicacao("publicado");
+      })
+      .catch(() => {});
+    return () => {
+      ativo = false;
+    };
+  }, [slideKey]);
 
   useEffect(() => {
     if (isCorrect) {
@@ -365,18 +381,25 @@ export function Exercise16({
 
     onAttempt?.({ isCorrect: true });
     setResult("correct");
-    postAudioToCommunity(audioUri, recordingSeconds);
   };
 
-  const postAudioToCommunity = async (uri, duracaoSegundos) => {
+  // A gravacao so sai do aparelho quando o usuario toca em "Publicar na
+  // comunidade": e voz, e o feed e publico para todo mundo que usa o app.
+  const publicarNaComunidade = async () => {
+    if (!audioUri || statusPublicacao !== "idle") return;
+
+    setStatusPublicacao("enviando");
     try {
       const jaPostado = await getSlidePostId(slideKey);
-      if (jaPostado) return;
+      if (jaPostado) {
+        setStatusPublicacao("publicado");
+        return;
+      }
 
-      const arquivo = await enviarArquivo(uri, {
+      const arquivo = await enviarArquivo(audioUri, {
         tipo: "audio",
         mimeType: "audio/m4a",
-        duracaoSegundos,
+        duracaoSegundos: recordingSeconds,
       });
       if (!arquivo?.id) {
         throw new Error("Upload de audio nao retornou um id.");
@@ -393,12 +416,18 @@ export function Exercise16({
       if (novo?.id != null) {
         await markSlidePosted(slideKey, novo.id);
       }
+      setStatusPublicacao("publicado");
     } catch (error) {
       console.error(
         "[ex16] falha ao publicar audio na comunidade:",
         error?.status,
         error?.message,
         error
+      );
+      setStatusPublicacao("idle");
+      Alert.alert(
+        "Não foi possível publicar",
+        error?.message || "Tente novamente em instantes.",
       );
     }
   };
@@ -609,6 +638,24 @@ export function Exercise16({
               </Text>
             </View>
 
+            <TouchableOpacity
+              style={[
+                styles.publicarComunidadeButton,
+                statusPublicacao !== "idle" &&
+                  styles.publicarComunidadeButtonFeito,
+              ]}
+              onPress={publicarNaComunidade}
+              disabled={statusPublicacao !== "idle"}
+            >
+              <Text style={styles.publicarComunidadeButtonText}>
+                {statusPublicacao === "publicado"
+                  ? "Publicado na comunidade ✓"
+                  : statusPublicacao === "enviando"
+                    ? "Publicando…"
+                    : "Publicar na comunidade"}
+              </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.alertContinueButton} onPress={next}>
               <Text style={styles.alertContinueButtonText}>
                 Próxima Atividade
@@ -623,6 +670,24 @@ export function Exercise16({
 
 const ex16 = (CORES) =>
   StyleSheet.create({
+    publicarComunidadeButton: {
+      width: "100%",
+      height: 46,
+      borderRadius: 14,
+      borderWidth: 1.5,
+      borderColor: CORES.SECONDARY,
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 10,
+    },
+    publicarComunidadeButtonFeito: {
+      borderColor: CORES.BORDER,
+    },
+    publicarComunidadeButtonText: {
+      color: CORES.TEXT,
+      fontSize: 15,
+      fontWeight: "700",
+    },
     sendAudioBlock: {
       width: "100%",
       alignItems: "center",

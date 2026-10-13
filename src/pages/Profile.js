@@ -348,7 +348,13 @@ export default function ProfileScreen({ navigation }) {
   const handleDeleteAccount = () => {
     Alert.alert(
       "Excluir conta",
-      "Isso vai apagar sua conta e a maior parte dos dados vinculados a ela — perfil, progresso, XP, sequência, posts e comentários na comunidade, amizades, desafios e assinaturas. Essa ação não pode ser desfeita. Deseja continuar?",
+      "Isso vai apagar sua conta e a maior parte dos dados vinculados a ela — perfil, progresso, XP, sequência, posts e comentários na comunidade, amizades, desafios e assinaturas. Essa ação não pode ser desfeita." +
+        // A loja e quem cobra: apagar a conta aqui nao encerra a assinatura,
+        // entao o usuario continuaria sendo cobrado sem saber.
+        (COMPRA_SUPORTADA
+          ? "\n\nApagar a conta NÃO cancela sua assinatura: cancele antes em Ajustes > [seu nome] > Assinaturas."
+          : "") +
+        "\n\nDeseja continuar?",
       [
         { text: "Cancelar", style: "cancel" },
         {
@@ -474,8 +480,17 @@ export default function ProfileScreen({ navigation }) {
           <Text style={styles.planDesc}>
             {fullAccess
               ? "Todas as lições, cursos e níveis estão liberados na sua conta."
-              : "Desbloqueie lições ilimitadas, correções prioritárias na comunidade e sem anúncios."}
+              : "Desbloqueie todos os cursos, níveis e aulas."}
           </Text>
+          {/* Quem cobra, renova e cancela e a loja. Com acesso vindo de contrato
+              corporativo nao existe loja envolvida, por isso a frase e condicional. */}
+          {fullAccess ? (
+            <Text style={styles.planDesc}>
+              {podeGerenciarAssinatura
+                ? "A cobrança e a renovação ficam com a App Store — é lá que você troca de plano, cancela ou pede reembolso."
+                : "Se você assinou por uma loja, a cobrança e o cancelamento são feitos nela, no aparelho em que a assinatura foi contratada."}
+            </Text>
+          ) : null}
           {!fullAccess || podeGerenciarAssinatura ? (
             <Pressable style={styles.planBtn} onPress={handlePlanAction}>
               <Text style={styles.planBtnText}>

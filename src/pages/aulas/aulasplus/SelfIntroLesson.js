@@ -529,6 +529,8 @@ export default function SelfIntroLesson({ navigation, route }) {
     isMeteringEnabled: true,
   });
   const [recKey, setRecKey] = useState(null);
+  // Por gravacao: "enviando" | "publicado". Sem entrada = nao publicada.
+  const [publicacoes, setPublicacoes] = useState({});
   const recStartRef = useRef(0);
   // guards startRecording/stopRecording against overlapping calls (e.g. a
   // fast double-tap firing a start and a stop before either one settles)
@@ -843,13 +845,19 @@ export default function SelfIntroLesson({ navigation, route }) {
 
   // mirrors Exercise16's audio-to-community flow (enviarArquivo ->
   // criarPostAudio), gated by exercisePosts so re-recording or replaying a
-  // scene never posts the same clip to the community twice
-  const postAudioToCommunity = async (key, uri, seconds) => {
-    if (!lesson || !uri) return;
+  // scene never posts the same clip to the community twice.
+  // So roda quando o usuario toca em "Publicar na comunidade": o feed e
+  // publico, entao a voz dele nunca sai do aparelho sozinha.
+  const publicarNaComunidade = async (key, uri, seconds) => {
+    if (!lesson || !uri || publicacoes[key]) return;
     const slideKey = `aulasplus:${lesson.id}:${key}`;
+    setPublicacoes((atual) => ({ ...atual, [key]: "enviando" }));
     try {
       const jaPostado = await getSlidePostId(slideKey);
-      if (jaPostado) return;
+      if (jaPostado) {
+        setPublicacoes((atual) => ({ ...atual, [key]: "publicado" }));
+        return;
+      }
       const arquivo = await enviarArquivo(uri, {
         tipo: "audio",
         mimeType: "audio/m4a",
@@ -865,6 +873,7 @@ export default function SelfIntroLesson({ navigation, route }) {
         aulaPrompt: recordingPromptFor(key),
       });
       if (novo?.id != null) await markSlidePosted(slideKey, novo.id);
+      setPublicacoes((atual) => ({ ...atual, [key]: "publicado" }));
     } catch (error) {
       console.error(
         "[SelfIntroLesson] falha ao publicar audio na comunidade:",
@@ -872,8 +881,25 @@ export default function SelfIntroLesson({ navigation, route }) {
         error?.message,
         error,
       );
+      setPublicacoes((atual) => {
+        const proximo = { ...atual };
+        delete proximo[key];
+        return proximo;
+      });
+      Alert.alert(
+        "Não foi possível publicar",
+        error?.message || "Tente novamente em instantes.",
+      );
     }
   };
+
+  // Rotulo do botao de publicar de cada gravacao.
+  const rotuloPublicacao = (key) =>
+    publicacoes[key] === "publicado"
+      ? "✓ Publicado na comunidade"
+      : publicacoes[key] === "enviando"
+        ? "Publicando…"
+        : "↑ Publicar na comunidade";
 
   const record2 = () => {
     if (recKey === "s2") {
@@ -884,7 +910,6 @@ export default function SelfIntroLesson({ navigation, route }) {
           s2_audioUri: uri,
           s2_audioSec: seconds,
         });
-        postAudioToCommunity("s2", uri, seconds);
       });
     } else {
       startRecording("s2");
@@ -973,7 +998,6 @@ export default function SelfIntroLesson({ navigation, route }) {
           s5_audioUri: uri,
           s5_audioSec: seconds,
         });
-        postAudioToCommunity("s5", uri, seconds);
       });
     } else {
       startRecording("s5");
@@ -997,7 +1021,6 @@ export default function SelfIntroLesson({ navigation, route }) {
           s6_audioUri: uri,
           s6_audioSec: seconds,
         });
-        postAudioToCommunity("s6", uri, seconds);
       });
     } else {
       startRecording("s6");
@@ -1021,7 +1044,6 @@ export default function SelfIntroLesson({ navigation, route }) {
           s8_audioUri: uri,
           s8_audioSec: seconds,
         });
-        postAudioToCommunity("s8", uri, seconds);
       });
     } else {
       startRecording("s8");
@@ -1197,6 +1219,12 @@ export default function SelfIntroLesson({ navigation, route }) {
                     ▶ {formatDuration(st.s2_audioSec)} - sent
                   </Text>
                 </TouchableOpacity>
+                <Pill
+                  label={rotuloPublicacao("s2")}
+                  onPress={() =>
+                    publicarNaComunidade("s2", st.s2_audioUri, st.s2_audioSec)
+                  }
+                />
                 <Pill label="↺ Re-record" onPress={() => reRecord("s2")} />
                 <GreenBtn
                   label="Continue →"
@@ -1518,6 +1546,12 @@ export default function SelfIntroLesson({ navigation, route }) {
                     ▶ {formatDuration(st.s5_audioSec)} - sent
                   </Text>
                 </TouchableOpacity>
+                <Pill
+                  label={rotuloPublicacao("s5")}
+                  onPress={() =>
+                    publicarNaComunidade("s5", st.s5_audioUri, st.s5_audioSec)
+                  }
+                />
                 <Pill label="↺ Re-record" onPress={() => reRecord("s5")} />
                 <GreenBtn
                   label="Continue →"
@@ -1606,6 +1640,12 @@ export default function SelfIntroLesson({ navigation, route }) {
                     ▶ {formatDuration(st.s6_audioSec)} - sent
                   </Text>
                 </TouchableOpacity>
+                <Pill
+                  label={rotuloPublicacao("s6")}
+                  onPress={() =>
+                    publicarNaComunidade("s6", st.s6_audioUri, st.s6_audioSec)
+                  }
+                />
                 <Pill label="↺ Re-record" onPress={() => reRecord("s6")} />
                 <GreenBtn
                   label="Continue →"
@@ -1721,6 +1761,12 @@ export default function SelfIntroLesson({ navigation, route }) {
                     ▶ Your presentation · {formatDuration(st.s8_audioSec)}
                   </Text>
                 </TouchableOpacity>
+                <Pill
+                  label={rotuloPublicacao("s8")}
+                  onPress={() =>
+                    publicarNaComunidade("s8", st.s8_audioUri, st.s8_audioSec)
+                  }
+                />
                 <Pill label="↺ Re-record" onPress={() => reRecord("s8")} />
                 <GreenBtn
                   label="See your results →"

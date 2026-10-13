@@ -22,6 +22,13 @@ import * as AppleAuthentication from "expo-apple-authentication";
 import { useAuth } from "../context/AuthContext";
 import api, { setTokens } from "../services/api";
 import { requestNotificationPermission } from "../services/notifications";
+import {
+  IDADE_MINIMA,
+  URL_PRIVACIDADE,
+  URL_TERMOS,
+  VERSAO_TERMOS,
+  abrirLinkLegal,
+} from "../util/legal";
 import { useTheme, useThemeMode, useThemedStyles } from "../theme";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -44,6 +51,9 @@ export default function LoginScreen({ navigation }) {
   const [showSenha, setShowSenha] = useState(false);
   const [corpOpen, setCorpOpen] = useState(false);
   const [socialLoading, setSocialLoading] = useState(false);
+  // Sem aceite nao ha login: e o unico momento em que o usuario toma ciencia
+  // dos Termos e declara a idade minima.
+  const [aceitou, setAceitou] = useState(false);
 
   const [googleRequest, googleResponse, googlePromptAsync] =
     Google.useAuthRequest({
@@ -56,7 +66,11 @@ export default function LoginScreen({ navigation }) {
     if (googleResponse?.type === "success") {
       const idToken = googleResponse.params?.id_token;
       if (idToken) {
-        handleSocialLogin("google", { idToken, plataforma: Platform.OS });
+        handleSocialLogin("google", {
+          idToken,
+          plataforma: Platform.OS,
+          aceite_versao: VERSAO_TERMOS,
+        });
       } else {
         setSocialLoading(false);
         Alert.alert("Erro", "Não foi possível obter o token do Google.");
@@ -67,7 +81,18 @@ export default function LoginScreen({ navigation }) {
     }
   }, [googleResponse]);
 
+  // Devolve false e avisa quando o usuario ainda nao marcou o aceite.
+  function aceiteConfirmado() {
+    if (aceitou) return true;
+    Alert.alert(
+      "Antes de entrar",
+      `Marque a caixa confirmando que você tem ${IDADE_MINIMA} anos ou mais e que concorda com os Termos de Uso e a Política de Privacidade.`,
+    );
+    return false;
+  }
+
   async function handleGooglePress() {
+    if (!aceiteConfirmado()) return;
     setSocialLoading(true);
     try {
       const result = await googlePromptAsync();
@@ -142,7 +167,27 @@ export default function LoginScreen({ navigation }) {
     }
   }
 
+  // O "Entrar com Apple" nativo so existe no iOS: a lib nao tem codigo Android.
+  // Enquanto o fluxo web da Apple nao existir, o Android recebe uma explicacao
+  // em vez do erro tecnico que a lib lanca.
+  function avisarAppleIndisponivel() {
+    Alert.alert(
+      "Entrar com Apple",
+      "O login com Apple funciona só no iPhone. Neste aparelho, entre com o Google.\n\n" +
+        "Se você criou sua conta com a Apple, use um iPhone para acessá-la: entrando com o Google aqui, uma nova conta será criada.",
+    );
+  }
+
   async function handleAppleSignIn() {
+    if (!aceiteConfirmado()) return;
+    if (
+      Platform.OS !== "ios" ||
+      !(await AppleAuthentication.isAvailableAsync())
+    ) {
+      avisarAppleIndisponivel();
+      return;
+    }
+
     setSocialLoading(true);
     try {
       const credential = await AppleAuthentication.signInAsync({
@@ -153,18 +198,34 @@ export default function LoginScreen({ navigation }) {
       });
       // A Apple só manda o nome no primeiro login desse usuário; nos próximos
       // credential.fullName vem nulo. O backend só usa isso ao criar a conta.
-      const nomeCompleto = [credential.fullName?.givenName, credential.fullName?.familyName]
+      const nomeCompleto = [
+        credential.fullName?.givenName,
+        credential.fullName?.familyName,
+      ]
         .filter(Boolean)
         .join(" ")
         .trim();
       await handleSocialLogin("apple", {
         identityToken: credential.identityToken,
         plataforma: Platform.OS,
+        aceite_versao: VERSAO_TERMOS,
         ...(nomeCompleto ? { nome: nomeCompleto } : {}),
+        // O backend troca esse código por um refresh token da Apple, que é o
+        // que permite revogar o login quando o usuário exclui a conta —
+        // exigência da Apple na revisão.
+        ...(credential.authorizationCode
+          ? { authorizationCode: credential.authorizationCode }
+          : {}),
       });
     } catch (error) {
       setSocialLoading(false);
       if (error.code === "ERR_REQUEST_CANCELED") return;
+      // Rede de seguranca: se a lib ainda assim disser que nao esta disponivel,
+      // mostra a explicacao em vez da mensagem tecnica em ingles dela.
+      if (error.code === "ERR_UNAVAILABLE") {
+        avisarAppleIndisponivel();
+        return;
+      }
       Alert.alert("Erro", error.message || "Erro ao realizar login com Apple");
     }
   }
@@ -241,9 +302,47 @@ export default function LoginScreen({ navigation }) {
             Entre para continuar aprendendo{"\n"}com a Lingueto
           </Text>
 
+          {/* Aceite dos documentos legais e declaração de idade */}
+          <TouchableOpacity
+            style={styles.aceiteRow}
+            onPress={() => setAceitou((v) => !v)}
+            activeOpacity={0.8}
+          >
+            <Ionicons
+              name={aceitou ? "checkbox" : "square-outline"}
+              size={22}
+              color={aceitou ? CORES.LOGIN_MINT_DARK : CORES.TEXT_FAINT}
+            />
+            <Text style={styles.aceiteTexto}>
+              Declaro ter {IDADE_MINIMA} anos ou mais e concordo com os{" "}
+              {/* Enquanto as URLs nao existirem (ver util/legal.js), os nomes
+                  aparecem como texto comum em vez de link que nao abre nada. */}
+              <Text
+                style={URL_TERMOS ? styles.aceiteLink : undefined}
+                onPress={
+                  URL_TERMOS ? () => abrirLinkLegal(URL_TERMOS) : undefined
+                }
+              >
+                Termos de Uso
+              </Text>{" "}
+              e com a{" "}
+              <Text
+                style={URL_PRIVACIDADE ? styles.aceiteLink : undefined}
+                onPress={
+                  URL_PRIVACIDADE
+                    ? () => abrirLinkLegal(URL_PRIVACIDADE)
+                    : undefined
+                }
+              >
+                Política de Privacidade
+              </Text>
+              .
+            </Text>
+          </TouchableOpacity>
+
           {/* Google */}
           <TouchableOpacity
-            style={styles.googleButton}
+            style={[styles.googleButton, !aceitou && styles.botaoBloqueado]}
             onPress={handleGooglePress}
             disabled={!googleRequest || socialLoading}
             activeOpacity={0.85}
@@ -254,44 +353,71 @@ export default function LoginScreen({ navigation }) {
 
           {/* Apple (nativo no iOS, fallback no Android) */}
           {Platform.OS === "ios" ? (
-            <AppleAuthentication.AppleAuthenticationButton
-              buttonType={
-                AppleAuthentication.AppleAuthenticationButtonType.CONTINUE
-              }
-              buttonStyle={
-                isDark
-                  ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
-                  : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
-              }
-              cornerRadius={15}
-              style={styles.appleNativeButton}
-              onPress={handleAppleSignIn}
-            />
+            // O botao nativo da Apple nao aceita `disabled`, entao ele so fica
+            // esmaecido: o toque continua chegando e aceiteConfirmado() explica
+            // o que falta, em vez de o botao nao responder sem motivo aparente.
+            <View style={!aceitou && styles.botaoBloqueado}>
+              <AppleAuthentication.AppleAuthenticationButton
+                buttonType={
+                  AppleAuthentication.AppleAuthenticationButtonType.CONTINUE
+                }
+                buttonStyle={
+                  isDark
+                    ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
+                    : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
+                }
+                cornerRadius={15}
+                style={styles.appleNativeButton}
+                onPress={handleAppleSignIn}
+              />
+            </View>
           ) : (
             <TouchableOpacity
-              style={styles.appleButton}
+              style={[styles.appleButton, !aceitou && styles.botaoBloqueado]}
               onPress={handleAppleSignIn}
               activeOpacity={0.85}
             >
-              <AntDesign name="apple" size={20} color={CORES.LOGIN_APPLE_TEXT} />
+              <AntDesign
+                name="apple"
+                size={20}
+                color={CORES.LOGIN_APPLE_TEXT}
+              />
               <Text style={styles.appleText}>Continuar com Apple</Text>
             </TouchableOpacity>
           )}
 
-          {/* Divisor corporativo */}
+          {/*
+            LOGIN CORPORATIVO — escondido de proposito (30/09/2026).
+
+            O recurso e prototipo: o funcionamento real ainda vai mudar, entao
+            ele fica fora do app publicado e, por consequencia, fora da Politica
+            de Privacidade e dos Termos de Uso. Documento nao pode descrever o
+            que vai mudar, nem omitir o que o usuario ve na tela — por isso as
+            duas coisas andam juntas.
+
+            Quando o corporativo entrar de verdade: descomente este bloco E
+            atualize os dois documentos no mesmo ciclo. O resto do codigo
+            (estado email/senha, toggleCorp, handleSignIn) continua no arquivo,
+            entao basta descomentar.
+
+          Divisor corporativo
           <View style={styles.dividerRow}>
             <View style={styles.dividerLine} />
             <Text style={styles.dividerText}>CONTA CORPORATIVA</Text>
             <View style={styles.dividerLine} />
           </View>
 
-          {/* Toggle de acesso corporativo */}
+          Toggle de acesso corporativo
           <TouchableOpacity
             style={styles.corpToggle}
             onPress={toggleCorp}
             activeOpacity={0.8}
           >
-            <Ionicons name="business-outline" size={18} color={CORES.LOGIN_MINT_DARK} />
+            <Ionicons
+              name="business-outline"
+              size={18}
+              color={CORES.LOGIN_MINT_DARK}
+            />
             <Text style={styles.corpToggleText}>
               {corpOpen
                 ? "Ocultar acesso corporativo"
@@ -304,7 +430,7 @@ export default function LoginScreen({ navigation }) {
             />
           </TouchableOpacity>
 
-          {/* Campos corporativos - só aparecem ao abrir */}
+          Campos corporativos - so aparecem ao abrir
           {corpOpen && (
             <View style={styles.corpFields}>
               <Text style={styles.label}>Login corporativo</Text>
@@ -350,25 +476,17 @@ export default function LoginScreen({ navigation }) {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() =>
-                  Alert.alert("Recuperar senha", "Em breve.")
-                }
+                onPress={() => Alert.alert("Recuperar senha", "Em breve.")}
               >
                 <Text style={styles.forgot}>
-                  Esqueceu a senha? <Text style={styles.forgotLink}>Recuperar</Text>
+                  Esqueceu a senha?{" "}
+                  <Text style={styles.forgotLink}>Recuperar</Text>
                 </Text>
               </TouchableOpacity>
             </View>
           )}
+          */}
 
-          <TouchableOpacity
-            style={styles.signUpWrap}
-            onPress={() => Alert.alert("Cadastro", "Tela de cadastro em breve")}
-          >
-            <Text style={styles.noAccount}>
-              Não tem uma conta? <Text style={styles.signUpText}>Cadastre-se</Text>
-            </Text>
-          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -427,6 +545,27 @@ const makeStyles = (CORES) =>
       fontWeight: "900",
       color: CORES.LOGIN_INK,
       letterSpacing: 0.5,
+    },
+    aceiteRow: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      alignSelf: "stretch",
+      gap: 10,
+      marginBottom: 18,
+    },
+    aceiteTexto: {
+      flex: 1,
+      fontSize: 13,
+      lineHeight: 19,
+      color: CORES.LOGIN_MUTED,
+    },
+    aceiteLink: {
+      color: CORES.LOGIN_MINT_DARK,
+      fontWeight: "700",
+      textDecorationLine: "underline",
+    },
+    botaoBloqueado: {
+      opacity: 0.45,
     },
     subtitle: {
       marginTop: 4,
@@ -582,20 +721,6 @@ const makeStyles = (CORES) =>
     },
     forgotLink: {
       color: CORES.LOGIN_MINT_DARK,
-      textDecorationLine: "underline",
-    },
-    signUpWrap: {
-      marginTop: 22,
-    },
-    noAccount: {
-      fontSize: 14,
-      fontWeight: "700",
-      color: CORES.LOGIN_MUTED,
-      textAlign: "center",
-    },
-    signUpText: {
-      color: CORES.LOGIN_MINT_DARK,
-      fontWeight: "900",
       textDecorationLine: "underline",
     },
   });

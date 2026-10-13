@@ -11,13 +11,19 @@
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://apilingueto-production-ac5a.up.railway.app"
+        "EXPO_PUBLIC_API_URL": "https://apilingueto-production-ac5a.up.railway.app",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "910997590272-pocnrtmsndci0lfu7lm1m3lnnjt5qlu1.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "910997590272-kgbum4i9v81m6tvjf8ph4cnel014pr63.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID": "910997590272-ho6o61m1kl9a15rjirv5p2voh060hom1.apps.googleusercontent.com"
       }
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://apilingueto-production-ac5a.up.railway.app"
+        "EXPO_PUBLIC_API_URL": "https://apilingueto-production-ac5a.up.railway.app",
+        "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "910997590272-pocnrtmsndci0lfu7lm1m3lnnjt5qlu1.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "910997590272-kgbum4i9v81m6tvjf8ph4cnel014pr63.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID": "910997590272-ho6o61m1kl9a15rjirv5p2voh060hom1.apps.googleusercontent.com"
       }
     },
     "apk": {
