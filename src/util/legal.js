@@ -1,18 +1,16 @@
 import * as WebBrowser from "expo-web-browser";
 
-// Endereços públicos dos documentos legais.
+// Endereços públicos dos documentos legais, no domínio próprio
+// linguetoapp.com.br (comprado em 14/10/2026).
 //
-// Ainda vazios porque o domínio próprio não existe (o endereço atual da API é
-// um subdomínio gerado pela Railway, que não serve para isso). Enquanto
-// estiverem vazios, a tela de login mostra os nomes como texto comum, sem
-// link — nada de botão que não abre nada.
+// As duas páginas precisam estar NO AR antes de publicar nas lojas: a Apple e
+// a Google pedem os dois endereços na ficha do app, e a Apple também no fluxo
+// de assinatura. Enquanto o site não subir, estes links abrem em 404.
 //
-// Quando o domínio estiver no ar, preencha aqui e os links passam a funcionar
-// em todo lugar que usar estas constantes. As duas páginas precisam estar
-// acessíveis ANTES de publicar nas lojas: a Apple e a Google pedem os dois
-// endereços na ficha do app, e a Apple também no fluxo de assinatura.
-export const URL_TERMOS = "";
-export const URL_PRIVACIDADE = "";
+// Se algum endereço mudar, muda só aqui — todo lugar que mostra os documentos
+// usa estas constantes.
+export const URL_TERMOS = "https://linguetoapp.com.br/termos";
+export const URL_PRIVACIDADE = "https://linguetoapp.com.br/privacidade";
 
 // 16 para acompanhar a classificação da App Store (A16 no Brasil, calculada a
 // partir do questionário). A escala da Apple é 4+, 9+, 13+, 16+ e 18+, e a

@@ -350,10 +350,12 @@ export default function ProfileScreen({ navigation }) {
       "Excluir conta",
       "Isso vai apagar sua conta e a maior parte dos dados vinculados a ela — perfil, progresso, XP, sequência, posts e comentários na comunidade, amizades, desafios e assinaturas. Essa ação não pode ser desfeita." +
         // A loja e quem cobra: apagar a conta aqui nao encerra a assinatura,
-        // entao o usuario continuaria sendo cobrado sem saber.
-        (COMPRA_SUPORTADA
-          ? "\n\nApagar a conta NÃO cancela sua assinatura: cancele antes em Ajustes > [seu nome] > Assinaturas."
-          : "") +
+        // entao o usuario continuaria sendo cobrado sem saber. O aviso NAO pode
+        // depender de COMPRA_SUPORTADA: ela e falsa no Android, e era justamente
+        // ali que o usuario apagaria a conta sem nunca ler isto.
+        "\n\nApagar a conta NÃO cancela sua assinatura. Cancele antes na loja onde assinou:" +
+        "\n\n• iPhone: Ajustes > [seu nome] > Assinaturas" +
+        "\n• Android: Google Play > foto do perfil > Pagamentos e assinaturas > Assinaturas" +
         "\n\nDeseja continuar?",
       [
         { text: "Cancelar", style: "cancel" },
