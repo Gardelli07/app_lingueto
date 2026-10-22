@@ -88,9 +88,12 @@ android {
     // The default 3.22.1 bundled with the Android SDK ships an old Ninja that hard-fails
     // on object file paths over 260 chars, which the react-native-keyboard-controller
     // codegen output regularly exceeds.
-    externalNativeBuild {
-        cmake {
-            version "4.1.2"
+    // Windows-only: EAS (Linux) doesn't have this CMake installed and doesn't need it.
+    if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+        externalNativeBuild {
+            cmake {
+                version "4.1.2"
+            }
         }
     }
 

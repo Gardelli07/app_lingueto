@@ -9,10 +9,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearTokens, setOnAuthFailure, setOnSessionRenewed } from "../services/api";
 import {
   buscarMinhaAssinatura,
-  registrarCompraApple,
-  restaurarComprasApple,
+  registrarCompra,
+  restaurarCompras as restaurarComprasDaLoja,
 } from "../services/assinaturas";
-import { COMPRA_SUPORTADA, observarCompras } from "../services/iap";
+import {
+  COMPRA_SUPORTADA,
+  lojaDaAssinatura,
+  observarCompras,
+} from "../services/iap";
 import { setActiveUser } from "../util/userScope";
 import { PLAN_FREE, PLAN_FULL_ACCESS } from "../util/plans";
 import { useThemeMode } from "../theme";
@@ -88,12 +92,16 @@ export function AuthProvider({ children }) {
   // assinatura, contrato corporativo ou permissao manual) e fica salvo junto
   // com o usuario, pra o app abrir offline com o ultimo acesso conhecido.
   // Resposta que chega depois de trocar de conta ou sair e descartada.
-  const aplicarAcesso = useCallback((idDono, acessoCompleto) => {
+  // `loja_assinatura` ("ios" | "android" | null) e onde a pessoa assinou, que
+  // pode nao ser o aparelho atual: decide pra qual loja o Perfil manda no
+  // "Gerenciar assinatura".
+  const aplicarAcesso = useCallback((idDono, acessoCompleto, assinatura) => {
     setUser((prev) => {
       if (!prev || prev.id !== idDono) return prev;
       const next = {
         ...prev,
         plano: acessoCompleto ? PLAN_FULL_ACCESS : PLAN_FREE,
+        loja_assinatura: lojaDaAssinatura(assinatura),
       };
       setActiveUser(next);
       AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(next));
@@ -104,11 +112,13 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (!idUsuario) return;
     buscarMinhaAssinatura()
-      .then((resumo) => aplicarAcesso(idUsuario, !!resumo?.acesso_completo))
+      .then((resumo) =>
+        aplicarAcesso(idUsuario, !!resumo?.acesso_completo, resumo?.assinatura),
+      )
       .catch(() => {});
   }, [idUsuario, aplicarAcesso]);
 
-  // Toda transacao da App Store (compra do paywall, renovacao, compra que
+  // Toda transacao da loja (compra do paywall, renovacao, compra que
   // ficou pendente em outra sessao) e validada no backend e so entao libera o
   // acesso. Roda so com usuario logado, porque a validacao vincula a compra a
   // conta atual.
@@ -116,8 +126,8 @@ export function AuthProvider({ children }) {
     if (!idUsuario || !COMPRA_SUPORTADA) return undefined;
     try {
       return observarCompras(async (compra) => {
-        const resultado = await registrarCompraApple(compra);
-        aplicarAcesso(idUsuario, resultado.acessoCompleto);
+        const resultado = await registrarCompra(compra);
+        aplicarAcesso(idUsuario, resultado.acessoCompleto, resultado.assinatura);
         return resultado;
       });
     } catch {
@@ -126,11 +136,13 @@ export function AuthProvider({ children }) {
     }
   }, [idUsuario, aplicarAcesso]);
 
-  // "Restaurar compras" (exigido pela Apple). Devolve null se o Apple ID nao
-  // tiver assinatura ativa do Lingueto.
+  // "Restaurar compras" (exigido pela Apple). Devolve null se a conta da loja
+  // (Apple ID ou conta do Google) nao tiver assinatura ativa do Lingueto.
   async function restaurarCompras() {
-    const resultado = await restaurarComprasApple();
-    if (resultado) aplicarAcesso(idUsuario, resultado.acessoCompleto);
+    const resultado = await restaurarComprasDaLoja();
+    if (resultado) {
+      aplicarAcesso(idUsuario, resultado.acessoCompleto, resultado.assinatura);
+    }
     return resultado;
   }
 

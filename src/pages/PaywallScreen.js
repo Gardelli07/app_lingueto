@@ -14,11 +14,9 @@ import { ApiError } from "../services/api";
 import {
   COMPRA_SUPORTADA,
   CompraError,
-  PRODUTO_ANUAL,
-  PRODUTO_MENSAL,
-  buscarProdutos,
+  LOJA,
+  buscarPlanos,
   comprar,
-  elegivelOfertaIntrodutoria,
 } from "../services/iap";
 import { useTheme, useThemedStyles } from "../theme";
 
@@ -67,8 +65,8 @@ function fmt(n) {
   return "R$ " + n.toFixed(2).replace(".", ",");
 }
 
-// Precos fixos acima (RAW_PLANS) so aparecem onde a App Store nao vende
-// (Android, por enquanto). No iPhone o preco vem sempre do catalogo da loja.
+// Precos fixos acima (RAW_PLANS) so aparecem onde nao ha loja (web). No
+// iPhone e no Android o preco vem sempre do catalogo da loja.
 function precoDeReferencia(price, isYearly) {
   if (price.now === 0) {
     return {
@@ -98,35 +96,17 @@ function precoDeReferencia(price, isYearly) {
   };
 }
 
-// Oferta do anual configurada na App Store: 1 ano pago adiantado com desconto.
-// Qualquer outro formato cai no preco cheio, que e o que a folha cobra.
-function ofertaDoPrimeiroAno(produto) {
-  const umAnoAdiantado =
-    produto.introductoryPricePaymentModeIOS === "pay-up-front" &&
-    produto.introductoryPriceSubscriptionPeriodIOS === "year" &&
-    Number(produto.introductoryPriceNumberOfPeriodsIOS) === 1;
-  if (!umAnoAdiantado || !produto.introductoryPriceIOS) return null;
-
-  const valor = Number(produto.introductoryPriceAsAmountIOS);
-  const cheio = Number(produto.price);
-  return {
-    displayPrice: produto.introductoryPriceIOS,
-    discountPct:
-      valor > 0 && cheio > valor ? Math.round((1 - valor / cheio) * 100) : null,
-  };
-}
-
 function precoDaLoja(catalogo, isYearly) {
   if (catalogo.status === "carregando") {
     return {
       priceNow: "…",
       priceWas: "",
-      priceSubnote: "buscando preço na App Store",
+      priceSubnote: `buscando preço ${LOJA.na}`,
       discountPct: null,
     };
   }
-  const produto = catalogo.produtos[isYearly ? PRODUTO_ANUAL : PRODUTO_MENSAL];
-  if (!produto) {
+  const plano = catalogo.planos[isYearly ? "anual" : "mensal"];
+  if (!plano) {
     return {
       priceNow: "—",
       priceWas: "",
@@ -136,26 +116,26 @@ function precoDaLoja(catalogo, isYearly) {
   }
   if (!isYearly) {
     return {
-      priceNow: `${produto.displayPrice}/mês`,
+      priceNow: `${plano.preco}/mês`,
       priceWas: "",
       priceSubnote: "cobrado mensalmente",
       discountPct: null,
     };
   }
-  const oferta = catalogo.elegivelOferta ? ofertaDoPrimeiroAno(produto) : null;
+  const oferta = plano.ofertaPrimeiroAno;
   if (!oferta) {
     return {
-      priceNow: produto.displayPrice,
+      priceNow: plano.preco,
       priceWas: "",
       priceSubnote: "cobrado anualmente",
       discountPct: null,
     };
   }
   return {
-    priceNow: oferta.displayPrice,
-    priceWas: produto.displayPrice,
-    priceSubnote: `no 1º ano · depois ${produto.displayPrice}/ano`,
-    discountPct: oferta.discountPct,
+    priceNow: oferta.preco,
+    priceWas: plano.preco,
+    priceSubnote: `no 1º ano · depois ${plano.preco}/ano`,
+    discountPct: oferta.descontoPct,
   };
 }
 
@@ -167,8 +147,7 @@ function precoDoPlano(plan, isYearly, catalogo) {
 
 const CATALOGO_INICIAL = {
   status: "carregando",
-  produtos: {},
-  elegivelOferta: false,
+  planos: {},
 };
 
 export default function PaywallScreen({ navigation }) {
@@ -187,19 +166,9 @@ export default function PaywallScreen({ navigation }) {
     if (!COMPRA_SUPORTADA) return;
     setCatalogo(CATALOGO_INICIAL);
     try {
-      const lista = await buscarProdutos();
-      const produtos = Object.fromEntries(
-        lista.map((produto) => [produto.id, produto]),
-      );
-      const completo = !!(produtos[PRODUTO_MENSAL] && produtos[PRODUTO_ANUAL]);
-      const elegivelOferta = await elegivelOfertaIntrodutoria(
-        produtos[PRODUTO_ANUAL],
-      );
-      setCatalogo({
-        status: completo ? "pronto" : "erro",
-        produtos,
-        elegivelOferta,
-      });
+      const planos = await buscarPlanos();
+      const completo = !!(planos.mensal && planos.anual);
+      setCatalogo({ status: completo ? "pronto" : "erro", planos });
     } catch {
       setCatalogo({ ...CATALOGO_INICIAL, status: "erro" });
     }
@@ -249,7 +218,7 @@ export default function PaywallScreen({ navigation }) {
     if (!COMPRA_SUPORTADA) {
       Alert.alert(
         "Assinatura indisponível",
-        "Por enquanto o Premium só pode ser assinado pelo iPhone. Em breve também no Android.",
+        "O Premium só pode ser assinado pelo app no iPhone ou no Android.",
       );
       return;
     }
@@ -260,15 +229,15 @@ export default function PaywallScreen({ navigation }) {
 
     setSubmitting(true);
     try {
-      // A folha da App Store abre aqui. O acesso e liberado pelo AuthContext
+      // A folha da loja abre aqui. O acesso e liberado pelo AuthContext
       // depois que o backend valida a transacao; `comprar` devolve o resultado.
       const { acessoCompleto } = await comprar(
-        billing === "yearly" ? PRODUTO_ANUAL : PRODUTO_MENSAL,
+        catalogo.planos[billing === "yearly" ? "anual" : "mensal"].compra,
       );
       if (acessoCompleto) {
         Alert.alert(
           "Assinatura ativa",
-          "Tudo pronto! O Premium já está liberado na sua conta.\n\n Para mais detalhes, acesse Ajustes > [seu nome] > Assinaturas.",
+          `Tudo pronto! O Premium já está liberado na sua conta.\n\n Para mais detalhes, acesse ${LOJA.caminhoAssinaturas}.`,
         );
         handleClose();
       } else {
@@ -288,7 +257,7 @@ export default function PaywallScreen({ navigation }) {
           );
         }
       } else if (error instanceof ApiError) {
-        // A App Store cobrou, mas o backend nao validou (rede, servidor). A
+        // A loja cobrou, mas o backend nao validou (rede, servidor). A
         // transacao fica pendente e e reenviada; o usuario nao paga de novo.
         Alert.alert(
           "Não foi possível liberar o acesso",
@@ -313,7 +282,7 @@ export default function PaywallScreen({ navigation }) {
       if (!resultado) {
         Alert.alert(
           "Nenhuma assinatura encontrada",
-          "Não encontramos uma assinatura ativa do Lingueto neste Apple ID.",
+          `Não encontramos uma assinatura ativa do Lingueto ${LOJA.nestaConta}.`,
         );
       } else if (resultado.acessoCompleto) {
         Alert.alert(
@@ -520,7 +489,7 @@ export default function PaywallScreen({ navigation }) {
               e a loja — inclusive depois de trocar de aparelho. */}
           <Text style={styles.disclaimer}>
             {COMPRA_SUPORTADA
-              ? 'Para mais detalhes, acesse suas assinaturas na Apple Store. Trocou de aparelho? Entre com o mesmo Apple ID e toque em "Restaurar compras".'
+              ? `Para mais detalhes, acesse suas assinaturas ${LOJA.na}. Trocou de aparelho? Entre com ${LOJA.mesmaConta} e toque em "Restaurar compras".`
               : "Detalhes da assinatura pela loja do seu aparelho (App Store ou Google Play)."}
           </Text>
           {COMPRA_SUPORTADA ? (

@@ -17,7 +17,12 @@ import Svg, { Path, Circle } from "react-native-svg";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../services/api";
 import { excluirConta } from "../services/usuarios";
-import { COMPRA_SUPORTADA, abrirGerenciarAssinaturas } from "../services/iap";
+import {
+  COMPRA_SUPORTADA,
+  LOJAS,
+  abrirGerenciarAssinaturas,
+  podeAbrirGerenciamento,
+} from "../services/iap";
 import { getLevelProgress } from "../util/xp";
 import { clearAllLocalProgress } from "../util/courseCatalog";
 import { clearAllAulasPlusProgress } from "./aulas/aulasplus/progress";
@@ -282,18 +287,33 @@ export default function ProfileScreen({ navigation }) {
 
   const levelProgress = getLevelProgress(totalXp);
 
-  // Cancelar ou trocar de plano e feito na App Store: a Apple nao deixa o app
+  // Cancelar ou trocar de plano e feito na loja: nenhuma delas deixa o app
   // cancelar a assinatura por conta propria. O plano exibido vem do backend.
-  const podeGerenciarAssinatura = fullAccess && COMPRA_SUPORTADA;
+  // A loja e a de onde a pessoa assinou (backend), nao a do aparelho: quem
+  // assinou no iPhone e abre o app no Android continua sendo da App Store.
+  // Sem loja (sem assinatura, contrato corporativo, acesso manual) nao ha o
+  // que gerenciar.
+  const plataformaAssinatura = user?.loja_assinatura ?? null;
+  const lojaAssinatura = LOJAS[plataformaAssinatura] ?? null;
+  const podeGerenciarAssinatura =
+    fullAccess && !!lojaAssinatura && COMPRA_SUPORTADA;
   const handlePlanAction = () => {
     if (!fullAccess) {
       navigation.navigate("Paywall");
       return;
     }
-    abrirGerenciarAssinaturas().catch(() => {
+    if (!lojaAssinatura) return;
+    if (!podeAbrirGerenciamento(plataformaAssinatura)) {
+      Alert.alert(
+        `Assinatura feita ${lojaAssinatura.na}`,
+        `A Apple só permite gerenciar essa assinatura num iPhone ou iPad: abra ${lojaAssinatura.caminhoAssinaturas}.`,
+      );
+      return;
+    }
+    abrirGerenciarAssinaturas(plataformaAssinatura).catch(() => {
       Alert.alert(
         "Não foi possível abrir",
-        "Para gerenciar a assinatura, abra Ajustes > [seu nome] > Assinaturas.",
+        `Para gerenciar a assinatura, abra ${lojaAssinatura.caminhoAssinaturas}.`,
       );
     });
   };
@@ -489,7 +509,7 @@ export default function ProfileScreen({ navigation }) {
           {fullAccess ? (
             <Text style={styles.planDesc}>
               {podeGerenciarAssinatura
-                ? "A cobrança e a renovação ficam com a App Store — é lá que você troca de plano, cancela ou pede reembolso."
+                ? `A cobrança e a renovação ficam ${lojaAssinatura.com} — é lá que você troca de plano, cancela ou pede reembolso.`
                 : "Se você assinou por uma loja, a cobrança e o cancelamento são feitos nela, no aparelho em que a assinatura foi contratada."}
             </Text>
           ) : null}

@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import api from "./api";
 import { buscarAssinaturasAtivas, finalizarTransacao } from "./iap";
 
@@ -29,14 +30,30 @@ export function validarCompraApple(compra) {
   });
 }
 
-// Registra no backend uma transacao do StoreKit e devolve o acesso resultante:
+// No Android nao existe id_transacao: quem identifica a compra e o
+// purchaseToken, que o backend consulta na Google Play Developer API.
+export function validarCompraAndroid(compra) {
+  return api.post("/assinaturas/validar-compra", {
+    plataforma: "android",
+    token_compra: compra.purchaseToken,
+    id_produto: compra.productId,
+  });
+}
+
+function validarCompra(compra) {
+  return Platform.OS === "android"
+    ? validarCompraAndroid(compra)
+    : validarCompraApple(compra);
+}
+
+// Registra no backend uma compra da loja e devolve o acesso resultante:
 // { acessoCompleto, assinatura }. O 201 do validar-compra NAO significa
-// acesso — a Apple pode devolver a transacao como expirada/revogada — entao o
+// acesso — a loja pode devolver a compra como expirada/revogada — entao o
 // acesso vem do /assinaturas/minha logo em seguida. Se so essa segunda
 // chamada falhar, cai no status da propria assinatura validada, pra nao
 // tratar como erro uma compra que o backend ja aceitou.
-export async function registrarCompraApple(compra) {
-  const assinatura = await validarCompraApple(compra);
+export async function registrarCompra(compra) {
+  const assinatura = await validarCompra(compra);
   const resumo = await buscarMinhaAssinatura().catch(() => null);
 
   if (resumo) {
@@ -49,14 +66,14 @@ export async function registrarCompraApple(compra) {
 }
 
 // "Restaurar compras" (exigido pela Apple): reenvia pro backend a assinatura
-// ativa mais recente que a App Store conhece para este Apple ID. Devolve null
-// se nao houver nenhuma. Tambem serve de "tentar de novo" pra uma compra que
-// ficou sem validar por falha de rede.
-export async function restaurarComprasApple() {
+// ativa mais recente que a loja conhece para a conta do aparelho (Apple ID ou
+// conta do Google). Devolve null se nao houver nenhuma. Tambem serve de
+// "tentar de novo" pra uma compra que ficou sem validar por falha de rede.
+export async function restaurarCompras() {
   const [maisRecente] = await buscarAssinaturasAtivas({ sincronizar: true });
   if (!maisRecente) return null;
 
-  const resultado = await registrarCompraApple(maisRecente);
+  const resultado = await registrarCompra(maisRecente);
   await finalizarTransacao(maisRecente).catch(() => {});
   return resultado;
 }
