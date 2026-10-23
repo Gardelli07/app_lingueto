@@ -25,7 +25,7 @@ import { Feather } from "@expo/vector-icons";
 import { createAudioPlayer } from "expo-audio";
 import { useTheme, useThemedStyles } from "../theme";
 import { useAuth } from "../context/AuthContext";
-import { API_URL } from "../services/api";
+import { resolverUrlFoto } from "../services/api";
 import {
   fetchPosts,
   criarPost,
@@ -73,7 +73,7 @@ function formatRelativeTime(isoString) {
 }
 
 function resolveMediaUrl(path) {
-  return path ? `${API_URL}${path}` : null;
+  return resolverUrlFoto(path);
 }
 
 function formatDuration(totalSeconds) {

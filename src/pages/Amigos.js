@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
-import { API_URL } from "../services/api";
+import { resolverUrlFoto } from "../services/api";
 import {
   fetchAmigos,
   fetchPedidos,
@@ -202,7 +202,7 @@ export default function Amigos({ navigation }) {
                 style={styles.card}
                 onPress={() => navigation.navigate("PerfilVisitado", { usuarioId: amigo.id })}
               >
-                <Avatar uri={amigo.foto_url ? `${API_URL}${amigo.foto_url}` : null} nome={amigo.nome} />
+                <Avatar uri={resolverUrlFoto(amigo.foto_url)} nome={amigo.nome} />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.nome}>{amigo.nome}</Text>
                   <Text style={styles.meta}>{amigo.xp_total} XP</Text>
@@ -213,7 +213,7 @@ export default function Amigos({ navigation }) {
           {tab === "recebidos" &&
             recebidos.map((pedido) => (
               <View key={pedido.id} style={styles.card}>
-                <Avatar uri={pedido.usuario.foto_url ? `${API_URL}${pedido.usuario.foto_url}` : null} nome={pedido.usuario.nome} />
+                <Avatar uri={resolverUrlFoto(pedido.usuario.foto_url)} nome={pedido.usuario.nome} />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.nome}>{pedido.usuario.nome}</Text>
                   <Text style={styles.meta}>{pedido.usuario.xp_total} XP</Text>
@@ -236,7 +236,7 @@ export default function Amigos({ navigation }) {
           {tab === "enviados" &&
             enviados.map((pedido) => (
               <View key={pedido.id} style={styles.card}>
-                <Avatar uri={pedido.usuario.foto_url ? `${API_URL}${pedido.usuario.foto_url}` : null} nome={pedido.usuario.nome} />
+                <Avatar uri={resolverUrlFoto(pedido.usuario.foto_url)} nome={pedido.usuario.nome} />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.nome}>{pedido.usuario.nome}</Text>
                   <Text style={styles.meta}>Pedido enviado</Text>
@@ -254,7 +254,7 @@ export default function Amigos({ navigation }) {
           {tab === "bloqueados" &&
             bloqueados.map((bloqueado) => (
               <View key={bloqueado.id} style={styles.card}>
-                <Avatar uri={bloqueado.foto_url ? `${API_URL}${bloqueado.foto_url}` : null} nome={bloqueado.nome} />
+                <Avatar uri={resolverUrlFoto(bloqueado.foto_url)} nome={bloqueado.nome} />
                 <View style={{ flex: 1 }}>
                   <Text style={styles.nome}>{bloqueado.nome}</Text>
                   <Text style={styles.meta}>Bloqueado</Text>
