@@ -12,6 +12,7 @@ export default function Feedback({
   earnedXp = 0,
   accuracy = 0,
   streak = 0,
+  previousStreak = 0,
   totalXp = 0,
   currentLevel = 1,
   levelPercent = 0,
@@ -25,17 +26,21 @@ export default function Feedback({
   const styles = useThemedStyles(makeStyles);
   const streakMaintained =
     !lessonAlreadyCompleted && accuracy >= LESSON_STREAK_MIN_ACCURACY;
+  // A sequencia sobe uma vez por dia: a segunda aula boa do dia so mantem.
+  const streakIncreased = streakMaintained && streak > previousStreak;
 
   const infoTitle = lessonAlreadyCompleted
     ? "Aula já concluída"
-    : streakMaintained
+    : streakIncreased
       ? "Sequência aumentou!"
-      : "Sequência reiniciada";
+      : streakMaintained
+        ? "Sequência mantida!"
+        : "Sequência reiniciada";
 
   const infoText = lessonAlreadyCompleted
     ? "O XP e a sequência desta aula já tinham sido contabilizados."
     : streakMaintained
-      ? `Você fechou a aula com ${accuracy}% e chegou a ${streak} de sequência.`
+      ? `Você fechou a aula com ${accuracy}% e ${streakIncreased ? "chegou a" : "manteve"} ${streak} de sequência.`
       : `Para manter a sequência, finalize com pelo menos ${LESSON_STREAK_MIN_ACCURACY}% de precisão.`;
 
   return (

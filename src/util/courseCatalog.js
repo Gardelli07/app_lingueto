@@ -1,6 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchAulasConcluidas } from "../services/progresso";
+import { fetchConteudoMaps } from "../services/conteudos";
 import { scopedKey } from "./userScope";
+import { clearLastLessonDone, loadLastLessonDone } from "./lastLesson";
 import {
   BUSSINES_STORAGE_KEY,
   bussinesModuleDefs,
@@ -31,6 +33,18 @@ import {
   travelModuleDefs,
   travelSampleLessons,
 } from "../pages/aulas/viagem/A1";
+import {
+  GRAMMAR_LAB_STORAGE_KEY,
+  GRAMMAR_LAB_COURSE_NAME,
+  grammarLabModuleDefs,
+  grammarLabSampleLessons,
+} from "../pages/aulas/grammarlab/A0-A1";
+import {
+  STORY_MODE_STORAGE_KEY,
+  STORY_MODE_COURSE_NAME,
+  storyModeModuleDefs,
+  storyModeSampleLessons,
+} from "../pages/aulas/storymode/A0-A1";
 
 export const COURSE_OPTIONS = [
   "Ingles Completo",
@@ -130,6 +144,46 @@ export const COURSE_LEVEL_AVAILABILITY = {
   "Ingles para viagem": ["Starter"],
 };
 
+// Cursos que a Home mostra pelos proprios tiles (COURSE_TILES em Home.js) e
+// por isso ficam fora de COURSE_OPTIONS. Entram aqui para os erros, a
+// sincronizacao com o servidor, o reset e o "Continue de onde parou"
+// enxergarem as aulas deles.
+export const EXTRA_COURSES = [
+  {
+    courseName: GRAMMAR_LAB_COURSE_NAME,
+    level: "Starter",
+    config: {
+      folder: "A0-A1",
+      routeName: "GrammarLab",
+      storageKey: GRAMMAR_LAB_STORAGE_KEY,
+      moduleDefs: grammarLabModuleDefs,
+      lessons: grammarLabSampleLessons,
+      available: true,
+    },
+  },
+  {
+    courseName: STORY_MODE_COURSE_NAME,
+    level: "Starter",
+    config: {
+      folder: "A0-A1",
+      routeName: "StoryMode",
+      storageKey: STORY_MODE_STORAGE_KEY,
+      moduleDefs: storyModeModuleDefs,
+      lessons: storyModeSampleLessons,
+      available: true,
+    },
+  },
+];
+
+function allAvailableConfigs() {
+  return [
+    ...Object.values(LEVEL_CONFIG),
+    ...Object.values(BUSINESS_LEVEL_CONFIG),
+    ...Object.values(TRAVEL_LEVEL_CONFIG),
+    ...EXTRA_COURSES.map((course) => course.config),
+  ].filter((config) => config.available);
+}
+
 export function getCourseLevelConfig(courseName, level) {
   if (courseName === "Bussines English") {
     return BUSINESS_LEVEL_CONFIG[level] ?? BUSINESS_LEVEL_CONFIG.Starter;
@@ -149,10 +203,10 @@ export async function loadProgress(storageKey) {
   }
 }
 
-async function mergeCompletedLessonsIntoStorage(storageKey, lessons, completedIds) {
+async function mergeCompletedLessonsIntoStorage(storageKey, lessons, completedScreens) {
   const relevantIds = lessons
-    .map((lesson) => String(lesson.id))
-    .filter((id) => completedIds.has(id));
+    .filter((lesson) => completedScreens.has(lesson.screen))
+    .map((lesson) => String(lesson.id));
   if (relevantIds.length === 0) return;
 
   const current = await loadProgress(storageKey);
@@ -172,28 +226,29 @@ async function mergeCompletedLessonsIntoStorage(storageKey, lessons, completedId
 // Restaura, a partir do backend, as aulas que o usuario ja concluiu em
 // qualquer aparelho/instalacao. So adiciona conclusoes, nunca remove -
 // o progresso local continua sendo a fonte de verdade para o que ja foi
-// salvo neste aparelho.
+// salvo neste aparelho. O servidor devolve conteudo_ids, que viram telas pelo
+// nome_tela (o lesson.id de cada curso recomeca em "1").
 export async function syncCourseProgressFromServer() {
-  let completedIds;
+  let completedScreens;
   try {
-    completedIds = new Set(await fetchAulasConcluidas());
+    const [completedIds, { telaPorId }] = await Promise.all([
+      fetchAulasConcluidas(),
+      fetchConteudoMaps(),
+    ]);
+    completedScreens = new Set(
+      completedIds.map((id) => telaPorId[String(id)]).filter(Boolean),
+    );
   } catch {
     return;
   }
-  if (completedIds.size === 0) return;
-
-  const configs = [
-    ...Object.values(LEVEL_CONFIG),
-    ...Object.values(BUSINESS_LEVEL_CONFIG),
-    ...Object.values(TRAVEL_LEVEL_CONFIG),
-  ].filter((config) => config.available);
+  if (completedScreens.size === 0) return;
 
   await Promise.all(
-    configs.map((config) =>
+    allAvailableConfigs().map((config) =>
       mergeCompletedLessonsIntoStorage(
         config.storageKey,
         config.lessons,
-        completedIds,
+        completedScreens,
       ),
     ),
   );
@@ -203,32 +258,68 @@ export async function syncCourseProgressFromServer() {
 // cursos/niveis para o usuario ativo. Usado pelo botao "Resetar aulas" do
 // perfil - o backend e limpo separadamente via resetarProgresso().
 export async function clearAllLocalProgress() {
-  const configs = [
-    ...Object.values(LEVEL_CONFIG),
-    ...Object.values(BUSINESS_LEVEL_CONFIG),
-    ...Object.values(TRAVEL_LEVEL_CONFIG),
-  ].filter((config) => config.available);
-
-  await Promise.all(
-    configs.map(async (config) => {
+  await Promise.all([
+    ...allAvailableConfigs().map(async (config) => {
       await AsyncStorage.removeItem(await scopedKey(config.storageKey));
     }),
-  );
+    clearLastLessonDone(),
+  ]);
 }
 
 export function findLessonByScreen(screen) {
+  const found = (config, courseName, level) => {
+    const lesson = config.lessons.find((item) => item.screen === screen);
+    return lesson
+      ? {
+          lesson,
+          lessons: config.lessons,
+          courseName,
+          level,
+          storageKey: config.storageKey,
+        }
+      : null;
+  };
+
   for (const courseName of COURSE_OPTIONS) {
     for (const level of LEVEL_OPTIONS) {
       if (!COURSE_LEVEL_AVAILABILITY[courseName]?.includes(level)) continue;
       const config = getCourseLevelConfig(courseName, level);
       if (!config.available) continue;
-      const lesson = config.lessons.find((item) => item.screen === screen);
-      if (lesson) {
-        return { lesson, lessons: config.lessons, courseName, level };
-      }
+      const result = found(config, courseName, level);
+      if (result) return result;
     }
   }
+  for (const course of EXTRA_COURSES) {
+    if (!course.config.available) continue;
+    const result = found(course.config, course.courseName, course.level);
+    if (result) return result;
+  }
   return null;
+}
+
+// A proxima aula ainda nao concluida depois da ultima feita, no mesmo curso;
+// sem nenhuma, a propria ultima aula feita. Null quando nenhuma aula foi feita
+// (a Home cai no curso selecionado).
+export async function findContinueLesson() {
+  const last = await loadLastLessonDone();
+  const found = last ? findLessonByScreen(last.screen) : null;
+  if (!found) return null;
+
+  const progress = await loadProgress(found.storageKey);
+  const lastIndex = found.lessons.findIndex(
+    (lesson) => lesson.screen === found.lesson.screen,
+  );
+  const nextLesson = found.lessons
+    .slice(lastIndex + 1)
+    .find((lesson) => !progress[lesson.id]);
+  const completed = found.lessons.filter((lesson) => progress[lesson.id]).length;
+
+  return {
+    lesson: nextLesson || found.lesson,
+    lessons: found.lessons,
+    percent:
+      found.lessons.length > 0 ? (completed / found.lessons.length) * 100 : 0,
+  };
 }
 
 export async function loadGlobalProgressStats() {

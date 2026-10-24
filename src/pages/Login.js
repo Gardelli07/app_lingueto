@@ -291,7 +291,7 @@ export default function LoginScreen({ navigation }) {
           {/* Logo em círculo */}
           <View style={styles.logoCircle}>
             <Image
-              source={require("../../assets/logo.png")}
+              source={require("../../assets/LogoIcon.png")}
               style={styles.logo}
               resizeMode="contain"
             />

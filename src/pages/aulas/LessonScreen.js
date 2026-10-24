@@ -35,15 +35,19 @@ import ex17, { Exercise17 } from "../../exc/ex17";
 import ex18, { Exercise18 } from "../../exc/ex18";
 import ex19, { Exercise19 } from "../../exc/ex19";
 import ex20, { Exercise20 } from "../../exc/ex20";
+import ex21, { Exercise21 } from "../../exc/ex21";
+import { Exercise22 } from "../../exc/ex22";
 import Feedback from "../../exc/feedback";
 import { Images } from "../../util/images";
 import {
   calculateLessonAccuracy,
   LESSON_STREAK_MIN_ACCURACY,
 } from "../../util/lessonPerformance";
-import { getLevelProgress, XP_PER_LESSON } from "../../util/xp";
+import { getLevelProgress, xpForAccuracy } from "../../util/xp";
 import { concluirAula, fetchResumoProgresso } from "../../services/progresso";
 import { registrarTentativaExercicio } from "../../services/erros";
+import { getConteudoIdDaTela } from "../../services/conteudos";
+import { saveLastLessonDone } from "../../util/lastLesson";
 import { getSlideHint } from "../../util/erroReview";
 import { scopedKey } from "../../util/userScope";
 import * as dailyGoals from "../../util/dailyGoals";
@@ -61,7 +65,7 @@ const CLOSE_IMAGE = require("../../../assets/x.png");
 // repassado por prop pros componentes de exercicio (que ja recebiam `styles`).
 const STYLE_FACTORIES = [
   geral, ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10,
-  ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19, ex20,
+  ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19, ex20, ex21,
 ];
 
 const makeStyles = (CORES) =>
@@ -88,7 +92,21 @@ const COMPONENTS = {
   Exercise18,
   Exercise19,
   Exercise20,
+  Exercise21,
+  Exercise22,
 };
+
+// Exercicios com layout proprio (scroll, safe area e painel fixo no rodape,
+// como o Grammar Lab) marcam `fullScreen` no componente: a licao entao nao
+// embrulha o slide no ScrollView nem aplica a safe area por fora.
+function isFullScreenSlide(slide) {
+  const component =
+    slide &&
+    (typeof slide.component === "string"
+      ? COMPONENTS[slide.component]
+      : slide.component);
+  return Boolean(component && component.fullScreen);
+}
 
 // Esses tipos de exercicio nao entram no registro de tentativas/erros
 // (Exercise1, Exercise2 e Exercise7 disparam onAttempt varias vezes por
@@ -556,6 +574,7 @@ function LessonSlideRenderer({
   onPressNextLesson,
   onFinishReview,
   onAttempt,
+  xpProjection,
   feedbackProps,
 }) {
   if (slide.type === "finish") {
@@ -601,6 +620,7 @@ function LessonSlideRenderer({
       HeaderComponent={SlideHeader}
       next={next}
       onAttempt={onAttempt}
+      xpProjection={xpProjection}
       slideKey={slideInstanceKey}
       {...(slide.needsSpeech ? { speak } : {})}
     />
@@ -772,7 +792,11 @@ export default function createLessonScreen(
       exerciseScores: {},
       slideAttempts: {},
     });
-    const [completedLessonsCount, setCompletedLessonsCount] = useState(0);
+    // XP do servidor ao abrir a aula + bonus das metas do dia (local): a
+    // mesma soma que a Home mostra, para a barra de nivel da tela final bater.
+    const [xpBeforeLesson, setXpBeforeLesson] = useState(0);
+    const [bonusXp, setBonusXp] = useState(0);
+    const [confirmedEarnedXp, setConfirmedEarnedXp] = useState(null);
     const [currentStreak, setCurrentStreak] = useState(0);
     const [confirmedNextStreak, setConfirmedNextStreak] = useState(null);
     const [lessonAlreadyCompleted, setLessonAlreadyCompleted] =
@@ -831,39 +855,62 @@ export default function createLessonScreen(
             exerciseSlideCount,
         )
       : calculateLessonAccuracy(lessonStats.correct, lessonStats.total);
-    const earnedXp = lessonAlreadyCompleted ? 0 : XP_PER_LESSON;
-    // Estimativa otimista para exibir na hora, antes da confirmacao do
-    // backend (fonte da verdade para a sequencia, ver commitLessonCompletion).
+    // XP e sequencia: o backend e a fonte da verdade (ver
+    // commitLessonCompletion); ate a confirmacao chegar, a tela mostra a
+    // mesma conta que ele faz.
+    const earnedXp = lessonAlreadyCompleted
+      ? 0
+      : confirmedEarnedXp ?? xpForAccuracy(lessonAccuracy);
+    // A sequencia so conta com a precisao minima e sobe uma vez por dia: sem
+    // saber se ja houve aula hoje, a estimativa nao soma, so garante 1.
     const optimisticNextStreak = lessonAlreadyCompleted
       ? currentStreak
       : lessonAccuracy >= LESSON_STREAK_MIN_ACCURACY
-        ? currentStreak + 1
+        ? Math.max(currentStreak, 1)
         : 0;
     const nextStreak = confirmedNextStreak ?? optimisticNextStreak;
-    const totalXpAfterLesson = completedLessonsCount * XP_PER_LESSON + earnedXp;
+    const totalXpAfterLesson = xpBeforeLesson + bonusXp + earnedXp;
     const levelProgress = getLevelProgress(totalXpAfterLesson);
+
+    // XP que a aula daria se o slide atual fechasse com `slideAccuracy`,
+    // mantendo os outros slides como estao (mesma media do lessonAccuracy).
+    // O Grammar Lab usa no chip de XP. Null quando esta passagem nao credita
+    // XP: revisao de erros ou aula ja concluida.
+    const xpProjection =
+      reviewMode || lessonAlreadyCompleted
+        ? null
+        : (slideAccuracy) => {
+            const scores = {
+              ...lessonStats.exerciseScores,
+              [currentSlideInstanceKey]: slideAccuracy,
+            };
+            const sum = Object.values(scores).reduce(
+              (total, score) => total + score,
+              0,
+            );
+            return xpForAccuracy(Math.round(sum / exerciseSlideCount));
+          };
 
     useEffect(() => {
       let active = true;
 
       async function loadLessonMeta() {
-        const [progress, resumo] = await Promise.all([
+        const [progress, resumo, goals] = await Promise.all([
           loadProgress(),
           fetchResumoProgresso().catch(() => null),
+          dailyGoals.getTodayGoals().catch(() => null),
         ]);
 
         if (!active) return;
 
-        const completedCount = Object.values(progress || {}).filter(
-          Boolean,
-        ).length;
         const alreadyCompleted = Boolean(
           lesson && lesson.id != null && progress && progress[lesson.id],
         );
 
-        setCompletedLessonsCount(completedCount);
         setLessonAlreadyCompleted(alreadyCompleted);
         setCurrentStreak(resumo?.streakAtual ?? 0);
+        setXpBeforeLesson(resumo?.xpTotal ?? 0);
+        setBonusXp(goals?.lifetimeBonusXp ?? 0);
         setLessonMetaLoaded(true);
       }
 
@@ -925,6 +972,7 @@ export default function createLessonScreen(
         correctDelta,
         totalDelta,
         exerciseAccuracy,
+        trackingSuffix,
       } = {},
       attemptedSlideKey = currentSlideInstanceKey,
     ) => {
@@ -940,17 +988,28 @@ export default function createLessonScreen(
         .recordExerciseAttempt({ isCorrect, exerciseType: tipoExercicio })
         .catch(() => {});
 
-      if (
-        lesson &&
-        lesson.id != null &&
-        !EXERCISE_TYPES_WITHOUT_TRACKING.has(tipoExercicio)
-      ) {
-        registrarTentativaExercicio({
-          conteudoId: lesson.id,
-          chaveSlide: attemptedSlideKey,
-          tipoExercicio,
-          correta: isCorrect,
-        }).catch(() => {});
+      if (lesson && !EXERCISE_TYPES_WITHOUT_TRACKING.has(tipoExercicio)) {
+        // Slides com varias perguntas (Exercise21) mandam um sufixo por
+        // pergunta: o backend so guarda a ultima tentativa de cada chave, e
+        // sem o sufixo o acerto de uma pergunta apagaria o erro da anterior.
+        // O parseChaveSlide ignora o que vem depois do ":", entao o erro
+        // continua apontando pro mesmo slide.
+        const chaveSlide = trackingSuffix
+          ? `${attemptedSlideKey}#${trackingSuffix}`
+          : attemptedSlideKey;
+        // Meus erros acha a aula pela chave_slide; o conteudo_id vai junto
+        // quando a tela esta cadastrada no banco.
+        getConteudoIdDaTela(lesson.screen)
+          .catch(() => null)
+          .then((conteudoId) =>
+            registrarTentativaExercicio({
+              conteudoId,
+              chaveSlide,
+              tipoExercicio,
+              correta: isCorrect,
+            }),
+          )
+          .catch(() => {});
       }
 
       setLessonStats((current) => {
@@ -1013,14 +1072,36 @@ export default function createLessonScreen(
         if (lesson && lesson.id != null) {
           const progress = await loadProgress();
           await saveProgress({ ...progress, [lesson.id]: true });
+          // Concluir a aula pode fechar uma meta do dia e render bonus: relê o
+          // bonus depois, como a Home faz.
           dailyGoals
-            .recordLessonCompleted({ xp: XP_PER_LESSON, accuracy: lessonAccuracy })
+            .recordLessonCompleted({
+              xp: xpForAccuracy(lessonAccuracy),
+              accuracy: lessonAccuracy,
+            })
+            .then(() => dailyGoals.getTodayGoals())
+            .then((goals) => {
+              if (goals) setBonusXp(goals.lifetimeBonusXp ?? 0);
+            })
             .catch(() => {});
-          // A sequencia (streak) e calculada e armazenada no backend, que e a
-          // fonte da verdade; so atualizamos a estimativa otimista quando a
-          // confirmacao chega.
+          // XP e sequencia (streak) sao calculados e armazenados no backend,
+          // que e a fonte da verdade; as estimativas otimistas sao trocadas
+          // pelo que ele confirmar.
           try {
-            const resultado = await concluirAula(lesson.id, lessonAccuracy);
+            const conteudoId = await getConteudoIdDaTela(lesson.screen);
+            if (conteudoId == null) {
+              if (__DEV__) {
+                console.warn(
+                  `Aula ${lesson.screen} sem conteudo no banco (nome_tela): progresso nao foi salvo no servidor.`,
+                );
+              }
+              return;
+            }
+            const resultado = await concluirAula(conteudoId, lessonAccuracy);
+            const xpCreditado = resultado?.evento?.quantidade;
+            if (typeof xpCreditado === "number") {
+              setConfirmedEarnedXp(xpCreditado);
+            }
             const sequenciaAtual = resultado?.sequencia?.sequencia_atual;
             if (typeof sequenciaAtual === "number") {
               setConfirmedNextStreak(sequenciaAtual);
@@ -1037,6 +1118,13 @@ export default function createLessonScreen(
       lessonMetaLoaded,
       lessonAccuracy,
     ]);
+
+    // Vale tambem para aula refeita: o "Continue de onde parou" da Home parte
+    // da ultima aula que chegou ao fim.
+    useEffect(() => {
+      if (!currentSlide || currentSlide.type !== "finish" || !lesson) return;
+      saveLastLessonDone(lesson.screen).catch(() => {});
+    }, [currentSlide && currentSlide.type, lesson && lesson.screen]);
 
     useEffect(() => {
       if (!currentSlide || currentSlide.type !== "reviewFinish") return;
@@ -1067,16 +1155,49 @@ export default function createLessonScreen(
       navigation.navigate("MeusErros");
     };
 
+    const fullScreenSlide = isFullScreenSlide(currentSlide);
+
+    // Slide em tela cheia ja tem a propria dica (ex.: a lampada do Grammar
+    // Lab), e o rodape daqui ficaria por baixo da barra de navegacao.
     const showHintOverlay =
       reviewMode &&
+      !fullScreenSlide &&
       currentSlide &&
       currentSlide.type !== "finish" &&
       currentSlide.type !== "reviewFinish";
 
+    const slideContent = (
+      <LessonSlideRenderer
+        key={currentSlideInstanceKey}
+        slide={currentSlide}
+        styles={styles}
+        slideInstanceKey={currentSlideInstanceKey}
+        next={slideNav.next}
+        speak={speak}
+        onPressNextLesson={goToNextLesson}
+        onFinishReview={goToMeusErros}
+        onAttempt={(attempt) =>
+          handleAttempt(attempt, currentSlideInstanceKey)
+        }
+        xpProjection={xpProjection}
+        feedbackProps={{
+          earnedXp,
+          accuracy: lessonAccuracy,
+          streak: nextStreak,
+          previousStreak: currentStreak,
+          totalXp: totalXpAfterLesson,
+          lessonAlreadyCompleted,
+          reviewLabel: "Revisar erros ->",
+          onReview: goToMeusErros,
+          ...levelProgress,
+        }}
+      />
+    );
+
     return (
       <SafeAreaView
         style={{ flex: 1, backgroundColor: CORES.BACKGROUND }}
-        edges={["top", "bottom"]}
+        edges={fullScreenSlide ? [] : ["top", "bottom"]}
       >
         <SlideNavContext.Provider
           value={{
@@ -1088,35 +1209,17 @@ export default function createLessonScreen(
             },
           }}
         >
-          <ScrollView
-            style={{ flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
-            keyboardShouldPersistTaps="handled"
-          >
-            <LessonSlideRenderer
-              key={currentSlideInstanceKey}
-              slide={currentSlide}
-              styles={styles}
-              slideInstanceKey={currentSlideInstanceKey}
-              next={slideNav.next}
-              speak={speak}
-              onPressNextLesson={goToNextLesson}
-              onFinishReview={goToMeusErros}
-              onAttempt={(attempt) =>
-                handleAttempt(attempt, currentSlideInstanceKey)
-              }
-              feedbackProps={{
-                earnedXp,
-                accuracy: lessonAccuracy,
-                streak: nextStreak,
-                totalXp: totalXpAfterLesson,
-                lessonAlreadyCompleted,
-                reviewLabel: "Revisar erros ->",
-                onReview: goToMeusErros,
-                ...levelProgress,
-              }}
-            />
-          </ScrollView>
+          {fullScreenSlide ? (
+            slideContent
+          ) : (
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={{ flexGrow: 1 }}
+              keyboardShouldPersistTaps="handled"
+            >
+              {slideContent}
+            </ScrollView>
+          )}
 
           <HintOverlay
             visible={showHintOverlay}

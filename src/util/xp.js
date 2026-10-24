@@ -1,4 +1,11 @@
+// XP maximo de uma aula (100% de precisao): xpForAccuracy(100).
 export const XP_PER_LESSON = 50;
+
+// Mesma conta do calcularXp da API (progresso.service.ts), que e quem credita
+// o XP: de 10 (0%) a 50 (100%). Mudou la, muda aqui.
+export function xpForAccuracy(accuracy) {
+  return Math.round(10 + accuracy * 0.4);
+}
 
 export const LEVEL_XP_CURVE = [
   { level: 1, totalXp: 0 },

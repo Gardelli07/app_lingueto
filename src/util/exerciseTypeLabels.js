@@ -21,6 +21,8 @@ const EXERCISE_TYPE_LABELS = {
   Exercise18: "ordenar frase",
   Exercise19: "ditado",
   Exercise20: "verdadeiro ou falso",
+  Exercise21: "interpretação de texto",
+  Exercise22: "gramática",
 };
 
 export function getExerciseTypeLabel(tipo) {

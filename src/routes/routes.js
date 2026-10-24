@@ -1,5 +1,5 @@
 ﻿import * as React from "react";
-import { Image, TouchableOpacity, BackHandler } from "react-native";
+import { Image, TouchableOpacity, BackHandler, StyleSheet } from "react-native";
 import {
   DarkTheme as NavDarkTheme,
   DefaultTheme as NavDefaultTheme,
@@ -28,6 +28,9 @@ import InglesCompletoB1Home, { lessonScreens as inglesCompletoB1LessonScreens } 
 import BussinesHome, { lessonScreens as bussinesA1LessonScreens } from "../pages/aulas/bussines/A1";
 import BussinesB1Home, { lessonScreens as bussinesB1LessonScreens } from "../pages/aulas/bussines/B1";
 import TravelHome, { lessonScreens as travelA1LessonScreens } from "../pages/aulas/viagem/A1";
+import ExpressionsHome, { lessonScreens as expressionsA0A1LessonScreens } from "../pages/aulas/expressions/A0-A1";
+import GrammarLabHome, { lessonScreens as grammarLabA0A1LessonScreens } from "../pages/aulas/grammarlab/A0-A1";
+import StoryModeHome, { lessonScreens as storyModeA0A1LessonScreens } from "../pages/aulas/storymode/A0-A1";
 import AulasPlusHome, {
   lessonScreens as aulasPlusLessonScreens,
 } from "../pages/aulas/aulasplus";
@@ -112,11 +115,20 @@ export default function Routes() {
             header: () => (
               <Appbar.Header
                 style={{
+                  // cor do tema so aparece enquanto o banner carrega
                   backgroundColor: CORES.PRIMARY,
                   height: 55,
                   paddingHorizontal: 10,
+                  overflow: "hidden",
                 }}
               >
+                {/* stretch: o header e bem mais largo que a imagem, e com cover
+                    ela era ampliada e cortada em vez de aparecer inteira */}
+                <Image
+                  source={require("../../assets/Home/background-header.png")}
+                  style={StyleSheet.absoluteFill}
+                  resizeMode="stretch"
+                />
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate("Tabs", { screen: "Home" })
@@ -206,6 +218,42 @@ export default function Routes() {
         {renderLessonScreens(inglesCompletoA2LessonScreens)}
 
         {renderLessonScreens(inglesCompletoA0A1LessonScreens)}
+
+        {/* ===== EXPRESSIONS ===== */}
+        <Stack.Screen
+          name="Expressions"
+          component={ExpressionsHome}
+          options={{
+            title: "Expressions",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        {renderLessonScreens(expressionsA0A1LessonScreens)}
+
+        {/* ===== GRAMMAR LAB ===== */}
+        <Stack.Screen
+          name="GrammarLab"
+          component={GrammarLabHome}
+          options={{
+            title: "Grammar Lab",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        {renderLessonScreens(grammarLabA0A1LessonScreens)}
+
+        {/* ===== STORY MODE ===== */}
+        <Stack.Screen
+          name="StoryMode"
+          component={StoryModeHome}
+          options={{
+            title: "Story Mode",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        {renderLessonScreens(storyModeA0A1LessonScreens)}
 
         {/* ===== AULAS PLUS ===== */}
         <Stack.Screen

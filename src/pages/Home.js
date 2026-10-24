@@ -14,9 +14,10 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Svg, { Circle, Text as SvgText, TSpan } from "react-native-svg";
+import Svg, { Circle, Text as SvgText } from "react-native-svg";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../services/api";
@@ -36,6 +37,7 @@ import {
   COURSE_LEVEL_AVAILABILITY,
   getCourseLevelConfig,
   loadProgress,
+  findContinueLesson,
 } from "../util/courseCatalog";
 import StudyTimeModal from "../components/StudyTimeModal";
 import {
@@ -90,6 +92,30 @@ const COURSE_ACCENT = {
   },
 };
 
+const COURSE_TILES = [
+  {
+    key: "expressions",
+    label: "Expressions",
+    routeName: "Expressions",
+    image: require("../../assets/Home/icone-expressions.png"),
+    color: { light: "#6BA3D6", dark: "#7FB4E6" },
+  },
+  {
+    key: "grammar_lab",
+    label: "Grammar Lab",
+    routeName: "GrammarLab",
+    image: require("../../assets/Home/icone-grammar-lab.png"),
+    color: { light: "#F2AE1C", dark: "#F5BC3E" },
+  },
+  {
+    key: "story_mode",
+    label: "Story Mode",
+    routeName: "StoryMode",
+    image: require("../../assets/Home/icone-story-mode.png"),
+    color: { light: "#45C068", dark: "#56CF7A" },
+  },
+];
+
 const DIFFICULTY_LABEL = { facil: "Fácil", normal: "Normal", dificil: "Difícil" };
 const difficultyColor = (CORES) => ({
   facil: CORES.HOME_GREEN,
@@ -97,11 +123,69 @@ const difficultyColor = (CORES) => ({
   dificil: CORES.HOME_DANGER,
 });
 
+// Primeiro slide fixo do carrossel de metas. O mascote passa um pouco acima do
+// card azul, entao os slides das metas comecam na mesma altura do card.
+const METAS_BANNER = require("../../assets/Home/metas-banner.png");
+const METAS_BANNER_RATIO = 2063 / 584;
+const METAS_BANNER_TOP = 52 / 584;
+
+// Atalhos Praticar / Revisar erros / Desafiar. Os fundos sao cards largos com
+// margem transparente em volta, entao cada um guarda a caixa do card (em px da
+// imagem) e o atalho mostra so o lado direito dela, onde fica o desenho do tema.
+const QUICK_ACTION_RATIO = 1.3;
+const QUICK_ACTIONS = {
+  praticar: {
+    icon: require("../../assets/Home/icone-praticar.png"),
+    background: {
+      source: require("../../assets/Home/background-praticar.png"),
+      width: 1448,
+      height: 1086,
+      box: { right: 1421, top: 236, bottom: 850 },
+    },
+  },
+  revisarErros: {
+    icon: require("../../assets/Home/icone-revisar-erros.png"),
+    background: {
+      source: require("../../assets/Home/background-revisarerro.png"),
+      width: 1448,
+      height: 1086,
+      box: { right: 1414, top: 226, bottom: 832 },
+    },
+  },
+  desafiar: {
+    icon: require("../../assets/Home/icone-desafio.png"),
+    background: {
+      source: require("../../assets/Home/background-desafio.png"),
+      width: 1448,
+      height: 1086,
+      box: { right: 1427, top: 246, bottom: 836 },
+    },
+  },
+};
+
+// Posiciona a imagem inteira de forma que o recorte [direita da caixa, altura
+// da caixa, proporcao QUICK_ACTION_RATIO] ocupe exatamente o atalho.
+function quickActionBackgroundStyle({ width, height, box }) {
+  const cropH = box.bottom - box.top;
+  const cropW = cropH * QUICK_ACTION_RATIO;
+  const cropLeft = box.right - cropW;
+  return {
+    position: "absolute",
+    width: `${(width / cropW) * 100}%`,
+    height: `${(height / cropH) * 100}%`,
+    left: `${(-cropLeft / cropW) * 100}%`,
+    top: `${(-box.top / cropH) * 100}%`,
+  };
+}
+
 function ProgressCircle({ percent, size = 70, strokeWidth = 8 }) {
   const CORES = useTheme();
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference * (1 - percent / 100);
+  const rounded = Math.round(percent);
+  // "100%" nao cabe dentro do anel no mesmo tamanho dos numeros de 2 digitos
+  const fontSize = rounded >= 100 ? 14 : 16;
 
   return (
     <Svg width={size} height={size}>
@@ -125,40 +209,37 @@ function ProgressCircle({ percent, size = 70, strokeWidth = 8 }) {
         transform={`rotate(-90 ${size / 2} ${size / 2})`}
         fill="none"
       />
+      {/* numero e "%" num texto so: com o "%" num TSpan separado a centralizacao
+          quebrava nos 3 digitos e o "%" ia parar em cima do anel */}
       <SvgText
         x={size / 2}
-        y={size / 2 + 6}
+        y={size / 2 + fontSize * 0.375}
         textAnchor="middle"
         fill={CORES.HOME_NAVY}
         fontWeight="800"
-        fontSize={16}
+        fontSize={fontSize}
       >
-        {Math.round(percent)}
-        <TSpan dx={-1.5}>%</TSpan>
+        {`${rounded}%`}
       </SvgText>
     </Svg>
   );
 }
 
-function QuickAction({ icon, label, primary, onPress }) {
-  const CORES = useTheme();
+function QuickAction({ action, label, onPress }) {
   const styles = useThemedStyles(makeStyles);
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.85}
-      style={[styles.qa, primary ? styles.qaPrimary : styles.qaPlain]}
-    >
-      {icon}
-      <Text
-        style={[
-          styles.qaLabel,
-          { color: primary ? CORES.WHITE : CORES.HOME_NAVY },
-        ]}
-      >
-        {label}
-      </Text>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.85} style={styles.qa}>
+      {/* camada sem padding: as porcentagens do recorte valem pelo atalho todo */}
+      <View style={StyleSheet.absoluteFill}>
+        <Image
+          source={action.background.source}
+          style={quickActionBackgroundStyle(action.background)}
+          resizeMode="stretch"
+        />
+      </View>
+      <Image source={action.icon} style={styles.qaIcon} resizeMode="contain" />
+      <Text style={styles.qaLabel}>{label}</Text>
     </TouchableOpacity>
   );
 }
@@ -256,6 +337,134 @@ function PremiumBanner({ onPress }) {
   );
 }
 
+function GoalsCarousel({ goals }) {
+  const CORES = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const DIFFICULTY_COLOR = difficultyColor(CORES);
+  const { width } = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+
+  // mesma largura do conteudo da Home (paddingHorizontal 16 de cada lado)
+  const slideWidth = width - 32;
+  const slideHeight = slideWidth / METAS_BANNER_RATIO;
+  const slideCount = goals.length + 1;
+
+  const handleScroll = (e) => {
+    const next = Math.round(e.nativeEvent.contentOffset.x / slideWidth);
+    const clamped = Math.max(0, Math.min(slideCount - 1, next));
+    if (clamped !== index) setIndex(clamped);
+  };
+
+  return (
+    <View style={styles.goalsCarousel}>
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
+        <Image
+          source={METAS_BANNER}
+          style={{ width: slideWidth, height: slideHeight }}
+          resizeMode="contain"
+        />
+        {goals.map((goal) => {
+          const percent = Math.min(100, (goal.progress / goal.target) * 100);
+          return (
+            <View
+              key={goal.id}
+              style={{
+                width: slideWidth,
+                height: slideHeight,
+                paddingTop: slideHeight * METAS_BANNER_TOP,
+              }}
+            >
+              <View style={styles.goalSlide}>
+                <View
+                  style={[styles.dailyIcon, goal.completed && styles.dailyIconDone]}
+                >
+                  <MaterialCommunityIcons
+                    name={goal.completed ? "check" : goal.icon}
+                    size={18}
+                    color={goal.completed ? CORES.WHITE : CORES.HOME_PRIMARY}
+                  />
+                </View>
+                <View style={{ flex: 1, minWidth: 0 }}>
+                  <View style={[styles.row, { justifyContent: "space-between" }]}>
+                    <Text style={styles.dailyGoalLabel} numberOfLines={1}>
+                      {goal.label}
+                    </Text>
+                    <Text style={styles.dailyGoalCount}>
+                      {goal.progress}/{goal.target}
+                    </Text>
+                  </View>
+                  <View style={styles.dailyTrack}>
+                    <View
+                      style={[
+                        styles.dailyFill,
+                        {
+                          width: `${percent}%`,
+                          backgroundColor: goal.completed
+                            ? CORES.HOME_GREEN
+                            : CORES.HOME_PRIMARY,
+                        },
+                      ]}
+                    />
+                  </View>
+                  <View
+                    style={[
+                      styles.row,
+                      { justifyContent: "space-between", marginTop: 5 },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.difficultyPill,
+                        {
+                          backgroundColor: `${DIFFICULTY_COLOR[goal.difficulty]}1F`,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.difficultyPillTxt,
+                          { color: DIFFICULTY_COLOR[goal.difficulty] },
+                        ]}
+                      >
+                        {DIFFICULTY_LABEL[goal.difficulty]}
+                      </Text>
+                    </View>
+                    <Text
+                      style={[
+                        styles.dailyGoalReward,
+                        goal.rewarded && { color: CORES.HOME_GREEN },
+                      ]}
+                    >
+                      {goal.rewarded ? "✓ " : ""}+{goal.rewardXp} XP
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          );
+        })}
+      </ScrollView>
+
+      {slideCount > 1 && (
+        <View style={styles.goalsDots}>
+          {Array.from({ length: slideCount }, (_, i) => (
+            <View
+              key={i}
+              style={[styles.goalsDot, i === index && styles.goalsDotOn]}
+            />
+          ))}
+        </View>
+      )}
+    </View>
+  );
+}
+
 function ActivityRow({ item }) {
   const CORES = useTheme();
   const styles = useThemedStyles(makeStyles);
@@ -295,7 +504,6 @@ export default function Inglescompleto({ navigation, route }) {
   const { user } = useAuth();
   const CORES = useTheme();
   const styles = useThemedStyles(makeStyles);
-  const DIFFICULTY_COLOR = difficultyColor(CORES);
   const fullAccess = hasFullAccess(user);
   const displayName = user?.nome_exibicao?.trim() || user?.login || "Usuário";
   const firstName = displayName.split(" ")[0];
@@ -323,6 +531,9 @@ export default function Inglescompleto({ navigation, route }) {
   const [studyTimeModalVisible, setStudyTimeModalVisible] = useState(false);
   const [dailyGoalsState, setDailyGoalsState] = useState({ goals: [] });
   const [xpTotal, setXpTotal] = useState(0);
+  // { lesson, lessons, percent } do curso da ultima aula feita; null ate
+  // existir uma (findContinueLesson em courseCatalog.js).
+  const [continueTarget, setContinueTarget] = useState(null);
 
   // Pergunta o horario de estudo uma unica vez, logo na primeira Home apos o
   // login (a flag fica salva no dispositivo independente do usuario decidir
@@ -470,6 +681,7 @@ export default function Inglescompleto({ navigation, route }) {
       }
       const goals = await dailyGoals.getTodayGoals().catch(() => null);
       if (goals) setDailyGoalsState(goals);
+      setContinueTarget(await findContinueLesson().catch(() => null));
       await loadAllCourseStats();
     }
     loadExtras();
@@ -536,6 +748,12 @@ export default function Inglescompleto({ navigation, route }) {
 
   const firstPendingLesson =
     activeLessons.find((item) => !progressMap[item.id]) || activeLessons[0];
+
+  // "Continue de onde parou": sai do curso da ultima aula feita (qualquer
+  // curso, inclusive Grammar Lab e Story Mode); antes da primeira aula, fica
+  // a primeira pendente do curso selecionado.
+  const continueLesson = continueTarget ? continueTarget.lesson : firstPendingLesson;
+  const continuePercent = continueTarget ? continueTarget.percent : percent;
 
   const recentActivity = useMemo(() => {
     const items = [];
@@ -626,7 +844,7 @@ export default function Inglescompleto({ navigation, route }) {
     setLevelMenuOpen(false);
   };
 
-  const goToLesson = (lesson) => {
+  const goToLesson = (lesson, lessons = activeLessons) => {
     if (!lesson?.screen) return;
     if (!isLessonUnlocked(lesson.screen)) {
       navigation.navigate("Paywall");
@@ -634,7 +852,7 @@ export default function Inglescompleto({ navigation, route }) {
     }
     navigation.navigate(lesson.screen, {
       lesson,
-      lessons: activeLessons,
+      lessons,
     });
   };
 
@@ -751,15 +969,8 @@ export default function Inglescompleto({ navigation, route }) {
 
         <View style={styles.quickRow}>
           <QuickAction
-            primary
+            action={QUICK_ACTIONS.praticar}
             label="Praticar"
-            icon={
-              <MaterialCommunityIcons
-                name="lightning-bolt"
-                size={20}
-                color={CORES.WHITE}
-              />
-            }
             onPress={() =>
               scrollViewRef.current?.scrollTo({
                 y: coursesSectionY.current,
@@ -768,38 +979,24 @@ export default function Inglescompleto({ navigation, route }) {
             }
           />
           <QuickAction
+            action={QUICK_ACTIONS.revisarErros}
             label="Revisar erros"
-            icon={
-              <MaterialCommunityIcons
-                name="alert-circle-outline"
-                size={20}
-                color={CORES.HOME_PRIMARY}
-              />
-            }
             onPress={() => navigation.navigate("MeusErros")}
           />
           <QuickAction
+            action={QUICK_ACTIONS.desafiar}
             label="Desafiar"
-            icon={
-              <MaterialCommunityIcons
-                name="sword-cross"
-                size={20}
-                color={CORES.HOME_PRIMARY}
-              />
-            }
             onPress={() => navigation.navigate("Desafios")}
           />
         </View>
 
         <View style={styles.hero}>
           <View style={[styles.row, { marginBottom: 15 }]}>
-            <ProgressCircle percent={percent} />
+            <ProgressCircle percent={continuePercent} />
             <View style={{ flex: 1, minWidth: 0, marginLeft: 15 }}>
               <Text style={styles.heroKicker}>CONTINUE DE ONDE PAROU</Text>
               <Text style={styles.heroTitle} numberOfLines={2}>
-                {firstPendingLesson
-                  ? firstPendingLesson.title
-                  : "Tudo concluído"}
+                {continueLesson ? continueLesson.title : "Tudo concluído"}
               </Text>
               <View style={[styles.row, { marginTop: 5 }]}>
                 <Text style={styles.heroMeta}>⏱ 8 min</Text>
@@ -809,14 +1006,15 @@ export default function Inglescompleto({ navigation, route }) {
                     { color: CORES.HOME_PRIMARY, marginLeft: 10 },
                   ]}
                 >
-                  +{XP_PER_LESSON} XP
+                  até {XP_PER_LESSON} XP
                 </Text>
               </View>
             </View>
           </View>
           <TouchableOpacity
             style={styles.primaryBtn}
-            onPress={() => goToLesson(firstPendingLesson)}
+            // TEMPORARIO: acesso aos cursos desativado ate resolver a propriedade das aulas
+            // onPress={() => goToLesson(continueLesson, continueTarget?.lessons)}
             activeOpacity={0.9}
           >
             <Text style={styles.primaryBtnTxt}>Continuar</Text>
@@ -828,100 +1026,15 @@ export default function Inglescompleto({ navigation, route }) {
           </TouchableOpacity>
         </View>
 
+        {/* TEMPORARIO: aba premium fora da Home por enquanto
         <PremiumBanner
           onPress={() => navigation.navigate("AulasPlusHome")}
         />
+        */}
 
-        {dailyGoalsState.goals.length > 0 && (
-          <View style={styles.daily}>
-            <Text style={styles.dailyTitle}>Metas de hoje</Text>
-            <View style={{ gap: 12, marginTop: 10 }}>
-              {dailyGoalsState.goals.map((goal) => {
-                const percent = Math.min(
-                  100,
-                  (goal.progress / goal.target) * 100,
-                );
-                return (
-                  <View key={goal.id} style={styles.dailyGoalRow}>
-                    <View
-                      style={[
-                        styles.dailyIcon,
-                        goal.completed && styles.dailyIconDone,
-                      ]}
-                    >
-                      <MaterialCommunityIcons
-                        name={goal.completed ? "check" : goal.icon}
-                        size={18}
-                        color={goal.completed ? CORES.WHITE : CORES.HOME_PRIMARY}
-                      />
-                    </View>
-                    <View style={{ flex: 1, minWidth: 0 }}>
-                      <View
-                        style={[
-                          styles.row,
-                          { justifyContent: "space-between" },
-                        ]}
-                      >
-                        <Text style={styles.dailyGoalLabel} numberOfLines={1}>
-                          {goal.label}
-                        </Text>
-                        <Text style={styles.dailyGoalCount}>
-                          {goal.progress}/{goal.target}
-                        </Text>
-                      </View>
-                      <View style={styles.dailyTrack}>
-                        <View
-                          style={[
-                            styles.dailyFill,
-                            {
-                              width: `${percent}%`,
-                              backgroundColor: goal.completed
-                                ? CORES.HOME_GREEN
-                                : CORES.HOME_PRIMARY,
-                            },
-                          ]}
-                        />
-                      </View>
-                      <View
-                        style={[
-                          styles.row,
-                          { justifyContent: "space-between", marginTop: 5 },
-                        ]}
-                      >
-                        <View
-                          style={[
-                            styles.difficultyPill,
-                            {
-                              backgroundColor: `${DIFFICULTY_COLOR[goal.difficulty]}1F`,
-                            },
-                          ]}
-                        >
-                          <Text
-                            style={[
-                              styles.difficultyPillTxt,
-                              { color: DIFFICULTY_COLOR[goal.difficulty] },
-                            ]}
-                          >
-                            {DIFFICULTY_LABEL[goal.difficulty]}
-                          </Text>
-                        </View>
-                        <Text
-                          style={[
-                            styles.dailyGoalReward,
-                            goal.rewarded && { color: CORES.HOME_GREEN },
-                          ]}
-                        >
-                          {goal.rewarded ? "✓ " : ""}+{goal.rewardXp} XP
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-          </View>
-        )}
+        <GoalsCarousel goals={dailyGoalsState.goals} />
 
+        {/* TEMPORARIO: atividade recente fora da Home por enquanto
         {recentActivity.length > 0 && (
           <>
             <View style={styles.sectionHead}>
@@ -934,7 +1047,9 @@ export default function Inglescompleto({ navigation, route }) {
             </View>
           </>
         )}
+        */}
 
+        {/* TEMPORARIO: lista antiga de cursos fora da Home ate resolver a propriedade das aulas
         <View
           style={styles.sectionHead}
           onLayout={(e) => {
@@ -1052,9 +1167,10 @@ export default function Inglescompleto({ navigation, route }) {
                     started={course.completed > 0}
                     percent={course.percent}
                     color={LEVEL_ACCENT[CORES.mode][levelFilter] || CORES.HOME_PRIMARY}
-                    onPress={() =>
-                      openCourseFromViewAll(course.courseName, levelFilter)
-                    }
+                    // TEMPORARIO: acesso aos cursos desativado ate resolver a propriedade das aulas
+                    // onPress={() =>
+                    //   openCourseFromViewAll(course.courseName, levelFilter)
+                    // }
                   />
                 ))}
               </View>
@@ -1089,9 +1205,10 @@ export default function Inglescompleto({ navigation, route }) {
                         started={lvl.completed > 0}
                         percent={lvl.percent}
                         color={group.color}
-                        onPress={() =>
-                          openCourseFromViewAll(group.courseName, lvl.level)
-                        }
+                        // TEMPORARIO: acesso aos cursos desativado ate resolver a propriedade das aulas
+                        // onPress={() =>
+                        //   openCourseFromViewAll(group.courseName, lvl.level)
+                        // }
                       />
                     ))}
                   </View>
@@ -1264,6 +1381,104 @@ export default function Inglescompleto({ navigation, route }) {
             })}
           </View>
         )}
+        */}
+
+        <View
+          style={styles.coursesSection}
+          onLayout={(e) => {
+            coursesSectionY.current = e.nativeEvent.layout.y;
+          }}
+        >
+          {/* o filtro por nivel ainda nao muda os cursos novos */}
+          <View style={styles.coursesHead}>
+            <Text style={styles.h2}>Conteúdos</Text>
+            <View style={styles.levelFilterWrap}>
+              <TouchableOpacity
+                style={[
+                  styles.levelFilterButton,
+                  isLevelFilterMode && styles.levelFilterButtonOn,
+                ]}
+                onPress={() => setLevelMenuOpen((v) => !v)}
+                activeOpacity={0.85}
+              >
+                <Text
+                  style={[
+                    styles.levelFilterTxt,
+                    isLevelFilterMode && styles.levelFilterTxtOn,
+                  ]}
+                >
+                  {isLevelFilterMode ? levelFilter : "Por nível"}
+                </Text>
+                <MaterialCommunityIcons
+                  name={levelMenuOpen ? "chevron-up" : "chevron-down"}
+                  size={16}
+                  color={isLevelFilterMode ? CORES.WHITE : CORES.HOME_PRIMARY}
+                />
+              </TouchableOpacity>
+
+              {levelMenuOpen && (
+                <View style={styles.levelFilterDropdown}>
+                  <TouchableOpacity
+                    style={styles.levelFilterItem}
+                    onPress={() => {
+                      setLevelFilter("todos");
+                      setLevelMenuOpen(false);
+                    }}
+                    activeOpacity={0.85}
+                  >
+                    <Text
+                      style={[
+                        styles.levelFilterItemTxt,
+                        !isLevelFilterMode && styles.levelFilterItemTxtActive,
+                      ]}
+                    >
+                      Todos os níveis
+                    </Text>
+                  </TouchableOpacity>
+                  {LEVEL_OPTIONS.map((level) => (
+                    <TouchableOpacity
+                      key={level}
+                      style={styles.levelFilterItem}
+                      onPress={() => selectLevelFilter(level)}
+                      activeOpacity={0.85}
+                    >
+                      <Text
+                        style={[
+                          styles.levelFilterItemTxt,
+                          levelFilter === level &&
+                            styles.levelFilterItemTxtActive,
+                        ]}
+                      >
+                        {level}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.courseTilesRow}>
+            {COURSE_TILES.map((tile) => (
+              <TouchableOpacity
+                key={tile.key}
+                style={styles.courseTile}
+                onPress={() => navigation.navigate(tile.routeName)}
+                activeOpacity={0.85}
+              >
+                <View
+                  style={[
+                    styles.courseTileIcon,
+                    { backgroundColor: tile.color[CORES.mode] },
+                  ]}
+                >
+                  <Image source={tile.image} style={styles.courseTileImage} />
+                </View>
+                <Text style={styles.courseTileLabel}>{tile.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
       </ScrollView>
 
       <StudyTimeModal
@@ -1379,18 +1594,19 @@ const makeStyles = (CORES) =>
     quickRow: { flexDirection: "row", gap: 10, marginBottom: 18 },
     qa: {
       flex: 1,
+      aspectRatio: QUICK_ACTION_RATIO,
       borderRadius: 16,
-      padding: 13,
-      gap: 8,
+      padding: 11,
+      justifyContent: "space-between",
       alignItems: "flex-start",
+      overflow: "hidden",
+      // cor do card, aparece so nas bordas antialiased do fundo
+      backgroundColor: "#2F45EE",
     },
-    qaPrimary: { backgroundColor: CORES.ACCENT_FILL_HOME },
-    qaPlain: {
-      backgroundColor: CORES.SURFACE,
-      borderWidth: 1,
-      borderColor: CORES.HOME_BORDER,
-    },
-    qaLabel: { fontWeight: "800", fontSize: 13 },
+    // os icones tem ~15% de margem transparente; a margem negativa alinha o
+    // desenho com o texto
+    qaIcon: { width: 40, height: 40, marginLeft: -5, marginTop: -5 },
+    qaLabel: { fontWeight: "800", fontSize: 13, color: CORES.WHITE },
 
     hero: {
       backgroundColor: CORES.SURFACE,
@@ -1450,17 +1666,29 @@ const makeStyles = (CORES) =>
       marginTop: 2,
     },
 
-    daily: {
-      backgroundColor: CORES.HOME_DAILY_BG,
-      borderRadius: 18,
-      padding: 16,
-      marginBottom: 22,
-    },
-    dailyGoalRow: {
+    goalsCarousel: { marginBottom: 22 },
+    goalSlide: {
+      flex: 1,
       flexDirection: "row",
       alignItems: "center",
       gap: 13,
+      backgroundColor: CORES.HOME_DAILY_BG,
+      borderRadius: 16,
+      paddingHorizontal: 16,
     },
+    goalsDots: {
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: 6,
+      marginTop: 10,
+    },
+    goalsDot: {
+      width: 6,
+      height: 6,
+      borderRadius: 3,
+      backgroundColor: CORES.HOME_DAILY_TRACK,
+    },
+    goalsDotOn: { width: 18, backgroundColor: CORES.HOME_PRIMARY },
     dailyIcon: {
       width: 40,
       height: 40,
@@ -1473,7 +1701,6 @@ const makeStyles = (CORES) =>
     dailyIconDone: {
       backgroundColor: CORES.HOME_GREEN,
     },
-    dailyTitle: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 15 },
     dailyGoalLabel: {
       color: CORES.HOME_NAVY,
       fontWeight: "700",
@@ -1521,6 +1748,44 @@ const makeStyles = (CORES) =>
     },
     h2: { color: CORES.HOME_NAVY, fontWeight: "900", fontSize: 19 },
     subtle: { color: CORES.HOME_FAINT, fontWeight: "800", fontSize: 13 },
+
+    coursesSection: {
+      backgroundColor: CORES.SURFACE,
+      borderRadius: 18,
+      borderWidth: 1,
+      borderColor: CORES.HOME_BORDER,
+      paddingVertical: 20,
+      paddingHorizontal: 12,
+    },
+    // zIndex pra lista do filtro abrir por cima dos quadrados dos cursos
+    coursesHead: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: 14,
+      zIndex: 10,
+    },
+    courseTilesRow: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+    },
+    courseTile: { alignItems: "center", flex: 1 },
+    courseTileIcon: {
+      width: 68,
+      height: 68,
+      borderRadius: 14,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    courseTileImage: { width: 60, height: 60, resizeMode: "contain" },
+    courseTileLabel: {
+      color: CORES.HOME_NAVY,
+      fontWeight: "800",
+      fontSize: 10.5,
+      textTransform: "uppercase",
+      textAlign: "center",
+      marginTop: 8,
+    },
 
     levelFilterWrap: { position: "relative" },
     levelFilterButton: {

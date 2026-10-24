@@ -59,6 +59,20 @@ const EMPTY_COUNTERS = {
   bestLessonAccuracy: 0,
 };
 
+// Toda operacao le o estado inteiro do AsyncStorage e regrava no fim; sem
+// fila, duas chamadas ao mesmo tempo (ex.: addStudyMillis e
+// recordExerciseAttempt) podiam sobrescrever o progresso uma da outra. A fila
+// tambem garante que uma leitura pedida depois de registrar uma tentativa ja
+// enxerga o resultado dela (o Exercise22 usa isso pra mostrar a meta que
+// andou com a resposta).
+let pending = Promise.resolve();
+
+function serialized(task) {
+  const run = pending.then(task);
+  pending = run.catch(() => {});
+  return run;
+}
+
 function todayKey() {
   const now = new Date();
   const year = now.getFullYear();
@@ -161,89 +175,99 @@ function goalProgress(goal, state) {
   return state.counters[goal.metric] ?? 0;
 }
 
-export async function getTodayGoals() {
-  const state = await loadState();
-  applyRewards(state);
-  await saveState(state);
+export function getTodayGoals() {
+  return serialized(async () => {
+    const state = await loadState();
+    applyRewards(state);
+    await saveState(state);
 
-  const goals = state.goalIds
-    .map((id) => GOAL_POOL.find((goal) => goal.id === id))
-    .filter(Boolean)
-    .map((goal) => {
-      const progress = goalProgress(goal, state);
-      return {
-        id: goal.id,
-        label: goal.label,
-        icon: goal.icon,
-        metric: goal.metric,
-        target: goal.target,
-        progress: Math.min(progress, goal.target),
-        completed: progress >= goal.target,
-        difficulty: goal.difficulty,
-        rewardXp: DIFFICULTY_REWARD_XP[goal.difficulty] || 0,
-        rewarded: state.rewardedGoalIds.includes(goal.id),
-      };
-    });
+    const goals = state.goalIds
+      .map((id) => GOAL_POOL.find((goal) => goal.id === id))
+      .filter(Boolean)
+      .map((goal) => {
+        const progress = goalProgress(goal, state);
+        return {
+          id: goal.id,
+          label: goal.label,
+          icon: goal.icon,
+          metric: goal.metric,
+          target: goal.target,
+          progress: Math.min(progress, goal.target),
+          completed: progress >= goal.target,
+          difficulty: goal.difficulty,
+          rewardXp: DIFFICULTY_REWARD_XP[goal.difficulty] || 0,
+          rewarded: state.rewardedGoalIds.includes(goal.id),
+        };
+      });
 
-  const bonusXpEarnedToday = goals
-    .filter((goal) => goal.rewarded)
-    .reduce((sum, goal) => sum + goal.rewardXp, 0);
+    const bonusXpEarnedToday = goals
+      .filter((goal) => goal.rewarded)
+      .reduce((sum, goal) => sum + goal.rewardXp, 0);
 
-  return {
-    date: state.date,
-    goals,
-    bonusXpEarnedToday,
-    lifetimeBonusXp: state.lifetimeBonusXp,
-  };
+    return {
+      date: state.date,
+      goals,
+      bonusXpEarnedToday,
+      lifetimeBonusXp: state.lifetimeBonusXp,
+    };
+  });
 }
 
-export async function recordExerciseAttempt({ isCorrect, exerciseType } = {}) {
-  if (exerciseType && EXERCISE_TYPES_WITHOUT_GOAL_TRACKING.has(exerciseType)) return;
+export function recordExerciseAttempt({ isCorrect, exerciseType } = {}) {
+  return serialized(async () => {
+    if (exerciseType && EXERCISE_TYPES_WITHOUT_GOAL_TRACKING.has(exerciseType)) return;
 
-  const state = await loadState();
-  state.counters.exercises += 1;
-  if (isCorrect) {
-    state.counters.correct += 1;
-    state.counters.currentCorrectStreak = (state.counters.currentCorrectStreak || 0) + 1;
-    if (state.counters.currentCorrectStreak > (state.counters.bestCorrectStreak || 0)) {
-      state.counters.bestCorrectStreak = state.counters.currentCorrectStreak;
+    const state = await loadState();
+    state.counters.exercises += 1;
+    if (isCorrect) {
+      state.counters.correct += 1;
+      state.counters.currentCorrectStreak = (state.counters.currentCorrectStreak || 0) + 1;
+      if (state.counters.currentCorrectStreak > (state.counters.bestCorrectStreak || 0)) {
+        state.counters.bestCorrectStreak = state.counters.currentCorrectStreak;
+      }
+    } else {
+      state.counters.currentCorrectStreak = 0;
     }
-  } else {
-    state.counters.currentCorrectStreak = 0;
-  }
-  registerActivityTimestamp(state);
-  applyRewards(state);
-  await saveState(state);
+    registerActivityTimestamp(state);
+    applyRewards(state);
+    await saveState(state);
+  });
 }
 
-export async function recordLessonCompleted({ xp = 0, accuracy } = {}) {
-  const state = await loadState();
-  state.counters.lessons += 1;
-  state.counters.xp += xp;
-  if (typeof accuracy === "number") {
-    state.counters.bestLessonAccuracy = Math.max(
-      state.counters.bestLessonAccuracy || 0,
-      accuracy,
-    );
-  }
-  registerActivityTimestamp(state);
-  applyRewards(state);
-  await saveState(state);
+export function recordLessonCompleted({ xp = 0, accuracy } = {}) {
+  return serialized(async () => {
+    const state = await loadState();
+    state.counters.lessons += 1;
+    state.counters.xp += xp;
+    if (typeof accuracy === "number") {
+      state.counters.bestLessonAccuracy = Math.max(
+        state.counters.bestLessonAccuracy || 0,
+        accuracy,
+      );
+    }
+    registerActivityTimestamp(state);
+    applyRewards(state);
+    await saveState(state);
+  });
 }
 
-export async function recordReviewCompleted() {
-  const state = await loadState();
-  state.counters.review += 1;
-  registerActivityTimestamp(state);
-  applyRewards(state);
-  await saveState(state);
+export function recordReviewCompleted() {
+  return serialized(async () => {
+    const state = await loadState();
+    state.counters.review += 1;
+    registerActivityTimestamp(state);
+    applyRewards(state);
+    await saveState(state);
+  });
 }
 
-export async function addStudyMillis(ms) {
-  if (!ms || ms <= 0) return;
-  const state = await loadState();
-  state.counters.studyMs += ms;
-  registerActivityTimestamp(state);
-  applyRewards(state);
-  await saveState(state);
+export function addStudyMillis(ms) {
+  return serialized(async () => {
+    if (!ms || ms <= 0) return;
+    const state = await loadState();
+    state.counters.studyMs += ms;
+    registerActivityTimestamp(state);
+    applyRewards(state);
+    await saveState(state);
+  });
 }

@@ -235,6 +235,7 @@ export const BUB1 = {
 };
 
 export const ICA1 = {
+  Hi01: require("../../assets/IC/A0-A1/Hi01.png"),
   A34S5: require("../../assets/IC/A0-A1/A13S9.jpeg"),
   A13S9: require("../../assets/IC/A0-A1/A13S9.jpeg"),
   A13S7: require("../../assets/IC/A0-A1/A13S7.jpg"),

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { Image, View, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -43,7 +43,16 @@ export default function TabsNavigator() {
                 styles.tabBarMainBackground,
                 { bottom: bottomInset > 0 ? bottomInset : 0 },
               ]}
-            />
+            >
+              {/* fundo proprio da barra de abas (o do header fica em routes.js).
+                  stretch: a barra e bem mais larga que a imagem, e com cover ela
+                  era ampliada e cortada em vez de aparecer inteira */}
+              <Image
+                source={require("../../assets/Home/background-navigator.png")}
+                style={StyleSheet.absoluteFill}
+                resizeMode="stretch"
+              />
+            </View>
             <View
               style={[
                 styles.nativeButtonsBackground,
@@ -56,8 +65,9 @@ export default function TabsNavigator() {
           paddingVertical: 0,
         },
 
-        tabBarActiveTintColor: CORES.ON_ACCENT,
-        tabBarInactiveTintColor: CORES.mode === "dark" ? "rgba(245,246,252,0.55)" : "#000000aa",
+        // fixas nos dois temas por causa do banner: selecionada branca, demais pretas
+        tabBarActiveTintColor: "#FFFFFF",
+        tabBarInactiveTintColor: "#000000",
         tabBarLabelStyle: {
           fontWeight: "bold",
           fontSize: 11,
@@ -123,7 +133,9 @@ const makeStyles = (CORES) =>
       left: 0,
       right: 0,
       top: 0,
+      // cor do tema so aparece enquanto o banner carrega
       backgroundColor: CORES.PRIMARY,
+      overflow: "hidden",
       borderTopWidth: 1.5,
       borderTopColor: CORES.mode === "dark" ? CORES.BORDER : "#ffffff",
     },
