@@ -15,7 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Path, Circle } from "react-native-svg";
 import { useAuth } from "../context/AuthContext";
-import { API_URL } from "../services/api";
+import { resolverUrlFoto } from "../services/api";
 import { excluirConta } from "../services/usuarios";
 import {
   COMPRA_SUPORTADA,
@@ -210,7 +210,7 @@ export default function ProfileScreen({ navigation }) {
 
   const displayName = user?.nome_exibicao?.trim() || user?.login || "Usuário";
   const email = user?.email || user?.login || "";
-  const avatarUri = user?.foto_url ? `${API_URL}${user.foto_url}` : null;
+  const avatarUri = resolverUrlFoto(user?.foto_url);
 
   const [totalXp, setTotalXp] = useState(0);
   const [streak, setStreak] = useState(0);

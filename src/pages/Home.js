@@ -20,7 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Circle, Text as SvgText } from "react-native-svg";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useAuth } from "../context/AuthContext";
-import { API_URL } from "../services/api";
+import { resolverUrlFoto } from "../services/api";
 import { getLevelProgress, XP_PER_LESSON } from "../util/xp";
 import { useTheme, useThemedStyles } from "../theme";
 import { fetchAulaAccessMap } from "../services/conteudos";
@@ -508,7 +508,7 @@ export default function Inglescompleto({ navigation, route }) {
   const displayName = user?.nome_exibicao?.trim() || user?.login || "Usuário";
   const firstName = displayName.split(" ")[0];
   const avatarSource = user?.foto_url
-    ? { uri: `${API_URL}${user.foto_url}` }
+    ? { uri: resolverUrlFoto(user.foto_url) }
     : null;
 
   const autoOpenLessonId = route?.params?.autoOpenLessonId;

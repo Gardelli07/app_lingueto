@@ -22,6 +22,14 @@ AsyncStorage.getItem(LAST_GOOD_API_URL_KEY)
   })
   .catch(() => {});
 
+// foto_url vem absoluta (link assinado do S3) em producao e relativa
+// ("/uploads/...") no modo local do backend. Prefixar API_URL numa URL ja
+// absoluta quebra o link, entao so prefixa quando ainda nao e absoluta.
+export function resolverUrlFoto(fotoUrl) {
+  if (!fotoUrl) return null;
+  return /^https?:\/\//i.test(fotoUrl) ? fotoUrl : `${API_URL}${fotoUrl}`;
+}
+
 export class ApiError extends Error {
   constructor(message, status = 0, data = null) {
     super(message);

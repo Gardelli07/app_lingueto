@@ -14,7 +14,7 @@ import {
 import ImagePicker from "react-native-image-crop-picker";
 import Svg, { Path } from "react-native-svg";
 import { useTheme, useThemedStyles } from "../theme";
-import { API_URL } from "../services/api";
+import { resolverUrlFoto } from "../services/api";
 import { atualizarFotoPerfil, atualizarNomeExibicao } from "../services/perfil";
 
 const IconCamera = ({ size = 18, color = "#fff" }) => (
@@ -29,7 +29,7 @@ const IconCamera = ({ size = 18, color = "#fff" }) => (
 // evita subir a foto de novo so porque o nome foi editado (e vice-versa).
 export default function EditProfileModal({ visible, user, onClose, onSaved }) {
   const displayName = user?.nome_exibicao?.trim() || user?.login || "";
-  const currentAvatarUri = user?.foto_url ? `${API_URL}${user.foto_url}` : null;
+  const currentAvatarUri = resolverUrlFoto(user?.foto_url);
 
   const CORES = useTheme();
   const styles = useThemedStyles(makeStyles);

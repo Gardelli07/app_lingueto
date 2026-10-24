@@ -15,7 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { API_URL } from "../services/api";
+import { resolverUrlFoto } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { fetchAmigos } from "../services/amizades";
 import {
@@ -160,7 +160,7 @@ function Avatar({ uri, nome, size = 44, style, textSize, textColor }) {
 }
 
 function fotoDe(usuario) {
-  return usuario?.foto_url ? `${API_URL}${usuario.foto_url}` : null;
+  return resolverUrlFoto(usuario?.foto_url);
 }
 
 function ChipTipoMeta({ meta, styles, CORES, compacto }) {
@@ -789,7 +789,7 @@ export default function Desafios({ route, navigation }) {
     );
   };
 
-  const minhaFoto = user?.foto_url ? `${API_URL}${user.foto_url}` : null;
+  const minhaFoto = resolverUrlFoto(user?.foto_url);
   const souDesafiante =
     desafioAtual && String(desafioAtual.desafiante.id) === String(currentUserId);
   const rival = desafioAtual

@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
-import { API_URL } from "../services/api";
+import { resolverUrlFoto } from "../services/api";
 import { fetchPerfilPublico } from "../services/usuarios";
 import { enviarPedidoAmizade, aceitarPedidoAmizade, desfazerAmizade } from "../services/amizades";
 import { bloquearUsuario, desbloquearUsuario } from "../services/bloqueios";
@@ -181,7 +181,7 @@ export default function PerfilVisitado({ route, navigation }) {
   };
 
   const displayName = perfil?.nome_exibicao?.trim() || "Usuário";
-  const avatarUri = perfil?.foto_url ? `${API_URL}${perfil.foto_url}` : null;
+  const avatarUri = resolverUrlFoto(perfil?.foto_url);
   const levelProgress = getLevelProgress(perfil?.xp_total || 0);
 
   return (
