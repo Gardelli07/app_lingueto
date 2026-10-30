@@ -32,6 +32,10 @@ export default function CourseOverviewScreen({
   storageKey,
   moduleDefs,
   lessons,
+  // Opcional: niveis do curso ([{ label, routeName }]) e a rota da tela
+  // atual. Mostra os chips de nivel; trocar recarrega a tela no outro nivel.
+  levels,
+  currentLevelRoute,
 }) {
   const CORES = useTheme();
   const styles = useThemedStyles(makeStyles);
@@ -135,6 +139,29 @@ export default function CourseOverviewScreen({
       >
         <View style={styles.headerBlock}>
           <Text style={styles.courseName}>{courseName}</Text>
+          {levels?.length > 1 && (
+            <View style={styles.levelRow} accessibilityRole="tablist">
+              {levels.map((level) => {
+                const active = level.routeName === currentLevelRoute;
+                return (
+                  <TouchableOpacity
+                    key={level.routeName}
+                    style={[styles.levelChip, active && styles.levelChipOn]}
+                    onPress={() => {
+                      if (!active) navigation.replace(level.routeName);
+                    }}
+                    accessibilityRole="tab"
+                    accessibilityState={{ selected: active }}
+                    activeOpacity={0.85}
+                  >
+                    <Text style={[styles.levelChipTxt, active && styles.levelChipTxtOn]}>
+                      {level.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
         </View>
 
         {moduleDefs.map((moduleItem) => {
@@ -296,6 +323,26 @@ const makeStyles = (CORES) =>
       fontSize: 31,
       fontWeight: "800",
     },
+    // Mesmo visual do filtro "Por nivel" da Home.
+    levelRow: { flexDirection: "row", gap: 8, marginTop: 12 },
+    levelChip: {
+      borderWidth: 1.5,
+      borderColor: CORES.HOME_PRIMARY,
+      borderRadius: 99,
+      paddingHorizontal: 14,
+      paddingVertical: 7,
+      backgroundColor: CORES.HOME_FILTER_BG,
+    },
+    levelChipOn: {
+      backgroundColor: CORES.NAVY_FILL,
+      borderColor: CORES.NAVY_FILL,
+    },
+    levelChipTxt: {
+      color: CORES.HOME_PRIMARY,
+      fontWeight: "800",
+      fontSize: 13,
+    },
+    levelChipTxtOn: { color: CORES.WHITE },
     moduleWrap: {
       marginTop: 12,
     },

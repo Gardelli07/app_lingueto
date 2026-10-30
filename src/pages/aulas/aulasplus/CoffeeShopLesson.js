@@ -17,6 +17,7 @@ import { runOnJS } from 'react-native-worklets';
 import { File } from 'expo-file-system';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { scopedKey } from '../../../util/userScope';
+import { playCorrectSound, playWrongSound } from '../../../util/answerSounds';
 import { enviarArquivo } from '../../../services/arquivos';
 import { criarPostAudio } from '../../../services/comunidade';
 import { getSlidePostId, markSlidePosted } from '../../../util/exercisePosts';
@@ -224,19 +225,6 @@ function deleteRecordingFile(uri) {
   try {
     const file = new File(uri);
     if (file.exists) file.delete();
-  } catch (e) {}
-}
-
-const CORRECT_SOUND_SOURCE = require('../../../../assets/sounds/correct.wav');
-let correctSoundPlayer = null;
-
-function playCorrectSound() {
-  try {
-    if (!correctSoundPlayer) {
-      correctSoundPlayer = createAudioPlayer(CORRECT_SOUND_SOURCE);
-    }
-    correctSoundPlayer.seekTo(0);
-    correctSoundPlayer.play();
   } catch (e) {}
 }
 
@@ -1020,7 +1008,7 @@ export default function CoffeeShopLesson({ navigation, route }) {
       wrong1: 'Não é isso. "Insert" seria para cartão com chip, mas aqui a pergunta é sobre pagamento por aproximação (tap).',
       wrong2: 'Não é isso. Assinar um recibo de papel não é como funciona o pagamento por aproximação (tap).',
     };
-    if (key === 'correct') { setTapQuizCorrect(true); setTapQuizWrong(null); addXp(10); } else setTapQuizWrong(key);
+    if (key === 'correct') { setTapQuizCorrect(true); setTapQuizWrong(null); addXp(10); } else { setTapQuizWrong(key); playWrongSound(); }
     setAnswerFeedback({ correct: key === 'correct', message: explain[key] });
   }
 
@@ -1033,7 +1021,7 @@ export default function CoffeeShopLesson({ navigation, route }) {
       wrong1: 'Não é isso. "Yes, I have one" não faz sentido aqui — "Have a good one" não é uma pergunta.',
       wrong2: "Não é isso. \"No, I don't\" também não faz sentido — a frase é uma despedida educada.",
     };
-    if (key === 'correct') { setGoodbyeQuizCorrect(true); setGoodbyeQuizWrong(null); addXp(10); } else setGoodbyeQuizWrong(key);
+    if (key === 'correct') { setGoodbyeQuizCorrect(true); setGoodbyeQuizWrong(null); addXp(10); } else { setGoodbyeQuizWrong(key); playWrongSound(); }
     setAnswerFeedback({ correct: key === 'correct', message: explain[key] });
   }
 

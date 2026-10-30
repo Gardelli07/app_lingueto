@@ -35,25 +35,38 @@ import ex17, { Exercise17 } from "../../exc/ex17";
 import ex18, { Exercise18 } from "../../exc/ex18";
 import ex19, { Exercise19 } from "../../exc/ex19";
 import ex20, { Exercise20 } from "../../exc/ex20";
-import ex21, { Exercise21 } from "../../exc/ex21";
+import { Exercise21 } from "../../exc/ex21";
 import { Exercise22 } from "../../exc/ex22";
+import { Exercise23 } from "../../exc/ex23";
+import { Exercise24 } from "../../exc/ex24";
+import { Exercise25 } from "../../exc/ex25";
+import { Exercise26 } from "../../exc/ex26";
+import { Exercise27 } from "../../exc/ex27";
 import Feedback from "../../exc/feedback";
 import { Images } from "../../util/images";
 import {
   calculateLessonAccuracy,
   LESSON_STREAK_MIN_ACCURACY,
 } from "../../util/lessonPerformance";
-import { getLevelProgress, xpForAccuracy } from "../../util/xp";
-import { concluirAula, fetchResumoProgresso } from "../../services/progresso";
+import {
+  getLevelProgress,
+  SECOND_CHANCE_COST,
+  xpForAccuracy,
+} from "../../util/xp";
+import {
+  comprarSegundaChance,
+  concluirAula,
+  fetchResumoProgresso,
+} from "../../services/progresso";
 import { registrarTentativaExercicio } from "../../services/erros";
 import { getConteudoIdDaTela } from "../../services/conteudos";
 import { saveLastLessonDone } from "../../util/lastLesson";
 import { getSlideHint } from "../../util/erroReview";
 import { scopedKey } from "../../util/userScope";
 import * as dailyGoals from "../../util/dailyGoals";
+import { playCorrectSound, playWrongSound } from "../../util/answerSounds";
 import { useTheme, useThemedStyles } from "../../theme";
 
-const CORRECT_SOUND_SOURCE = require("../../../assets/sounds/correct.wav");
 
 const SlideNavContext = React.createContext(null);
 
@@ -65,7 +78,7 @@ const CLOSE_IMAGE = require("../../../assets/x.png");
 // repassado por prop pros componentes de exercicio (que ja recebiam `styles`).
 const STYLE_FACTORIES = [
   geral, ex1, ex2, ex3, ex4, ex5, ex6, ex7, ex8, ex9, ex10,
-  ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19, ex20, ex21,
+  ex11, ex12, ex13, ex14, ex15, ex16, ex17, ex18, ex19, ex20,
 ];
 
 const makeStyles = (CORES) =>
@@ -94,6 +107,11 @@ const COMPONENTS = {
   Exercise20,
   Exercise21,
   Exercise22,
+  Exercise23,
+  Exercise24,
+  Exercise25,
+  Exercise26,
+  Exercise27,
 };
 
 // Exercicios com layout proprio (scroll, safe area e painel fixo no rodape,
@@ -575,6 +593,11 @@ function LessonSlideRenderer({
   onFinishReview,
   onAttempt,
   xpProjection,
+  secondChance,
+  reviewQuestionKeys,
+  userXp,
+  comboSession,
+  lessonPosition,
   feedbackProps,
 }) {
   if (slide.type === "finish") {
@@ -621,6 +644,11 @@ function LessonSlideRenderer({
       next={next}
       onAttempt={onAttempt}
       xpProjection={xpProjection}
+      secondChance={secondChance}
+      reviewQuestionKeys={reviewQuestionKeys}
+      userXp={userXp}
+      comboSession={comboSession}
+      lessonPosition={lessonPosition}
       slideKey={slideInstanceKey}
       {...(slide.needsSpeech ? { speak } : {})}
     />
@@ -735,6 +763,20 @@ function buildActiveSlides(lessonSlides, reviewMode, reviewSlideIndices) {
   return lessonSlides.map((slide, index) => ({ slide, originalIndex: index }));
 }
 
+// Quantas perguntas o slide mostra nesta passagem: as `activity.questions`
+// (na revisao, so as erradas) ou 1 para slides sem lista de perguntas. Os
+// exercicios do Grammar Lab usam a soma para o "Question x of y" e a barra
+// contarem a aula inteira.
+function slideQuestionCount({ slide, originalIndex }, reviewQuestionKeys) {
+  if (!slide || slide.type === "finish" || slide.type === "reviewFinish") return 0;
+  const questions = slide.activity && slide.activity.questions;
+  if (!Array.isArray(questions) || questions.length === 0) return 1;
+  const keys = reviewQuestionKeys && reviewQuestionKeys[originalIndex];
+  return Array.isArray(keys) && keys.length > 0
+    ? Math.min(keys.length, questions.length)
+    : questions.length;
+}
+
 export default function createLessonScreen(
   slides,
   { storageKey, nextRouteName, screenName = "LessonScreen" },
@@ -770,6 +812,11 @@ export default function createLessonScreen(
     const reviewSlideIndices =
       route && route.params ? route.params.reviewSlideIndices : undefined;
     const reviewMode = Boolean(route && route.params && route.params.reviewMode);
+    // Revisao de slides com varias perguntas: indice original do slide ->
+    // `trackingSuffix` das perguntas erradas (ver buildErrorGroups no
+    // MeusErros). O slide mostra so essas.
+    const reviewQuestionKeys =
+      (reviewMode && route.params.reviewQuestionKeys) || null;
     const CORES = useTheme();
     const { speak } = useSpeech();
 
@@ -791,7 +838,10 @@ export default function createLessonScreen(
       total: 0,
       exerciseScores: {},
       slideAttempts: {},
+      slideBonusXp: {},
     });
+    // XP gasto em segundas chances nesta aula (a API ja descontou).
+    const [spentXp, setSpentXp] = useState(0);
     // XP do servidor ao abrir a aula + bonus das metas do dia (local): a
     // mesma soma que a Home mostra, para a barra de nivel da tela final bater.
     const [xpBeforeLesson, setXpBeforeLesson] = useState(0);
@@ -804,30 +854,10 @@ export default function createLessonScreen(
     const [lessonMetaLoaded, setLessonMetaLoaded] = useState(false);
     const lessonCommitRef = useRef(false);
     const reviewCommitRef = useRef(false);
-    const correctSoundPlayerRef = useRef(null);
     const studySegmentStartRef = useRef(null);
-
-    const playCorrectSound = () => {
-      try {
-        if (!correctSoundPlayerRef.current) {
-          correctSoundPlayerRef.current = createAudioPlayer(
-            CORRECT_SOUND_SOURCE,
-          );
-        }
-        const player = correctSoundPlayerRef.current;
-        player.seekTo(0);
-        player.play();
-      } catch (error) {
-        // Falha ao tocar o som de acerto nao deve interromper a licao.
-      }
-    };
-
-    useEffect(() => {
-      return () => {
-        correctSoundPlayerRef.current?.remove();
-        correctSoundPlayerRef.current = null;
-      };
-    }, []);
+    // Combo e XP mostrado que seguem de um slide do Grammar Lab para o
+    // outro (ComboSlide le ao montar e grava a cada resposta).
+    const comboSessionRef = useRef({ combo: 0, gained: 0 });
 
     useEffect(() => {
       updateProgress(progressAnim, currentSlideIndex, slideCount);
@@ -848,6 +878,15 @@ export default function createLessonScreen(
       currentSlide,
       currentSlideEntry ? currentSlideEntry.originalIndex : currentSlideIndex,
     );
+    const questionCounts = activeSlides.map((entry) =>
+      slideQuestionCount(entry, reviewQuestionKeys),
+    );
+    const lessonPosition = {
+      questionOffset: questionCounts
+        .slice(0, currentSlideIndex)
+        .reduce((sum, count) => sum + count, 0),
+      questionTotal: questionCounts.reduce((sum, count) => sum + count, 0),
+    };
     const completedExerciseScores = Object.values(lessonStats.exerciseScores);
     const lessonAccuracy = completedExerciseScores.length
       ? Math.round(
@@ -855,12 +894,18 @@ export default function createLessonScreen(
             exerciseSlideCount,
         )
       : calculateLessonAccuracy(lessonStats.correct, lessonStats.total);
+    // Bonus de combo que os slides informaram (Exercise23 e Grammar Lab); vai
+    // como xp_bonus no concluir-aula, somado ao XP da precisao.
+    const comboXp = Object.values(lessonStats.slideBonusXp).reduce(
+      (sum, bonus) => sum + bonus,
+      0,
+    );
     // XP e sequencia: o backend e a fonte da verdade (ver
     // commitLessonCompletion); ate a confirmacao chegar, a tela mostra a
     // mesma conta que ele faz.
     const earnedXp = lessonAlreadyCompleted
       ? 0
-      : confirmedEarnedXp ?? xpForAccuracy(lessonAccuracy);
+      : confirmedEarnedXp ?? xpForAccuracy(lessonAccuracy) + comboXp;
     // A sequencia so conta com a precisao minima e sobe uma vez por dia: sem
     // saber se ja houve aula hoje, a estimativa nao soma, so garante 1.
     const optimisticNextStreak = lessonAlreadyCompleted
@@ -869,7 +914,12 @@ export default function createLessonScreen(
         ? Math.max(currentStreak, 1)
         : 0;
     const nextStreak = confirmedNextStreak ?? optimisticNextStreak;
-    const totalXpAfterLesson = xpBeforeLesson + bonusXp + earnedXp;
+    const totalXpAfterLesson = xpBeforeLesson + bonusXp + earnedXp - spentXp;
+    // Saldo que paga a segunda chance: so o XP do servidor (o bonus das metas
+    // do dia e local e a API nao enxerga).
+    const xpBalance = lessonMetaLoaded
+      ? Math.max(0, xpBeforeLesson - spentXp)
+      : 0;
     const levelProgress = getLevelProgress(totalXpAfterLesson);
 
     // XP que a aula daria se o slide atual fechasse com `slideAccuracy`,
@@ -973,11 +1023,15 @@ export default function createLessonScreen(
         totalDelta,
         exerciseAccuracy,
         trackingSuffix,
+        slideBonusXp,
+        muteSound,
       } = {},
       attemptedSlideKey = currentSlideInstanceKey,
     ) => {
-      if (isCorrect) {
-        playCorrectSound();
+      // Exercicio com som proprio (o combo do Grammar Lab) pede silencio.
+      if (!muteSound) {
+        if (isCorrect) playCorrectSound();
+        else playWrongSound();
       }
 
       const tipoExercicio =
@@ -1057,6 +1111,11 @@ export default function createLessonScreen(
             ...current.exerciseScores,
             [attemptedSlideKey]: derivedExerciseAccuracy,
           },
+          // Total do slide (nao incremento): refazer o slide sobrescreve.
+          slideBonusXp:
+            typeof slideBonusXp === "number"
+              ? { ...current.slideBonusXp, [attemptedSlideKey]: slideBonusXp }
+              : current.slideBonusXp,
         };
       });
     };
@@ -1076,7 +1135,7 @@ export default function createLessonScreen(
           // bonus depois, como a Home faz.
           dailyGoals
             .recordLessonCompleted({
-              xp: xpForAccuracy(lessonAccuracy),
+              xp: xpForAccuracy(lessonAccuracy) + comboXp,
               accuracy: lessonAccuracy,
             })
             .then(() => dailyGoals.getTodayGoals())
@@ -1097,7 +1156,11 @@ export default function createLessonScreen(
               }
               return;
             }
-            const resultado = await concluirAula(conteudoId, lessonAccuracy);
+            const resultado = await concluirAula(
+              conteudoId,
+              lessonAccuracy,
+              comboXp,
+            );
             const xpCreditado = resultado?.evento?.quantidade;
             if (typeof xpCreditado === "number") {
               setConfirmedEarnedXp(xpCreditado);
@@ -1117,7 +1180,25 @@ export default function createLessonScreen(
       lessonAlreadyCompleted,
       lessonMetaLoaded,
       lessonAccuracy,
+      comboXp,
     ]);
+
+    // Segunda chance: a API desconta o XP (e recusa sem saldo); a tela so
+    // acompanha o gasto. Rejeita a promise se a compra falhar. Fora da
+    // revisao de erros, que ja e o lugar de refazer.
+    const buySecondChance = async () => {
+      const conteudoId = lesson
+        ? await getConteudoIdDaTela(lesson.screen).catch(() => null)
+        : null;
+      const resultado = await comprarSegundaChance(conteudoId);
+      const custo =
+        typeof resultado?.custo === "number" ? resultado.custo : SECOND_CHANCE_COST;
+      setSpentXp((current) => current + custo);
+    };
+
+    const secondChance = reviewMode
+      ? null
+      : { cost: SECOND_CHANCE_COST, balance: xpBalance, buy: buySecondChance };
 
     // Vale tambem para aula refeita: o "Continue de onde parou" da Home parte
     // da ultima aula que chegou ao fim.
@@ -1180,6 +1261,17 @@ export default function createLessonScreen(
           handleAttempt(attempt, currentSlideInstanceKey)
         }
         xpProjection={xpProjection}
+        secondChance={secondChance}
+        reviewQuestionKeys={
+          reviewQuestionKeys && currentSlideEntry
+            ? reviewQuestionKeys[currentSlideEntry.originalIndex]
+            : undefined
+        }
+        // XP do usuario antes desta aula (o contador do topo do Grammar Lab
+        // soma o que a aula vai rendendo).
+        userXp={xpBeforeLesson + bonusXp - spentXp}
+        comboSession={comboSessionRef.current}
+        lessonPosition={lessonPosition}
         feedbackProps={{
           earnedXp,
           accuracy: lessonAccuracy,

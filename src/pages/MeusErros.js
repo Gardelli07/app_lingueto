@@ -93,6 +93,10 @@ function buildErrorGroups(erros) {
         lesson: found.lesson,
         lessons: found.lessons,
         slideIndexSet: new Set(),
+        // slideIndex -> perguntas erradas daquele slide; null quando algum
+        // erro e do slide inteiro (ai a revisao mostra o slide todo).
+        questionKeys: new Map(),
+        errorCount: 0,
         typeSet: new Set(),
         latestDate: erro.criado_em,
       });
@@ -100,6 +104,16 @@ function buildErrorGroups(erros) {
 
     const group = groups.get(groupKey);
     group.slideIndexSet.add(parsed.slideIndex);
+    group.errorCount += 1;
+    const slideKeys = group.questionKeys.get(parsed.slideIndex);
+    if (!parsed.questionKey) {
+      group.questionKeys.set(parsed.slideIndex, null);
+    } else if (slideKeys !== null) {
+      group.questionKeys.set(parsed.slideIndex, [
+        ...(slideKeys || []),
+        parsed.questionKey,
+      ]);
+    }
     if (erro.tipo_exercicio) group.typeSet.add(erro.tipo_exercicio);
     if (new Date(erro.criado_em) > new Date(group.latestDate)) {
       group.latestDate = erro.criado_em;
@@ -124,7 +138,12 @@ function buildErrorGroups(erros) {
         lesson: group.lesson,
         lessons: group.lessons,
         slideIndices,
-        count: slideIndices.length,
+        reviewQuestionKeys: Object.fromEntries(
+          [...group.questionKeys].filter(([, keys]) => keys !== null),
+        ),
+        // Cada registro e uma pergunta errada (slides com varias perguntas
+        // guardam uma por pergunta).
+        count: group.errorCount,
         typeLabel,
         days: diasDesde(group.latestDate),
         shortDate: formatDiaMes(group.latestDate),
@@ -295,6 +314,7 @@ export default function MeusErrosScreen({ navigation }) {
       lessons: group.lessons,
       reviewMode: true,
       reviewSlideIndices: group.slideIndices,
+      reviewQuestionKeys: group.reviewQuestionKeys,
     });
   };
 

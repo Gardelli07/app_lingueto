@@ -39,6 +39,7 @@ import {
   loadProgress,
   findContinueLesson,
 } from "../util/courseCatalog";
+import { storyModeRouteForLevel } from "./aulas/storymode/levels";
 import StudyTimeModal from "../components/StudyTimeModal";
 import {
   enableDailyReminder,
@@ -111,6 +112,8 @@ const COURSE_TILES = [
     key: "story_mode",
     label: "Story Mode",
     routeName: "StoryMode",
+    // Abre direto o nivel do aluno (A0-A1 ou A2); na tela troca entre eles.
+    routeForLevel: (level) => storyModeRouteForLevel(level, LEVEL_OPTIONS),
     image: require("../../assets/Home/icone-story-mode.png"),
     color: { light: "#45C068", dark: "#56CF7A" },
   },
@@ -832,6 +835,9 @@ export default function Inglescompleto({ navigation, route }) {
   }, [levelFilter, courseStatsMap]);
 
   const isLevelFilterMode = levelFilter !== "todos";
+  // Nivel que os tiles de curso seguem: o filtro "Por nivel" quando ligado,
+  // senao o nivel do curso selecionado.
+  const homeLevel = isLevelFilterMode ? levelFilter : activeLevel;
 
   const selectCourseChip = (key) => {
     setCourseFilter(key);
@@ -1463,7 +1469,13 @@ export default function Inglescompleto({ navigation, route }) {
               <TouchableOpacity
                 key={tile.key}
                 style={styles.courseTile}
-                onPress={() => navigation.navigate(tile.routeName)}
+                onPress={() =>
+                  navigation.navigate(
+                    tile.routeForLevel
+                      ? tile.routeForLevel(homeLevel)
+                      : tile.routeName,
+                  )
+                }
                 activeOpacity={0.85}
               >
                 <View

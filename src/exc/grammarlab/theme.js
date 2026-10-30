@@ -1,100 +1,68 @@
-// Tokens de design do Grammar Lab (espelham o canvas do Claude Design).
-// Paleta fixa e clara: essa tela nao segue o tema claro/escuro do app.
+// Tokens de design do Grammar Lab com o sistema de combo (espelham o canvas
+// do Claude Design). Paleta fixa e escura: essa tela nao segue o tema
+// claro/escuro do app.
 
 export const colors = {
-  // Fundo e texto
-  bg: "#F6F8FC",
-  surface: "#FFFFFF",
-  ink: "#0E1430",
-  inkSoft: "#5B6478",
-  inkStrong2: "#4A5468",
-  inkMuted: "#6B7385",
-  inkFaint: "#8A93A8",
+  bg: "#0e1322",
+  card: "#161c2e",
+  cardBorder: "#262e45",
+  raised: "#1a2034",
+  raisedBorder: "#2a3350",
+  badge: "#232a40",
+  text: "#ffffff",
+  textSoft: "#c9cfe4",
+  textMuted: "#6f7a9c",
+  subtitle: "#8ea6e6",
+  accent: "#6d7cff",
+  accentSoft: "#a9b4ff",
+  selectedBg: "#1b2142",
 
-  // Neutros
-  border: "#E4E8F1",
-  cardBorder: "#E3E8F1",
-  track: "#E6EAF3",
-  radio: "#D4DAE6",
-  tile: "#F1F3F8",
-  markerIdle: "#CBD3E3",
-  finishBorder: "#E1E6F0",
-  blankDash: "#C3CBDD",
-  disabledBg: "#E7EBF3",
+  green: "#34d399",
+  greenBright: "#4ade80",
+  greenText: "#8fd9b0",
+  greenInk: "#062018",
+  greenBg: "#0f2a22",
+  greenBorder: "#1f5a45",
+  greenScrim: "rgba(8, 46, 32, 0.94)",
 
-  // Azul da marca (destaque principal)
-  blue: "#3355FF",
-  blueInk: "#2440D8",
-  blueTint: "#EAEFFF",
-  blueSelected: "#F3F6FF",
-  blueBlank: "#E8EEFF",
-  blueBorderSoft: "#DCE4FF",
+  orange: "#ff8a65",
+  orangeText: "#ff9a7a",
+  orangeSoft: "#f3c3b3",
+  orangeInk: "#2a0e06",
+  orangeBg: "#2a1714",
+  orangeBorder: "#6b2f22",
+  wrongOptionBg: "#2c1915",
 
-  // Verde de recompensa
-  green: "#12B76A",
-  greenInk: "#067647",
-  greenButton: "#0A7F4B",
-  greenTint: "#F0FDF5",
-  greenStrip: "#F3FCF6",
-  greenBorder: "#D3F2DF",
-  greenChipBorder: "#BDEBD0",
-  greenBlank: "#E1F8EA",
-  greenTag: "#DCFAE6",
-  greenRing: "#DDF3E5",
-  greenHandle: "#DCEFE4",
-
-  // Vermelho de erro (so no estado incorreto)
-  red: "#F04438",
-  redInk: "#B42318",
-  redTint: "#FEF3F2",
-  redBlank: "#FEECEA",
-  redTag: "#FEE4E2",
-  redHandle: "#F6DCD8",
-  redBorder: "#FCD9D6",
-  redButton: "#D92D20",
-
-  // Ambar do combo
-  amber: "#F38A0B",
-  amberInk: "#A84A05",
-  amberTint: "#FFF4E8",
-  amberOff: "#F7D9B5",
-
-  // Extras do confete
-  gold: "#FDB022",
-  periwinkle: "#8EA2FF",
-};
-
-export const radii = {
-  card: 18,
-  button: 18,
-  tile: 11,
-  chip: 12,
-  badge: 8,
-  sheet: 28,
-  pill: 999,
+  amber: "#ffb020",
+  amberText: "#ffc14d",
+  amberInk: "#1d1300",
+  amberSoftBg: "rgba(255,176,32,0.14)",
+  amberDeepBg: "#2a2210",
+  amberDeepBorder: "#6b4e12",
+  hint: "#ffd27a",
 };
 
 // Cada peso e uma familia propria no React Native (carregadas no App.js) -
 // nunca combinar com fontWeight, senao o Android troca pela fonte do sistema.
+// boxShadow em string (usado nos componentes) precisa do RN 0.76+ com a New
+// Architecture (ligada em android/gradle.properties).
 export const fonts = {
-  display: "BricolageGrotesque_700Bold",
-  displayHeavy: "BricolageGrotesque_800ExtraBold",
-  body: "Manrope_500Medium",
-  bodySemi: "Manrope_600SemiBold",
-  bodyBold: "Manrope_700Bold",
-  bodyHeavy: "Manrope_800ExtraBold",
+  medium: "PlusJakartaSans_500Medium",
+  semibold: "PlusJakartaSans_600SemiBold",
+  bold: "PlusJakartaSans_700Bold",
+  extrabold: "PlusJakartaSans_800ExtraBold",
 };
 
-// boxShadow em string precisa do RN 0.76+ com a New Architecture (ligada em
-// android/gradle.properties).
-export const shadows = {
-  hairline: "0px 1px 2px rgba(14, 20, 48, 0.04)",
-  ringBlue: "0px 0px 0px 4px rgba(51, 85, 255, 0.12)",
-  ringGreen: "0px 0px 0px 4px rgba(18, 183, 106, 0.14)",
-  ringRed: "0px 0px 0px 4px rgba(240, 68, 56, 0.10)",
-  buttonBlue: "0px 12px 24px -10px rgba(51, 85, 255, 0.65)",
-  buttonGreen: "0px 12px 24px -10px rgba(10, 127, 75, 0.6)",
-  buttonRed: "0px 12px 24px -10px rgba(217, 45, 32, 0.6)",
-  sheet: "0px -14px 36px -12px rgba(14, 20, 48, 0.16)",
-  xpPop: "0px 6px 14px -4px rgba(18, 183, 106, 0.55)",
+// Tempos do avanco automatico (sem botao de continuar).
+export const timing = {
+  advanceAfterCorrectMs: 1500,
+  advanceAfterWrongMs: 2400,
+  advanceAfterRewardMs: 900,
 };
+
+export const PRAISE = ["NICE!", "GREAT!", "AWESOME!", "AMAZING!", "ON FIRE!"];
+
+export function praiseFor(combo) {
+  if (combo === 10) return "PERFECT!";
+  return PRAISE[Math.min(Math.max(combo, 1), 5) - 1];
+}

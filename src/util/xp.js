@@ -7,6 +7,31 @@ export function xpForAccuracy(accuracy) {
   return Math.round(10 + accuracy * 0.4);
 }
 
+// Bonus de combo: cada acerto a partir do 2o seguido soma esse XP ao da
+// precisao. O total vai como xp_bonus no concluir-aula (teto XP_BONUS_MAX).
+export const COMBO_BONUS_XP = 5;
+export const COMBO_BONUS_MIN = 2;
+
+export function comboBonusFor(combo) {
+  return combo >= COMBO_BONUS_MIN ? COMBO_BONUS_XP : 0;
+}
+
+// Recompensa extra ao chegar no combo x5 e x10 (telas de comemoracao do
+// Grammar Lab). Entra no mesmo xp_bonus da aula.
+export const COMBO_REWARD_XP = { 5: 10, 10: 20 };
+
+export function comboRewardFor(combo) {
+  return COMBO_REWARD_XP[combo] || 0;
+}
+
+// Teto do xp_bonus por aula: tem que bater com XP_BONUS_MAXIMO_POR_AULA na
+// API (progresso.service.ts).
+export const XP_BONUS_MAX = 150;
+
+// Preco da segunda chance. Quem desconta e a API (CUSTO_SEGUNDA_CHANCE em
+// progresso.service.ts); aqui e so para a tela. Mudou la, muda aqui.
+export const SECOND_CHANCE_COST = 15;
+
 export const LEVEL_XP_CURVE = [
   { level: 1, totalXp: 0 },
   { level: 2, totalXp: 50 },

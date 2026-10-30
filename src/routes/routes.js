@@ -31,6 +31,7 @@ import TravelHome, { lessonScreens as travelA1LessonScreens } from "../pages/aul
 import ExpressionsHome, { lessonScreens as expressionsA0A1LessonScreens } from "../pages/aulas/expressions/A0-A1";
 import GrammarLabHome, { lessonScreens as grammarLabA0A1LessonScreens } from "../pages/aulas/grammarlab/A0-A1";
 import StoryModeHome, { lessonScreens as storyModeA0A1LessonScreens } from "../pages/aulas/storymode/A0-A1";
+import StoryModeA2Home, { lessonScreens as storyModeA2LessonScreens } from "../pages/aulas/storymode/A2";
 import AulasPlusHome, {
   lessonScreens as aulasPlusLessonScreens,
 } from "../pages/aulas/aulasplus";
@@ -254,6 +255,16 @@ export default function Routes() {
           }}
         />
         {renderLessonScreens(storyModeA0A1LessonScreens)}
+        <Stack.Screen
+          name="StoryModeA2"
+          component={StoryModeA2Home}
+          options={{
+            title: "Story Mode A2",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        {renderLessonScreens(storyModeA2LessonScreens)}
 
         {/* ===== AULAS PLUS ===== */}
         <Stack.Screen

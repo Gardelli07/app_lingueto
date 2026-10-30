@@ -40,11 +40,22 @@ import {
   grammarLabSampleLessons,
 } from "../pages/aulas/grammarlab/A0-A1";
 import {
+  EXPRESSIONS_STORAGE_KEY,
+  EXPRESSIONS_COURSE_NAME,
+  expressionsModuleDefs,
+  expressionsSampleLessons,
+} from "../pages/aulas/expressions/A0-A1";
+import {
   STORY_MODE_STORAGE_KEY,
   STORY_MODE_COURSE_NAME,
   storyModeModuleDefs,
   storyModeSampleLessons,
 } from "../pages/aulas/storymode/A0-A1";
+import {
+  STORY_MODE_A2_STORAGE_KEY,
+  storyModeA2ModuleDefs,
+  storyModeA2SampleLessons,
+} from "../pages/aulas/storymode/A2";
 
 export const COURSE_OPTIONS = [
   "Ingles Completo",
@@ -150,6 +161,18 @@ export const COURSE_LEVEL_AVAILABILITY = {
 // enxergarem as aulas deles.
 export const EXTRA_COURSES = [
   {
+    courseName: EXPRESSIONS_COURSE_NAME,
+    level: "Starter",
+    config: {
+      folder: "A0-A1",
+      routeName: "Expressions",
+      storageKey: EXPRESSIONS_STORAGE_KEY,
+      moduleDefs: expressionsModuleDefs,
+      lessons: expressionsSampleLessons,
+      available: true,
+    },
+  },
+  {
     courseName: GRAMMAR_LAB_COURSE_NAME,
     level: "Starter",
     config: {
@@ -170,6 +193,18 @@ export const EXTRA_COURSES = [
       storageKey: STORY_MODE_STORAGE_KEY,
       moduleDefs: storyModeModuleDefs,
       lessons: storyModeSampleLessons,
+      available: true,
+    },
+  },
+  {
+    courseName: STORY_MODE_COURSE_NAME,
+    level: "Elementary",
+    config: {
+      folder: "A2",
+      routeName: "StoryModeA2",
+      storageKey: STORY_MODE_A2_STORAGE_KEY,
+      moduleDefs: storyModeA2ModuleDefs,
+      lessons: storyModeA2SampleLessons,
       available: true,
     },
   },

@@ -1,5 +1,7 @@
 // chave_slide tem o formato `${lesson.screen}S${index+1}:${slideKey}`,
-// ver buildSlideInstanceKey em src/pages/aulas/LessonScreen.js.
+// ver buildSlideInstanceKey em src/pages/aulas/LessonScreen.js. Slides com
+// varias perguntas acrescentam `#${trackingSuffix}`, que volta como
+// `questionKey` (null quando o erro e do slide inteiro).
 export function parseChaveSlide(chaveSlide) {
   if (!chaveSlide) return null;
 
@@ -7,7 +9,11 @@ export function parseChaveSlide(chaveSlide) {
   const match = /^(.+)S(\d+)$/.exec(slidePart || "");
   if (!match) return null;
 
-  return { screen: match[1], slideIndex: Number(match[2]) - 1 };
+  const hashIndex = chaveSlide.lastIndexOf("#");
+  const questionKey =
+    hashIndex >= 0 ? chaveSlide.slice(hashIndex + 1) || null : null;
+
+  return { screen: match[1], slideIndex: Number(match[2]) - 1, questionKey };
 }
 
 const FALLBACK_HINT = "Reveja o conteúdo da aula com atenção antes de responder.";
