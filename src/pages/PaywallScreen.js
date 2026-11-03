@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
 import { ApiError } from "../services/api";
+import { MODO_SANDBOX_COMPRAS } from "../services/assinaturas";
 import {
   COMPRA_SUPORTADA,
   CompraError,
@@ -19,6 +20,10 @@ import {
   comprar,
 } from "../services/iap";
 import { useTheme, useThemedStyles } from "../theme";
+
+// No modo sandbox (teste local) a loja nao e consultada: o preco mostrado e o
+// de referencia e a assinatura vai direto pro backend.
+const PRECO_DA_LOJA = COMPRA_SUPORTADA && !MODO_SANDBOX_COMPRAS;
 
 // Paleta local da tela, derivada do tema ativo.
 const paywallColors = (CORES) => ({
@@ -140,7 +145,7 @@ function precoDaLoja(catalogo, isYearly) {
 }
 
 function precoDoPlano(plan, isYearly, catalogo) {
-  if (plan.key === "premium" && COMPRA_SUPORTADA)
+  if (plan.key === "premium" && PRECO_DA_LOJA)
     return precoDaLoja(catalogo, isYearly);
   return precoDeReferencia(isYearly ? plan.yearly : plan.monthly, isYearly);
 }
@@ -154,7 +159,7 @@ export default function PaywallScreen({ navigation }) {
   const CORES = useTheme();
   const COLORS = paywallColors(CORES);
   const styles = useThemedStyles(makeStyles);
-  const { restaurarCompras } = useAuth();
+  const { restaurarCompras, assinarSandbox } = useAuth();
   const [billing, setBilling] = useState("monthly"); // 'monthly' | 'yearly'
   const [selected, setSelected] = useState("premium");
   const [submitting, setSubmitting] = useState(false);
@@ -163,7 +168,7 @@ export default function PaywallScreen({ navigation }) {
   const [catalogo, setCatalogo] = useState(CATALOGO_INICIAL);
 
   const carregarCatalogo = useCallback(async () => {
-    if (!COMPRA_SUPORTADA) return;
+    if (!PRECO_DA_LOJA) return;
     setCatalogo(CATALOGO_INICIAL);
     try {
       const planos = await buscarPlanos();
@@ -193,9 +198,9 @@ export default function PaywallScreen({ navigation }) {
   ).discountPct;
 
   const selectedPlan = plans.find((p) => p.key === selected);
-  const catalogoComErro = COMPRA_SUPORTADA && catalogo.status === "erro";
+  const catalogoComErro = PRECO_DA_LOJA && catalogo.status === "erro";
   const aguardandoCatalogo =
-    COMPRA_SUPORTADA && catalogo.status === "carregando";
+    PRECO_DA_LOJA && catalogo.status === "carregando";
   let ctaLabel;
   if (selected === "free") ctaLabel = "Continuar com o Free";
   else if (catalogoComErro) ctaLabel = "Tentar carregar os preços de novo";
@@ -215,6 +220,10 @@ export default function PaywallScreen({ navigation }) {
       return;
     }
     if (ocupado) return;
+    if (MODO_SANDBOX_COMPRAS) {
+      await handleSubscribeSandbox();
+      return;
+    }
     if (!COMPRA_SUPORTADA) {
       Alert.alert(
         "Assinatura indisponível",
@@ -269,6 +278,34 @@ export default function PaywallScreen({ navigation }) {
           "Não foi possível confirmar a assinatura. Tente novamente.",
         );
       }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Teste local: pula a loja e pede pro backend (MODO_SANDBOX_COMPRAS=true)
+  // gravar uma assinatura de teste.
+  const handleSubscribeSandbox = async () => {
+    setSubmitting(true);
+    try {
+      const { acessoCompleto } = await assinarSandbox();
+      if (acessoCompleto) {
+        Alert.alert(
+          "Assinatura de teste ativa",
+          "Modo sandbox: o Premium foi liberado sem passar pela loja.",
+        );
+        handleClose();
+      } else {
+        Alert.alert(
+          "Sandbox sem acesso",
+          "O backend aceitou a compra de teste, mas não liberou o Premium.",
+        );
+      }
+    } catch (error) {
+      Alert.alert(
+        "Não foi possível assinar (sandbox)",
+        `${error.message}\n\nConfira se a API local está rodando com MODO_SANDBOX_COMPRAS=true.`,
+      );
     } finally {
       setSubmitting(false);
     }

@@ -65,6 +65,19 @@ export async function registrarCompra(compra) {
   return { acessoCompleto: assinatura?.status === "ativa", assinatura };
 }
 
+// Teste local: com EXPO_PUBLIC_MODO_SANDBOX_COMPRAS=true o paywall nao abre a
+// loja e manda uma compra falsa direto pro validar-compra. So funciona contra
+// um backend com MODO_SANDBOX_COMPRAS=true, que ignora o token e grava uma
+// assinatura "sandbox_..."; o backend de producao recusa esse token.
+export const MODO_SANDBOX_COMPRAS =
+  process.env.EXPO_PUBLIC_MODO_SANDBOX_COMPRAS === "true";
+
+// Sem productId: o backend usa o produto "sandbox_base_<plataforma>".
+export function assinarSandbox() {
+  const token = `sandbox_app_${Date.now()}`;
+  return registrarCompra({ purchaseToken: token, transactionId: token });
+}
+
 // "Restaurar compras" (exigido pela Apple): reenvia pro backend a assinatura
 // ativa mais recente que a loja conhece para a conta do aparelho (Apple ID ou
 // conta do Google). Devolve null se nao houver nenhuma. Tambem serve de

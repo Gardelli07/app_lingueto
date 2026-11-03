@@ -9,6 +9,70 @@ export function BoltIcon({ size = 14, color = "#fff" }) {
   );
 }
 
+export function FlameIcon({ size = 15, color = "#ffb020" }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24">
+      <Path
+        d="M12 2c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.5 2-5 1 1.5 1 2.5 2 3 .5-3-1-5 1-8z"
+        fill={color}
+      />
+    </Svg>
+  );
+}
+
+export function PlayIcon({ size = 14, color = "#2b33a8" }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24">
+      <Path d="M7 4.5v15l12-7.5z" fill={color} />
+    </Svg>
+  );
+}
+
+export function TargetIcon({ size = 20, color = "#ffd27a" }) {
+  return (
+    <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.2}>
+      <Circle cx="12" cy="12" r="9" />
+      <Circle cx="12" cy="12" r="5" />
+      <Circle cx="12" cy="12" r="1.5" fill={color} />
+    </Svg>
+  );
+}
+
+export function LockIcon({ size = 18, color = "#6f7a9c", strokeWidth = 2.2 }) {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <Rect x="5" y="11" width="14" height="10" rx="2" />
+      <Path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </Svg>
+  );
+}
+
+export function ChevronRightIcon({ size = 18, color = "#fff", strokeWidth = 2.5 }) {
+  return (
+    <Svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <Path d="M9 18l6-6-6-6" />
+    </Svg>
+  );
+}
+
 export function ChevronLeftIcon({ size = 18, color = "#fff", strokeWidth = 2.5 }) {
   return (
     <Svg

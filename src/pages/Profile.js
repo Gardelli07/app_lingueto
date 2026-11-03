@@ -29,6 +29,7 @@ import { clearAllAulasPlusProgress } from "./aulas/aulasplus/progress";
 import { fetchResumoProgresso, resetarProgresso } from "../services/progresso";
 import { fetchEstatisticasDesafios } from "../services/desafios";
 import { resetarNivelamento } from "../services/nivelamento";
+import { NOME_PROFESSOR, resetarTempoProfessor } from "../services/professor";
 import { hasFullAccess } from "../util/plans";
 import {
   DEFAULT_REMINDER_HOUR,
@@ -400,6 +401,28 @@ export default function ProfileScreen({ navigation }) {
     );
   };
 
+  const handleResetTempoProfessor = () => {
+    Alert.alert(
+      "Resetar tempo do Professor",
+      `Zera o tempo de hoje com o ${NOME_PROFESSOR}. O cronômetro volta a correr na próxima mensagem. Só para teste.`,
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Resetar",
+          onPress: async () => {
+            try {
+              const tempo = await resetarTempoProfessor();
+              const minutos = Math.round((tempo?.limite_segundos ?? 300) / 60);
+              Alert.alert("Pronto", `Você tem ${minutos} minutos com o Professor de novo.`);
+            } catch (error) {
+              Alert.alert("Erro", error?.message || "Não foi possível resetar o tempo.");
+            }
+          },
+        },
+      ],
+    );
+  };
+
   const handleLogout = () => {
     Alert.alert("Sair da conta", "Tem certeza de que deseja sair?", [
       { text: "Cancelar", style: "cancel" },
@@ -619,6 +642,22 @@ export default function ProfileScreen({ navigation }) {
             onPress={excluindoConta ? undefined : handleDeleteAccount}
           />
         </View>
+
+        {/* teste: so aparece em build de desenvolvimento */}
+        {__DEV__ && (
+          <>
+            <Text style={styles.sectionLabel}>TESTE</Text>
+            <View style={styles.accountCard}>
+              <Row
+                icon={<IconRefresh color={CORES.PROFILE_BLUE} />}
+                label="Resetar tempo do Professor (24h)"
+                right={<IconChevron />}
+                isLast
+                onPress={handleResetTempoProfessor}
+              />
+            </View>
+          </>
+        )}
 
         {/* sair */}
         <Pressable style={styles.logoutBtn} onPress={handleLogout}>

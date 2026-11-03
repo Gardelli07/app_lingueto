@@ -340,6 +340,78 @@ function PremiumBanner({ onPress }) {
   );
 }
 
+// Card do Professor: fundo proprio + adesivo do Professor (1254x1254, fundo
+// transparente). O fundo e um card desenhado com margem transparente em volta
+// (caixa em px da imagem), como os fundos dos atalhos acima.
+const PROFESSOR_FUNDO = {
+  source: require("../../assets/IA/background-professorlingueto.png"),
+  width: 2508,
+  height: 627,
+  box: { top: 39, right: 2475, bottom: 585 },
+};
+const PROFESSOR_ADESIVO = require("../../assets/IA/lingueto_professor.png");
+const PROFESSOR_AZUL = "#1F4FF0";
+const PROFESSOR_CARD_ALTURA = 132;
+// Quanto o fundo passa da borda direita do card: o livro do desenho fica atras
+// do adesivo, e o balao e o "ABC" ficam livres entre o texto e o mascote.
+const PROFESSOR_FUNDO_DESLOCAMENTO = 52;
+
+// A caixa ocupa a altura toda do card e encosta (passando um pouco) na
+// direita, onde estao os desenhos; o que sobra da esquerda e azul liso.
+function professorFundoStyle({ width, height, box }) {
+  const escala = PROFESSOR_CARD_ALTURA / (box.bottom - box.top);
+  return {
+    position: "absolute",
+    width: width * escala,
+    height: height * escala,
+    top: -box.top * escala,
+    right: -(width - box.right) * escala - PROFESSOR_FUNDO_DESLOCAMENTO,
+  };
+}
+
+function ProfessorBanner({ onPress }) {
+  const styles = useThemedStyles(makeStyles);
+
+  return (
+    <TouchableOpacity
+      style={styles.professorCard}
+      onPress={onPress}
+      activeOpacity={0.9}
+      accessibilityRole="button"
+      accessibilityLabel="Professor Lingueto IA. Perguntar agora"
+    >
+      <Image
+        source={PROFESSOR_FUNDO.source}
+        style={professorFundoStyle(PROFESSOR_FUNDO)}
+        resizeMode="stretch"
+        resizeMethod="resize"
+      />
+      <Image
+        source={PROFESSOR_ADESIVO}
+        style={styles.professorAdesivo}
+        resizeMode="contain"
+        resizeMethod="resize"
+      />
+
+      <View style={styles.professorConteudo}>
+        {/* NOME_PROFESSOR (services/professor.js) quebrado a mao: assim a
+            linha nao muda conforme a largura do celular e o "IA" ganha destaque */}
+        <Text style={styles.professorTitulo} numberOfLines={2}>
+          Professor{"\n"}Lingueto <Text style={styles.professorTituloIa}>IA</Text>
+        </Text>
+        <View style={styles.professorCta}>
+          <Text style={styles.professorCtaTxt}>Perguntar agora</Text>
+          <MaterialCommunityIcons
+            name="arrow-right"
+            size={16}
+            color={PROFESSOR_AZUL}
+          />
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
 function GoalsCarousel({ goals }) {
   const CORES = useTheme();
   const styles = useThemedStyles(makeStyles);
@@ -1032,6 +1104,10 @@ export default function Inglescompleto({ navigation, route }) {
           </TouchableOpacity>
         </View>
 
+        <ProfessorBanner
+          onPress={() => navigation.navigate("ProfessorLingueto")}
+        />
+
         {/* TEMPORARIO: aba premium fora da Home por enquanto
         <PremiumBanner
           onPress={() => navigation.navigate("AulasPlusHome")}
@@ -1677,6 +1753,52 @@ const makeStyles = (CORES) =>
       fontSize: 12.5,
       marginTop: 2,
     },
+
+    // Altura fixa: o recorte do fundo e calculado pra ela. O raio acompanha o
+    // canto desenhado na imagem (~84px no original, ~20px aqui).
+    professorCard: {
+      height: PROFESSOR_CARD_ALTURA,
+      justifyContent: "center",
+      borderRadius: 21,
+      overflow: "hidden",
+      marginBottom: 18,
+      backgroundColor: "#058BFE",
+    },
+    // Ancorado embaixo e cortado pela borda do card, como se espiasse de baixo,
+    // na frente do livro do fundo.
+    professorAdesivo: {
+      position: "absolute",
+      right: -6,
+      bottom: -16,
+      width: 124,
+      height: 124,
+      transform: [{ rotate: "-4deg" }],
+    },
+    // paddingRight reserva o espaco do adesivo pro texto nao passar por cima
+    professorConteudo: {
+      alignItems: "flex-start",
+      padding: 18,
+      paddingRight: 120,
+    },
+    professorTitulo: {
+      color: CORES.WHITE,
+      fontSize: 21,
+      lineHeight: 25,
+      fontWeight: "900",
+    },
+    // mesmo amarelo das estrelinhas do fundo
+    professorTituloIa: { color: "#FFC94D" },
+    professorCta: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 6,
+      marginTop: 12,
+      paddingHorizontal: 14,
+      paddingVertical: 9,
+      borderRadius: 99,
+      backgroundColor: CORES.WHITE,
+    },
+    professorCtaTxt: { color: PROFESSOR_AZUL, fontSize: 13.5, fontWeight: "900" },
 
     goalsCarousel: { marginBottom: 22 },
     goalSlide: {

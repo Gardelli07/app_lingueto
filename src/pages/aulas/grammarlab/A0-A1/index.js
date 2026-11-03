@@ -2,20 +2,43 @@ import React from "react";
 import Gmm01 from "./Gmm01";
 import Gmm02 from "./Gmm02";
 import Gmm03 from "./Gmm03";
-import CourseOverviewScreen from "../../CourseOverviewScreen";
+import GrammarLabHome from "../GrammarLabHome";
 
 export const GRAMMAR_LAB_STORAGE_KEY = "@curso_progress_grammar_lab_A0-A1";
 export const GRAMMAR_LAB_COURSE_NAME = "Grammar Lab";
 
+// Cada modulo e um topico da tela do Grammar Lab: `glyph` e o simbolo curto
+// do quadradinho do card e `level` o nivel (grammarLabLevels) em que aparece.
 export const grammarLabModuleDefs = [
   {
     id: 0,
-    name: "Basics",
-    subtitle: "Gramatica essencial com frases para completar",
+    name: "Verb to be",
+    subtitle: "Am, is e are em frases para completar",
+    glyph: "be",
+    level: "A1",
     locked: false,
     accent: "#3355FF",
     icon: "check",
   },
+];
+
+export const grammarLabLevels = [
+  { code: "A1", name: "Básico" },
+  { code: "A2", name: "Elementar" },
+];
+
+// Topicos que ainda nao tem aulas: aparecem bloqueados como "Em breve". Ao
+// criar as aulas de um deles, mova-o para grammarLabModuleDefs (com um id).
+export const grammarLabUpcomingTopics = [
+  { name: "Articles", glyph: "a/an", level: "A1" },
+  { name: "Plural nouns", glyph: "+s", level: "A1" },
+  { name: "Possessives", glyph: "my", level: "A1" },
+  { name: "There is / are", glyph: "there", level: "A1" },
+  { name: "Present simple", glyph: "do", level: "A1" },
+  { name: "Present continuous", glyph: "-ing", level: "A2" },
+  { name: "Can / Can't", glyph: "can", level: "A2" },
+  { name: "Past simple", glyph: "-ed", level: "A2" },
+  { name: "Going to", glyph: "will", level: "A2" },
 ];
 
 export const grammarLabSampleLessons = [
@@ -50,12 +73,14 @@ export const lessonScreens = {
 
 export default function GrammarLabScreen(props) {
   return (
-    <CourseOverviewScreen
+    <GrammarLabHome
       {...props}
       courseName={GRAMMAR_LAB_COURSE_NAME}
       storageKey={GRAMMAR_LAB_STORAGE_KEY}
       moduleDefs={grammarLabModuleDefs}
       lessons={grammarLabSampleLessons}
+      levels={grammarLabLevels}
+      upcomingTopics={grammarLabUpcomingTopics}
     />
   );
 }

@@ -206,6 +206,10 @@ async function request(
     headers = {},
     authenticated = true,
     timeout = DEFAULT_TIMEOUT,
+    // false: usa so o host atual, com o timeout cheio. Pra chamadas em que o
+    // servidor demora pra responder (chat com IA): o corte de 5s dos outros
+    // hosts derrubaria a resposta, e repetir em outro host gastaria cota de novo.
+    failover = true,
     _isRetry = false,
   } = {},
 ) {
@@ -217,10 +221,12 @@ async function request(
 
   const token = authenticated ? await getAccessToken() : null;
   const isFormData = typeof FormData !== "undefined" && data instanceof FormData;
-  const orderedBases = [
-    API_URL,
-    ...API_URL_CANDIDATES.filter((url) => url !== API_URL),
-  ].filter(Boolean);
+  const orderedBases = failover
+    ? [
+        API_URL,
+        ...API_URL_CANDIDATES.filter((url) => url !== API_URL),
+      ].filter(Boolean)
+    : [API_URL];
 
   let lastError = null;
 
@@ -268,6 +274,7 @@ async function request(
               headers,
               authenticated,
               timeout,
+              failover,
               _isRetry: true,
             });
           } catch {

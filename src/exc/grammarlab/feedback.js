@@ -46,7 +46,7 @@ function replay(source) {
 // Vibracao com a API do proprio RN (sem expo-haptics, que pede dev client
 // novo). No iOS a duracao e fixa (~400ms), entao os toques curtos (acerto,
 // clique, par) so vibram no Android; o erro vibra nos dois.
-function tap(ms) {
+export function tap(ms) {
   if (Platform.OS === "android") Vibration.vibrate(ms);
 }
 

@@ -22,6 +22,7 @@ import PerfilVisitado from "../pages/PerfilVisitado";
 import Amigos from "../pages/Amigos";
 import Notificacoes from "../pages/Notificacoes";
 import Desafios from "../pages/Desafios";
+import ProfessorLingueto from "../pages/ProfessorLingueto";
 import InglesCompletoHome, { lessonScreens as inglesCompletoA0A1LessonScreens } from "../pages/aulas/completo/A0-A1";
 import InglesCompletoA2Home, { lessonScreens as inglesCompletoA2LessonScreens } from "../pages/aulas/completo/A2";
 import InglesCompletoB1Home, { lessonScreens as inglesCompletoB1LessonScreens } from "../pages/aulas/completo/B1";
@@ -348,6 +349,13 @@ export default function Routes() {
         <Stack.Screen
           name="Desafios"
           component={Desafios}
+          options={{ headerShown: false }}
+        />
+
+        {/* ===== PROFESSOR LINGUETO (chat com IA) ===== */}
+        <Stack.Screen
+          name="ProfessorLingueto"
+          component={ProfessorLingueto}
           options={{ headerShown: false }}
         />
 

@@ -8,6 +8,7 @@ import React, {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { clearTokens, setOnAuthFailure, setOnSessionRenewed } from "../services/api";
 import {
+  assinarSandbox as assinarSandboxNoBackend,
   buscarMinhaAssinatura,
   registrarCompra,
   restaurarCompras as restaurarComprasDaLoja,
@@ -146,6 +147,14 @@ export function AuthProvider({ children }) {
     return resultado;
   }
 
+  // Assinatura de teste do modo sandbox (MODO_SANDBOX_COMPRAS): libera o
+  // acesso igual a uma compra da loja, mas sem abrir a loja.
+  async function assinarSandbox() {
+    const resultado = await assinarSandboxNoBackend();
+    aplicarAcesso(idUsuario, resultado.acessoCompleto, resultado.assinatura);
+    return resultado;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -155,6 +164,7 @@ export function AuthProvider({ children }) {
         updateUser,
         signOut,
         restaurarCompras,
+        assinarSandbox,
       }}
     >
       {children}
