@@ -235,8 +235,6 @@ export const BUB1 = {
 };
 
 export const ICA1 = {
-  Hi01: require("../../assets/IC/A0-A1/Hi01.png"),
-  Hi02: require("../../assets/IC/A0-A1/Hi02.jpg"),
   A34S5: require("../../assets/IC/A0-A1/A13S9.jpeg"),
   A13S9: require("../../assets/IC/A0-A1/A13S9.jpeg"),
   A13S7: require("../../assets/IC/A0-A1/A13S7.jpg"),
@@ -916,6 +914,54 @@ export const ICB1 = {
   A52S3: require("../../assets/IC/B1/A52S3.jpg"),
   A53S2: require("../../assets/IC/B1/A53S2.jpg"),
   A53S3: require("../../assets/IC/B1/A53S3.jpg"),
+};
+
+// Business (tile da Home), A0-A1: uma imagem por parte da historia.
+export const BZA1 = {
+  Mkt01P1: require("../../assets/BZ/A0-A1/Mkt01P1.jpg"),
+  Mkt01P2: require("../../assets/BZ/A0-A1/Mkt01P2.jpg"),
+  Mkt01P3: require("../../assets/BZ/A0-A1/Mkt01P3.jpg"),
+  Mkt01P4: require("../../assets/BZ/A0-A1/Mkt01P4.jpg"),
+  Mkt01P5: require("../../assets/BZ/A0-A1/Mkt01P5.jpg"),
+  Mkt01P6: require("../../assets/BZ/A0-A1/Mkt01P6.jpg"),
+};
+
+// My Trip to Florida (curso FL, modulo da Viagem): uma imagem por parte de
+// cada aula (FlNNP1-3).
+export const FLA1 = {
+  Fl01P1: require("../../assets/FL/A0-A1/Fl01P1.jpg"),
+  Fl01P2: require("../../assets/FL/A0-A1/Fl01P2.jpg"),
+  Fl01P3: require("../../assets/FL/A0-A1/Fl01P3.jpg"),
+  Fl02P1: require("../../assets/FL/A0-A1/Fl02P1.jpg"),
+  Fl02P2: require("../../assets/FL/A0-A1/Fl02P2.jpg"),
+  Fl02P3: require("../../assets/FL/A0-A1/Fl02P3.jpg"),
+  Fl03P1: require("../../assets/FL/A0-A1/Fl03P1.jpg"),
+  Fl03P2: require("../../assets/FL/A0-A1/Fl03P2.jpg"),
+  Fl03P3: require("../../assets/FL/A0-A1/Fl03P3.jpg"),
+  Fl04P1: require("../../assets/FL/A0-A1/Fl04P1.jpg"),
+  Fl04P2: require("../../assets/FL/A0-A1/Fl04P2.jpg"),
+  Fl04P3: require("../../assets/FL/A0-A1/Fl04P3.jpg"),
+  Fl05P1: require("../../assets/FL/A0-A1/Fl05P1.jpg"),
+  Fl05P2: require("../../assets/FL/A0-A1/Fl05P2.jpg"),
+  Fl05P3: require("../../assets/FL/A0-A1/Fl05P3.jpg"),
+  Fl06P1: require("../../assets/FL/A0-A1/Fl06P1.jpg"),
+  Fl06P2: require("../../assets/FL/A0-A1/Fl06P2.jpg"),
+  Fl06P3: require("../../assets/FL/A0-A1/Fl06P3.jpg"),
+};
+
+// Story Mode (curso SM): uma imagem por historia, separada por nivel.
+export const SMA1 = {
+  Hi01: require("../../assets/SM/A0-A1/Hi01.png"),
+  Hi02: require("../../assets/SM/A0-A1/Hi02.jpg"),
+  Hi03: require("../../assets/SM/A0-A1/Hi03.jpg"),
+  Hi04: require("../../assets/SM/A0-A1/Hi04.jpg"),
+  Hi05: require("../../assets/SM/A0-A1/Hi05.jpg"),
+};
+
+export const SMA2 = {
+  A2Hi03: require("../../assets/SM/A2/A2Hi03.jpg"),
+  A2Hi04: require("../../assets/SM/A2/A2Hi04.jpg"),
+  A2Hi05: require("../../assets/SM/A2/A2Hi05.jpg"),
 };
 
 export const Empresas = {

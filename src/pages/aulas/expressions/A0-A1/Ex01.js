@@ -9,7 +9,7 @@ const LESSON_SLIDES = [
           id: "break-the-ice",
           phrase: "Break the ice",
           meaning: "Make people feel relaxed when things are awkward.",
-          image: require("../../../../../assets/Expressions/break-the-ice.jpg"),
+          image: require("../../../../../assets/EX/A0-A1/break-the-ice.jpg"),
           meaningCheck: {
             options: [
               { text: "Esfriar uma bebida" },

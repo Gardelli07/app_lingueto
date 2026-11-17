@@ -28,7 +28,6 @@ import { clearAllLocalProgress } from "../util/courseCatalog";
 import { clearAllAulasPlusProgress } from "./aulas/aulasplus/progress";
 import { fetchResumoProgresso, resetarProgresso } from "../services/progresso";
 import { fetchEstatisticasDesafios } from "../services/desafios";
-import { resetarNivelamento } from "../services/nivelamento";
 import { NOME_PROFESSOR, resetarTempoProfessor } from "../services/professor";
 import { hasFullAccess } from "../util/plans";
 import {
@@ -344,28 +343,6 @@ export default function ProfileScreen({ navigation }) {
     );
   };
 
-  const handleResetNivelamento = () => {
-    Alert.alert(
-      "Refazer teste de nivelamento",
-      "Isso vai apagar a tentativa registrada do teste de nivelamento. Você poderá refazer o teste na próxima vez que abrir o app. Deseja continuar?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Apagar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await resetarNivelamento();
-              updateUser({ teste_nivelamento_concluido: false });
-            } catch {
-              Alert.alert("Erro", "Não foi possível apagar a tentativa. Tente novamente.");
-            }
-          },
-        },
-      ],
-    );
-  };
-
   const handleDeleteAccount = () => {
     Alert.alert(
       "Excluir conta",
@@ -627,12 +604,6 @@ export default function ProfileScreen({ navigation }) {
             label="Resetar aulas concluídas"
             right={<IconChevron />}
             onPress={handleResetLessons}
-          />
-          <Row
-            icon={<IconRefresh />}
-            label="Refazer teste de nivelamento"
-            right={<IconChevron />}
-            onPress={handleResetNivelamento}
           />
           <Row
             icon={<IconTrash />}

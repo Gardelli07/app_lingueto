@@ -43,6 +43,7 @@ const LESSON_SLIDES = [
       questions: [
         {
           say: "I am happy.",
+          audioSource: require("../../../../../mp3/GL/A0-A1/Gmm03S3.mp3"),
           options: ["I am happy.", "You are happy.", "I am hungry."],
           correctAnswer: "I am happy.",
           hint: 'Preste atenção no começo da frase: é **I am** ou **You are**?',
@@ -128,6 +129,7 @@ const LESSON_SLIDES = [
       questions: [
         {
           say: "You are a teacher.",
+          audioSource: require("../../../../../mp3/GL/A0-A1/Gmm03S8.mp3"),
           options: ["I am a teacher.", "You are a teacher.", "You are at the theater."],
           correctAnswer: "You are a teacher.",
           hint: 'Ouça com atenção: **teacher** (professor) soa parecido com **theater** (teatro).',

@@ -1,12 +1,12 @@
 import createLessonScreen from "../../LessonScreen";
-import { ICA1 } from "../../../../util/images";
+import { SMA1 } from "../../../../util/images";
 
 const LESSON_SLIDES = [
   {
     component: "Exercise21",
     activity: {
-      image: ICA1.Hi01,
-      audioSource: require("../../../../../mp3/IC/A0-A1/Hi01.mp3"),
+      image: SMA1.Hi01,
+      audioSource: require("../../../../../mp3/SM/A0-A1/Hi01.mp3"),
       audioDurationMs: 22909,
       title: "Alex's Saturday",
       // Palavras ligadas por "_" formam uma expressao (toque para traduzir).

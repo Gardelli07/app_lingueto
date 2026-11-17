@@ -28,6 +28,17 @@ const EXERCISE_TYPE_LABELS = {
   Exercise25: "escutar e escolher",
   Exercise26: "ligar pares",
   Exercise27: "digitar a resposta",
+  Exercise28: "escutar o diálogo",
+  Exercise29: "pegar a palavra",
+  Exercise30: "completar a conversa",
+  Exercise31: "velocidade real",
+  Exercise32: "escutar e escolher",
+  Exercise33: "business",
+  Exercise34: "descobrir o som",
+  Exercise35: "entender o som",
+  Exercise36: "praticar o som",
+  Exercise37: "pares mínimos",
+  Exercise38: "praticar frases",
 };
 
 export function getExerciseTypeLabel(tipo) {

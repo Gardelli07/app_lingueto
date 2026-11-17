@@ -7,22 +7,23 @@ import { colors } from "../theme";
 
 const LETTERS = ["A", "B", "C", "D", "E", "F"];
 
-function optionState(option, answer, picked, checked) {
+export function optionState(option, answer, picked, checked) {
   if (!checked) return "idle";
   if (option === answer) return "ok";
   if (option === picked) return "bad";
   return "dim";
 }
 
-// Alternativas A/B/C: tocar ja responde. Usada tambem pelo "ouvir".
-export function OptionList({ options, answer, picked, checked, onPick }) {
+// Alternativas A/B/C: tocar ja responde. Usada tambem pelo "ouvir". `format`
+// (opcional) muda so o texto mostrado, nao o valor comparado com a resposta.
+export function OptionList({ options, answer, picked, checked, onPick, format }) {
   return (
     <View style={{ gap: 12 }} accessibilityRole="radiogroup">
       {options.map((option, index) => (
         <OptionButton
           key={option}
           letter={LETTERS[index]}
-          text={option}
+          text={format ? format(option) : option}
           state={optionState(option, answer, picked, checked)}
           disabled={checked}
           onPress={() => onPick(option)}

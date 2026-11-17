@@ -2,7 +2,13 @@ import * as React from "react";
 import { Provider as PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { KeyboardProvider } from "react-native-keyboard-controller";
-import { useFonts, Poppins_700Bold, Poppins_800ExtraBold } from "@expo-google-fonts/poppins";
+import * as NativeSplash from "expo-splash-screen";
+import {
+  useFonts,
+  Poppins_500Medium,
+  Poppins_700Bold,
+  Poppins_800ExtraBold,
+} from "@expo-google-fonts/poppins";
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -28,13 +34,22 @@ import {
   Roboto_400Regular,
   Roboto_500Medium,
   Roboto_700Bold,
+  Roboto_900Black,
+  Roboto_900Black_Italic,
 } from "@expo-google-fonts/roboto";
 import { AuthProvider } from "./src/context/AuthContext";
 import { ThemeProvider } from "./src/theme";
 import Routes from "./src/routes/routes";
 
+// Segura a splash nativa (fundo #0B1226 + logo) ate a tela de Splash animada
+// estar desenhada; e ela (src/pages/SplashScreen.js) que chama hideAsync().
+// Sem isso a nativa sumia sozinha no primeiro frame e aparecia um vazio
+// enquanto as fontes carregavam.
+NativeSplash.preventAutoHideAsync().catch(() => {});
+
 export default function App() {
   const [fontsLoaded] = useFonts({
+    Poppins_500Medium,
     Poppins_700Bold,
     Poppins_800ExtraBold,
     Inter_400Regular,
@@ -52,6 +67,8 @@ export default function App() {
     Roboto_400Regular,
     Roboto_500Medium,
     Roboto_700Bold,
+    Roboto_900Black,
+    Roboto_900Black_Italic,
   });
 
   if (!fontsLoaded) return null;

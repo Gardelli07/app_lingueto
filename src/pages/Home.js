@@ -42,7 +42,9 @@ import {
 import { storyModeRouteForLevel } from "./aulas/storymode/levels";
 import StudyTimeModal from "../components/StudyTimeModal";
 import {
+  DEFAULT_REMINDER_HOUR,
   enableDailyReminder,
+  getSuggestedStudyHour,
   hasPromptedStudyTime,
   markStudyTimePrompted,
 } from "../services/notifications";
@@ -116,6 +118,40 @@ const COURSE_TILES = [
     routeForLevel: (level) => storyModeRouteForLevel(level, LEVEL_OPTIONS),
     image: require("../../assets/Home/icone-story-mode.png"),
     color: { light: "#45C068", dark: "#56CF7A" },
+  },
+  {
+    key: "listening",
+    label: "Listening",
+    routeName: "Listening",
+    // Ainda sem arte propria como os outros: usa o icone no lugar da imagem.
+    icon: "headphones",
+    color: { light: "#9B7BE0", dark: "#AC90EA" },
+  },
+  {
+    key: "pronunciation",
+    label: "Pronunciation Lab",
+    routeName: "Pronunciation",
+    // Ainda sem arte propria: usa o icone no lugar da imagem.
+    icon: "microphone",
+    color: { light: "#5587C6", dark: "#6E9BD3" },
+  },
+  {
+    key: "business",
+    label: "Business",
+    // Sem seletor de nivel: o modulo Marketing leva as temporadas A1 a C1.
+    routeName: "Business",
+    image: require("../../assets/Home/icone-business.png"),
+    color: { light: "#5B6EF5", dark: "#5B6EF5" },
+  },
+  {
+    key: "travel",
+    label: "Viagem",
+    // Curso novo no visual do Grammar Lab; o "Ingles para viagem" antigo
+    // (TravelEnglish) ainda nao deve aparecer por aqui.
+    routeName: "Travel",
+    // Ainda sem arte propria: usa o icone no lugar da imagem.
+    icon: "airplane",
+    color: { light: "#1E97A8", dark: "#2FC0D4" },
   },
 ];
 
@@ -604,6 +640,10 @@ export default function Inglescompleto({ navigation, route }) {
   const [courseStatsMap, setCourseStatsMap] = useState({});
   const [aulaAccessMap, setAulaAccessMap] = useState(null);
   const [studyTimeModalVisible, setStudyTimeModalVisible] = useState(false);
+  // horario sugerido pelo onboarding ("Quando voce prefere estudar?")
+  const [suggestedStudyHour, setSuggestedStudyHourState] = useState(
+    DEFAULT_REMINDER_HOUR,
+  );
   const [dailyGoalsState, setDailyGoalsState] = useState({ goals: [] });
   const [xpTotal, setXpTotal] = useState(0);
   // { lesson, lessons, percent } do curso da ultima aula feita; null ate
@@ -615,8 +655,13 @@ export default function Inglescompleto({ navigation, route }) {
   // ativar ou pular).
   useEffect(() => {
     let active = true;
-    hasPromptedStudyTime().then((prompted) => {
-      if (active && !prompted) setStudyTimeModalVisible(true);
+    Promise.all([
+      hasPromptedStudyTime(),
+      getSuggestedStudyHour().catch(() => null),
+    ]).then(([prompted, hour]) => {
+      if (!active || prompted) return;
+      if (hour != null) setSuggestedStudyHourState(hour);
+      setStudyTimeModalVisible(true);
     });
     return () => {
       active = false;
@@ -1560,7 +1605,11 @@ export default function Inglescompleto({ navigation, route }) {
                     { backgroundColor: tile.color[CORES.mode] },
                   ]}
                 >
-                  <Image source={tile.image} style={styles.courseTileImage} />
+                  {tile.image ? (
+                    <Image source={tile.image} style={styles.courseTileImage} />
+                  ) : (
+                    <MaterialCommunityIcons name={tile.icon} size={38} color="#FFFFFF" />
+                  )}
                 </View>
                 <Text style={styles.courseTileLabel}>{tile.label}</Text>
               </TouchableOpacity>
@@ -1571,6 +1620,7 @@ export default function Inglescompleto({ navigation, route }) {
 
       <StudyTimeModal
         visible={studyTimeModalVisible}
+        initialHour={suggestedStudyHour}
         onConfirm={handleConfirmStudyTime}
         onCancel={handleSkipStudyTime}
       />
@@ -1899,11 +1949,15 @@ const makeStyles = (CORES) =>
       marginBottom: 14,
       zIndex: 10,
     },
+    // 3 tiles por linha (2 linhas de 3 com os 6 cursos):
+    // numa linha so, os icones de 68px encostavam nos celulares mais estreitos.
     courseTilesRow: {
       flexDirection: "row",
-      justifyContent: "space-around",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      rowGap: 14,
     },
-    courseTile: { alignItems: "center", flex: 1 },
+    courseTile: { alignItems: "center", width: "33.33%" },
     courseTileIcon: {
       width: 68,
       height: 68,

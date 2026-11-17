@@ -1,11 +1,11 @@
 import createLessonScreen from "../../LessonScreen";
-import { ICA1 } from "../../../../util/images";
+import { SMA1 } from "../../../../util/images";
 
 const LESSON_SLIDES = [
   {
     component: "Exercise21",
     activity: {
-      image: ICA1.Hi02,
+      image: SMA1.Hi02,
       imageDescription:
         "Lucas, um rapaz de camisa verde, sentado num banco de praça",
       // Sem audio gravado ainda: o player le o texto com TTS.

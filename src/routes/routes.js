@@ -15,7 +15,7 @@ import TabsNavigator from "./TabsNavigator";
 // padrão
 import SplashScreen from "../pages/SplashScreen";
 import Login from "../pages/Login";
-import PlacementFlow from "../pages/PlacementFlow";
+import OnboardingScreen from "../pages/onboarding/OnboardingScreen";
 import MeusErros from "../pages/MeusErros";
 import PaywallScreen from "../pages/PaywallScreen";
 import PerfilVisitado from "../pages/PerfilVisitado";
@@ -31,8 +31,18 @@ import BussinesB1Home, { lessonScreens as bussinesB1LessonScreens } from "../pag
 import TravelHome, { lessonScreens as travelA1LessonScreens } from "../pages/aulas/viagem/A1";
 import ExpressionsHome, { lessonScreens as expressionsA0A1LessonScreens } from "../pages/aulas/expressions/A0-A1";
 import GrammarLabHome, { lessonScreens as grammarLabA0A1LessonScreens } from "../pages/aulas/grammarlab/A0-A1";
-import StoryModeHome, { lessonScreens as storyModeA0A1LessonScreens } from "../pages/aulas/storymode/A0-A1";
-import StoryModeA2Home, { lessonScreens as storyModeA2LessonScreens } from "../pages/aulas/storymode/A2";
+import StoryModeHome, { StoryModeA2Home } from "../pages/aulas/storymode/StoryModeHome";
+import { lessonScreens as storyModeA0A1LessonScreens } from "../pages/aulas/storymode/A0-A1";
+import { lessonScreens as storyModeA2LessonScreens } from "../pages/aulas/storymode/A2";
+import ListeningHome, { lessonScreens as listeningA0A1LessonScreens } from "../pages/aulas/listening/A0-A1";
+import PronunciationHome, { lessonScreens as pronunciationA0A1LessonScreens } from "../pages/aulas/pronunciation/A0-A1";
+import BusinessHome, { lessonScreens as businessA0A1LessonScreens } from "../pages/aulas/business/A0-A1";
+import TravelNewHome, { lessonScreens as travelNewA0A1LessonScreens } from "../pages/aulas/travel/A0-A1";
+import FloridaTopicsScreen from "../pages/aulas/travel/florida/FloridaTopicsScreen";
+import FloridaClassesScreen from "../pages/aulas/travel/florida/FloridaClassesScreen";
+import MarketingTopicsScreen from "../pages/aulas/business/marketing/MarketingTopicsScreen";
+import MarketingClassesScreen from "../pages/aulas/business/marketing/MarketingClassesScreen";
+import BusinessA2Home, { lessonScreens as businessA2LessonScreens } from "../pages/aulas/business/A2";
 import AulasPlusHome, {
   lessonScreens as aulasPlusLessonScreens,
 } from "../pages/aulas/aulasplus";
@@ -233,6 +243,100 @@ export default function Routes() {
         />
         {renderLessonScreens(expressionsA0A1LessonScreens)}
 
+        {/* ===== LISTENING ===== */}
+        <Stack.Screen
+          name="Listening"
+          component={ListeningHome}
+          options={{
+            title: "Listening",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        {renderLessonScreens(listeningA0A1LessonScreens)}
+
+        {/* ===== PRONUNCIATION LAB ===== */}
+        <Stack.Screen
+          name="Pronunciation"
+          component={PronunciationHome}
+          options={{
+            title: "Pronunciation Lab",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        {renderLessonScreens(pronunciationA0A1LessonScreens)}
+
+        {/* ===== BUSINESS (tile da Home; o "Bussines English" antigo fica acima) ===== */}
+        <Stack.Screen
+          name="Business"
+          component={BusinessHome}
+          options={{
+            title: "Business",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="MarketingTopics"
+          component={MarketingTopicsScreen}
+          options={{
+            title: "Marketing",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="MarketingClasses"
+          component={MarketingClassesScreen}
+          options={{
+            title: "Marketing",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        {renderLessonScreens(businessA0A1LessonScreens)}
+        <Stack.Screen
+          name="BusinessA2"
+          component={BusinessA2Home}
+          options={{
+            title: "Business A2",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        {renderLessonScreens(businessA2LessonScreens)}
+
+        {/* ===== VIAGEM (tile da Home; o "Ingles para viagem" antigo e o TravelEnglish) ===== */}
+        <Stack.Screen
+          name="Travel"
+          component={TravelNewHome}
+          options={{
+            title: "Viagem",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="FloridaTopics"
+          component={FloridaTopicsScreen}
+          options={{
+            title: "My Trip to Florida",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="FloridaClasses"
+          component={FloridaClassesScreen}
+          options={{
+            title: "My Trip to Florida",
+            ...defaultHeader,
+            headerShown: false,
+          }}
+        />
+        {renderLessonScreens(travelNewA0A1LessonScreens)}
+
         {/* ===== GRAMMAR LAB ===== */}
         <Stack.Screen
           name="GrammarLab"
@@ -319,8 +423,8 @@ export default function Routes() {
         />
 
         <Stack.Screen
-          name="PlacementFlow"
-          component={PlacementFlow}
+          name="Onboarding"
+          component={OnboardingScreen}
           options={{ headerShown: false }}
         />
 

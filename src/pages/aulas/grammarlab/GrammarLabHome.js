@@ -64,6 +64,10 @@ export default function GrammarLabHome({
   navigation,
   route,
   courseName,
+  // Texto pequeno acima do titulo (outros cursos reusam esta tela).
+  kicker = "ESTUDE GRAMÁTICA",
+  // false esconde o card "Metas do dia" (a Viagem nao mostra).
+  showDailyGoals = true,
   storageKey,
   moduleDefs,
   lessons,
@@ -71,6 +75,9 @@ export default function GrammarLabHome({
   levels,
   // Topicos sem aulas ainda ([{ name, glyph, level }]), mostrados como "Em breve".
   upcomingTopics = [],
+  // Chave das aulas que `autoOpenLessonId` procura quando a tela junta aulas
+  // com `storageKey` proprio (Story Mode: A0-A1 e A2 repetem os ids).
+  autoOpenStorageKey,
 }) {
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
@@ -78,11 +85,19 @@ export default function GrammarLabHome({
 
   const autoOpenLessonId = route?.params?.autoOpenLessonId;
   const openedRef = useRef(false);
-  const [progressMap, setProgressMap] = useState({});
+  // Progresso por chave: aula com `storageKey` proprio salva na chave dela.
+  const [progressMaps, setProgressMaps] = useState({});
   const [aulaAccessMap, setAulaAccessMap] = useState(null);
   const [resumo, setResumo] = useState(null);
   const [goals, setGoals] = useState(null);
   const [sheetTopicKey, setSheetTopicKey] = useState(null);
+
+  const lessonKey = (lesson) => lesson.storageKey || storageKey;
+  const isDone = (lesson) => !!progressMaps[lessonKey(lesson)]?.[lesson.id];
+  const storageKeysId = useMemo(
+    () => [...new Set([storageKey, ...lessons.map((lesson) => lesson.storageKey).filter(Boolean)])].join("|"),
+    [storageKey, lessons],
+  );
 
   const isLessonUnlocked = (screenName) =>
     fullAccess || !aulaAccessMap || aulaAccessMap[screenName] !== false;
@@ -90,13 +105,16 @@ export default function GrammarLabHome({
   useEffect(() => {
     let active = true;
     async function load() {
-      const [progress, nextResumo, nextGoals] = await Promise.all([
-        loadProgress(storageKey),
+      const keys = storageKeysId.split("|");
+      const [progressList, nextResumo, nextGoals] = await Promise.all([
+        Promise.all(keys.map((key) => loadProgress(key))),
         fetchResumoProgresso().catch(() => null),
         dailyGoals.getTodayGoals().catch(() => null),
       ]);
       if (!active) return;
-      setProgressMap(progress);
+      setProgressMaps(
+        Object.fromEntries(keys.map((key, index) => [key, progressList[index]])),
+      );
       // Mantem o ultimo valor bom se a rede falhar (mesma regra da Home).
       if (nextResumo) setResumo(nextResumo);
       if (nextGoals) setGoals(nextGoals);
@@ -107,7 +125,7 @@ export default function GrammarLabHome({
       active = false;
       sub();
     };
-  }, [navigation, storageKey]);
+  }, [navigation, storageKeysId]);
 
   useEffect(() => {
     let active = true;
@@ -123,12 +141,19 @@ export default function GrammarLabHome({
     };
   }, []);
 
+  // A aula recebe so as aulas da mesma chave, para o "proxima aula" dela
+  // achar o id certo.
+  const lessonsOfSameKey = (lesson) =>
+    lessons.filter((item) => lessonKey(item) === lessonKey(lesson));
+
   useEffect(() => {
     if (!autoOpenLessonId || openedRef.current) return;
     if (aulaAccessMap === null) return;
 
+    const openKey = autoOpenStorageKey || storageKey;
     const lesson = lessons.find(
-      (item) => String(item.id) === String(autoOpenLessonId),
+      (item) =>
+        String(item.id) === String(autoOpenLessonId) && lessonKey(item) === openKey,
     );
 
     if (!lesson?.screen) return;
@@ -140,7 +165,7 @@ export default function GrammarLabHome({
     requestAnimationFrame(() => {
       navigation.replace(lesson.screen, {
         lesson,
-        lessons,
+        lessons: lessonsOfSameKey(lesson),
       });
     });
   }, [autoOpenLessonId, lessons, navigation, aulaAccessMap]);
@@ -155,8 +180,10 @@ export default function GrammarLabHome({
         name: moduleItem.name,
         glyph: moduleItem.glyph,
         level: moduleItem.level,
+        // Modulo com `routeName` abre a propria tela em vez da lista (Viagem).
+        routeName: moduleItem.routeName,
         lessons: moduleLessons,
-        done: moduleLessons.filter((lesson) => progressMap[lesson.id]).length,
+        done: moduleLessons.filter(isDone).length,
       };
     });
     const soon = upcomingTopics.map((topic) => ({
@@ -166,9 +193,11 @@ export default function GrammarLabHome({
       done: 0,
     }));
     return [...withLessons, ...soon];
-  }, [moduleDefs, lessons, upcomingTopics, progressMap]);
+  }, [moduleDefs, lessons, upcomingTopics, progressMaps]);
 
-  const nextLesson = lessons.find((lesson) => !progressMap[lesson.id]) || null;
+  // Aula sem `screen` ainda nao existe ("Em breve"): nunca e a proxima.
+  const nextLesson =
+    lessons.find((lesson) => lesson.screen && !isDone(lesson)) || null;
   const currentTopic = nextLesson
     ? topics.find((topic) => topic.lessons.includes(nextLesson))
     : null;
@@ -187,7 +216,7 @@ export default function GrammarLabHome({
 
     navigation.navigate(lesson.screen, {
       lesson,
-      lessons,
+      lessons: lessonsOfSameKey(lesson),
     });
   };
 
@@ -197,7 +226,7 @@ export default function GrammarLabHome({
 
       <View style={styles.header}>
         <View style={{ flex: 1, minWidth: 0 }}>
-          <Text style={styles.kicker}>ESTUDE GRAMÁTICA</Text>
+          <Text style={styles.kicker}>{kicker}</Text>
           <Text
             style={styles.title}
             numberOfLines={1}
@@ -226,7 +255,7 @@ export default function GrammarLabHome({
         contentContainerStyle={[styles.scroll, { paddingBottom: 32 + insets.bottom }]}
         showsVerticalScrollIndicator={false}
       >
-        {todayGoals.length > 0 && <DailyGoals goals={todayGoals} />}
+        {showDailyGoals && todayGoals.length > 0 && <DailyGoals goals={todayGoals} />}
 
         {nextLesson && currentTopic && (
           <ContinueCard
@@ -246,7 +275,11 @@ export default function GrammarLabHome({
               level={level}
               topics={levelTopics}
               currentKey={currentTopic?.key}
-              onOpenTopic={setSheetTopicKey}
+              onOpenTopic={(key) => {
+                const topic = topics.find((item) => item.key === key);
+                if (topic?.routeName) navigation.navigate(topic.routeName);
+                else setSheetTopicKey(key);
+              }}
             />
           );
         })}
@@ -255,8 +288,8 @@ export default function GrammarLabHome({
       {sheetTopic && (
         <TopicSheet
           topic={sheetTopic}
-          progressMap={progressMap}
-          nextLessonId={nextLesson?.id}
+          isDone={isDone}
+          nextLesson={nextLesson}
           isLessonUnlocked={isLessonUnlocked}
           bottomInset={insets.bottom}
           onClose={() => setSheetTopicKey(null)}
@@ -496,8 +529,8 @@ function TopicCard({ topic, state, onPress }) {
 // brigar com a navegacao ao abrir a aula).
 function TopicSheet({
   topic,
-  progressMap,
-  nextLessonId,
+  isDone,
+  nextLesson,
   isLessonUnlocked,
   bottomInset,
   onClose,
@@ -590,15 +623,16 @@ function TopicSheet({
           showsVerticalScrollIndicator={false}
         >
           {topic.lessons.map((lesson, index) => {
-            const done = !!progressMap[lesson.id];
-            const isNext = lesson.id === nextLessonId;
-            const locked = !isLessonUnlocked(lesson.screen);
+            const done = isDone(lesson);
+            const isNext = lesson === nextLesson;
+            const soon = !lesson.screen;
+            const locked = soon || !isLessonUnlocked(lesson.screen);
             return (
               <Pressable
-                key={lesson.id}
+                key={lesson.screen || lesson.id}
                 accessibilityRole="button"
                 accessibilityLabel={`Aula ${index + 1}: ${lesson.title}${
-                  done ? ", concluída" : locked ? ", bloqueada" : ""
+                  done ? ", concluída" : soon ? ", em breve" : locked ? ", bloqueada" : ""
                 }`}
                 disabled={!lesson.screen}
                 onPress={() => {
@@ -636,7 +670,11 @@ function TopicSheet({
                 </View>
                 <View style={{ flex: 1, minWidth: 0 }}>
                   <Text style={styles.lessonKicker}>
-                    {isNext ? "PRÓXIMA AULA" : `AULA ${index + 1}`}
+                    {isNext
+                      ? "PRÓXIMA AULA"
+                      : soon
+                        ? `AULA ${index + 1} · EM BREVE`
+                        : `AULA ${index + 1}`}
                   </Text>
                   <Text style={styles.lessonTitle}>{lesson.title}</Text>
                 </View>

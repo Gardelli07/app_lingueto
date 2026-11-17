@@ -42,6 +42,17 @@ import { Exercise24 } from "../../exc/ex24";
 import { Exercise25 } from "../../exc/ex25";
 import { Exercise26 } from "../../exc/ex26";
 import { Exercise27 } from "../../exc/ex27";
+import { Exercise28 } from "../../exc/ex28";
+import { Exercise29 } from "../../exc/ex29";
+import { Exercise30 } from "../../exc/ex30";
+import { Exercise31 } from "../../exc/ex31";
+import { Exercise32 } from "../../exc/ex32";
+import { Exercise33 } from "../../exc/ex33";
+import { Exercise34 } from "../../exc/ex34";
+import { Exercise35 } from "../../exc/ex35";
+import { Exercise36 } from "../../exc/ex36";
+import { Exercise37 } from "../../exc/ex37";
+import { Exercise38 } from "../../exc/ex38";
 import Feedback from "../../exc/feedback";
 import { Images } from "../../util/images";
 import {
@@ -112,6 +123,17 @@ const COMPONENTS = {
   Exercise25,
   Exercise26,
   Exercise27,
+  Exercise28,
+  Exercise29,
+  Exercise30,
+  Exercise31,
+  Exercise32,
+  Exercise33,
+  Exercise34,
+  Exercise35,
+  Exercise36,
+  Exercise37,
+  Exercise38,
 };
 
 // Exercicios com layout proprio (scroll, safe area e painel fixo no rodape,
@@ -130,11 +152,15 @@ function isFullScreenSlide(slide) {
 // (Exercise1, Exercise2 e Exercise7 disparam onAttempt varias vezes por
 // slide de um jeito que nao reflete "acertar ou errar" de forma util pra
 // revisao; Exercise10 ja tem bloqueio proprio de 24h apos responder).
+// Exercise35, 36 e 38 (Pronunciation Lab) sao etapas sem certo/errado.
 const EXERCISE_TYPES_WITHOUT_TRACKING = new Set([
   "Exercise1",
   "Exercise2",
   "Exercise7",
   "Exercise10",
+  "Exercise35",
+  "Exercise36",
+  "Exercise38",
 ]);
 
 function useSpeech() {
@@ -779,7 +805,8 @@ function slideQuestionCount({ slide, originalIndex }, reviewQuestionKeys) {
 
 export default function createLessonScreen(
   slides,
-  { storageKey, nextRouteName, screenName = "LessonScreen" },
+  // nextRouteParams: params extras da tela de volta (ex.: o topico da Viagem).
+  { storageKey, nextRouteName, nextRouteParams, screenName = "LessonScreen" },
 ) {
   if (!storageKey || !nextRouteName) {
     throw new Error("createLessonScreen requires storageKey and nextRouteName");
@@ -1227,6 +1254,7 @@ export default function createLessonScreen(
       stopActiveMedia();
       const nextLesson = findNextLesson();
       navigation.replace(nextRouteName, {
+        ...nextRouteParams,
         autoOpenLessonId: nextLesson ? nextLesson.id : null,
       });
     };

@@ -4,17 +4,12 @@
     "slug": "lingueto",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo.png",
+    "icon": "./assets/icon-ios.png",
     "userInterfaceStyle": "automatic",
     "scheme": [
       "lingueto",
       "com.shironora.lingueto"
     ],
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.shironora.lingueto",
@@ -55,7 +50,15 @@
           "color": "#3E6FB8"
         }
       ],
-      "expo-iap"
+      "expo-iap",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0B1226",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 140
+        }
+      ]
     ]
   }
 }

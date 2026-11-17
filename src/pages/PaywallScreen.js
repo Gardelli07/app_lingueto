@@ -66,6 +66,13 @@ const RAW_PLANS = {
 
 const PLAN_ORDER = ["free", "premium"];
 
+// Mesmos precos de referencia (sem loja) para quem mostra o Premium fora do
+// paywall, como o pop-up do Feedback instantaneo (Pronunciation Lab).
+export const PRECO_REFERENCIA_PREMIUM = {
+  mensal: fmt(RAW_PLANS.premium.monthly.now),
+  anual: fmt(RAW_PLANS.premium.yearly.now),
+};
+
 function fmt(n) {
   return "R$ " + n.toFixed(2).replace(".", ",");
 }
@@ -155,12 +162,15 @@ const CATALOGO_INICIAL = {
   planos: {},
 };
 
-export default function PaywallScreen({ navigation }) {
+export default function PaywallScreen({ navigation, route }) {
   const CORES = useTheme();
   const COLORS = paywallColors(CORES);
   const styles = useThemedStyles(makeStyles);
   const { restaurarCompras, assinarSandbox } = useAuth();
-  const [billing, setBilling] = useState("monthly"); // 'monthly' | 'yearly'
+  // 'monthly' | 'yearly'; quem abre o paywall pode mandar o plano ja escolhido.
+  const [billing, setBilling] = useState(
+    route?.params?.billing === "yearly" ? "yearly" : "monthly",
+  );
   const [selected, setSelected] = useState("premium");
   const [submitting, setSubmitting] = useState(false);
   const [restaurando, setRestaurando] = useState(false);

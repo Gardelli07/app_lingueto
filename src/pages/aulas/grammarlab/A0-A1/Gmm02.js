@@ -40,6 +40,7 @@ const LESSON_SLIDES = [
       questions: [
         {
           say: "She is a teacher.",
+          audioSource: require("../../../../../mp3/GL/A0-A1/Gmm02S3.mp3"),
           options: ["He is a teacher.", "She is a teacher.", "She is at the theater."],
           correctAnswer: "She is a teacher.",
           hint: HINT,
@@ -110,6 +111,7 @@ const LESSON_SLIDES = [
       questions: [
         {
           say: "We are friends.",
+          audioSource: require("../../../../../mp3/GL/A0-A1/Gmm02S8.mp3"),
           options: ["We are friends.", "They are friends.", "We are fine."],
           correctAnswer: "We are friends.",
           hint: HINT,

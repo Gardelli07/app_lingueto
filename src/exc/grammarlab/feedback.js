@@ -75,14 +75,63 @@ export function playPair(n) {
   replay(PAIR_SOURCES[Math.min(Math.max(n, 1), 3) - 1]);
 }
 
-// Le a frase em ingles do exercicio de ouvir (devagar no botao 0.5x).
-export function speakSentence(text, slow, { onStart, onEnd } = {}) {
+// Audio gravado da frase que esta tocando. Diferente dos sons acima, cada frase
+// so toca nesta pergunta, entao o player e criado na hora e solto ao parar.
+let sentence = null;
+
+function stopSentence() {
+  if (!sentence) return;
+  const { player, subscription, onEnd } = sentence;
+  sentence = null;
+  try {
+    subscription.remove();
+    // No Android o que solta o player nativo e o release(); o pause() antes
+    // corta o som na hora (mesma regra do useStoryAudio).
+    player.pause();
+    player.release();
+  } catch {
+    // Falha ao parar o som nao deve interromper a licao.
+  }
+  onEnd?.();
+}
+
+function playSentence(source, slow, { onStart, onEnd }) {
+  const player = createAudioPlayer(source);
+  const current = { player, onEnd };
+  current.subscription = player.addListener("playbackStatusUpdate", (status) => {
+    if (!status?.didJustFinish || sentence !== current) return;
+    // O player fica para o proximo stopSentence: aqui so avisa que acabou.
+    current.onEnd = null;
+    onEnd?.();
+  });
+  sentence = current;
+  if (slow) {
+    player.shouldCorrectPitch = true;
+    player.setPlaybackRate(0.5, "high");
+  }
+  player.play();
+  onStart?.();
+}
+
+// Toca a frase em ingles do exercicio de ouvir (devagar no botao 0.5x): o audio
+// gravado da pergunta (`source`) ou, sem ele, a voz do celular lendo o texto.
+// `rate` troca a velocidade da voz do celular (a velocidade real do Listening).
+export function speakSentence(text, slow, { source, rate, onStart, onEnd } = {}) {
+  stopSentence();
+  if (source) {
+    try {
+      playSentence(source, slow, { onStart, onEnd });
+      return;
+    } catch {
+      stopSentence();
+    }
+  }
   Speech.stop()
     .catch(() => {})
     .finally(() => {
       Speech.speak(text, {
         language: "en-US",
-        rate: slow ? 0.55 : 0.9,
+        rate: rate ?? (slow ? 0.55 : 0.9),
         onStart,
         onDone: onEnd,
         onStopped: onEnd,
@@ -91,6 +140,70 @@ export function speakSentence(text, slow, { onStart, onEnd } = {}) {
     });
 }
 
+// Duas vozes em ingles para os dialogos. Vozes "network" do Android falham sem
+// internet (a fala sumiria), entao so entram se nao houver nenhuma local. Sem
+// vozes, a diferenca entre as pessoas fica so no tom.
+let voicePool = null;
+async function englishVoices() {
+  if (voicePool) return voicePool;
+  try {
+    const all = await Speech.getAvailableVoicesAsync();
+    const english = all.filter((voice) => /^en[-_]/i.test(voice.language));
+    const local = english.filter((voice) => !/network/i.test(voice.identifier));
+    const usable = local.length > 0 ? local : english;
+    const american = usable.filter((voice) => /US/i.test(voice.language));
+    voicePool = (american.length >= 2 ? american : usable).map((voice) => voice.identifier);
+  } catch {
+    voicePool = [];
+  }
+  return voicePool;
+}
+
+let lineRun = 0;
+
+// Toca a conversa inteira como um audio so: o gravado (`source`) ou as falas em
+// sequencia, com uma voz para cada pessoa (line.speaker 0 ou 1).
+export function speakLines(lines, slow, { source, onStart, onEnd } = {}) {
+  stopSentence();
+  const run = ++lineRun;
+  if (source) {
+    try {
+      playSentence(source, slow, { onStart, onEnd });
+      return;
+    } catch {
+      stopSentence();
+    }
+  }
+  onStart?.();
+  Speech.stop()
+    .catch(() => {})
+    .finally(async () => {
+      const voices = await englishVoices();
+      const say = (index) => {
+        if (run !== lineRun) return;
+        if (index >= lines.length) {
+          onEnd?.();
+          return;
+        }
+        const line = lines[index];
+        Speech.speak(line.text, {
+          language: "en-US",
+          voice: voices.length ? voices[Math.min(line.speaker, voices.length - 1)] : undefined,
+          pitch: line.speaker === 1 ? 1.2 : 0.95,
+          rate: slow ? 0.55 : 0.9,
+          onDone: () => say(index + 1),
+          onStopped: () => {
+            if (run === lineRun) onEnd?.();
+          },
+          onError: () => say(index + 1),
+        });
+      };
+      say(0);
+    });
+}
+
 export function stopSpeaking() {
+  stopSentence();
+  lineRun++;
   Speech.stop().catch(() => {});
 }

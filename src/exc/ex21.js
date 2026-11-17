@@ -54,9 +54,9 @@ Exercise21.fullScreen = true;
   {
     component: "Exercise21",
     activity: {
-      image: ICA1.Hi02,
+      image: SMA1.Hi02,
       imageDescription: "Lucas sentado num banco de praca", // opcional (acessibilidade)
-      audioSource: require("../../../../../mp3/IC/A0-A1/Hi01.mp3"), // opcional
+      audioSource: require("../../../../../mp3/SM/A0-A1/Hi01.mp3"), // opcional
       audioDurationMs: 22909, // opcional, so usado ate o player carregar
       title: "Lucas's Family", // opcional
       // Paragrafos (array, ou string com linha em branco entre eles).
@@ -76,7 +76,7 @@ Exercise21.fullScreen = true;
           correctAnswer: "24 years old.",
           hint: "Hi! My name is Lucas, and I'm 24 years old.", // opcional
           explanation: "Lucas says “I’m 24 years old.”", // no acerto
-          correction: "Anna is the one who is 12.", // no erro, depois de "It's <resposta> —"
+          correction: "Anna is the one who is 12.", // no erro, depois de "Answer: <resposta> —"
         },
       ],
     },

@@ -15,7 +15,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { comboBonusFor, comboRewardFor, formatXp } from "../../util/xp";
-import { projectXp, slideAccuracy } from "../../util/exerciseProgress";
+import { buildQuestionItems, projectXp, slideAccuracy } from "../../util/exerciseProgress";
 import { colors, fonts, praiseFor, timing } from "./theme";
 import { BoltIcon, BulbIcon, ChevronLeftIcon, GearIcon, TrophyIcon } from "./icons";
 import {
@@ -72,22 +72,6 @@ const TAP_TEXT = {
   listen: "Ouça e toque na frase certa",
   match: "Forme os pares, um de cada vez",
 };
-
-// Na revisao de erros so entram as perguntas que estao no Meus erros. Cada
-// uma guarda o numero original, que e o `trackingSuffix` (q1, q2...): acertar
-// na revisao apaga o erro certo. Sem lista, ou se nenhuma bater (a aula
-// mudou), volta todas.
-function buildQuestionItems(questions, reviewQuestionKeys) {
-  const all = questions.map((question, index) => ({
-    question,
-    suffix: `q${index + 1}`,
-  }));
-  if (!Array.isArray(reviewQuestionKeys) || reviewQuestionKeys.length === 0) {
-    return all;
-  }
-  const missed = all.filter((item) => reviewQuestionKeys.includes(item.suffix));
-  return missed.length > 0 ? missed : all;
-}
 
 // Estado de entrada de cada pergunta, zerado ao avancar.
 const RESET_QUESTION = {
@@ -194,8 +178,9 @@ export function ComboSlide({
   const { question: item } = items[Math.min(s.q, total - 1)];
   const hasXp = xpProjection != null;
 
-  const speak = useCallback((text, slow) => {
-    speakSentence(text, slow, {
+  const speak = useCallback((question, slow) => {
+    speakSentence(question.say, slow, {
+      source: question.audioSource,
       onStart: () => setSpeaking(true),
       onEnd: () => setSpeaking(false),
     });
@@ -204,7 +189,7 @@ export function ComboSlide({
   // No "ouvir", a frase toca sozinha quando a pergunta aparece.
   useEffect(() => {
     if (type !== "listen") return undefined;
-    listenTimer.current = setTimeout(() => speak(item.say, false), 450);
+    listenTimer.current = setTimeout(() => speak(item, false), 450);
     return () => clearTimeout(listenTimer.current);
   }, [type, s.q]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -533,7 +518,7 @@ export function ComboSlide({
                 {...exerciseProps}
                 picked={s.picked}
                 speaking={speaking}
-                onSpeak={(slow) => speak(item.say, slow)}
+                onSpeak={(slow) => speak(item, slow)}
                 onPick={pickOption}
               />
             )}

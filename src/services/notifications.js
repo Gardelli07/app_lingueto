@@ -6,6 +6,7 @@ const ENABLED_KEY = "@lingueto:notifications_enabled";
 const HOUR_KEY = "@lingueto:notifications_hour";
 const MINUTE_KEY = "@lingueto:notifications_minute";
 const PROMPTED_KEY = "@lingueto:notifications_prompted";
+const SUGGESTED_HOUR_KEY = "@lingueto:study_time_suggested_hour";
 const REMINDER_ID = "daily-practice-reminder";
 export const DEFAULT_REMINDER_HOUR = 20;
 export const DEFAULT_REMINDER_MINUTE = 0;
@@ -121,4 +122,19 @@ export async function hasPromptedStudyTime() {
 
 export async function markStudyTimePrompted() {
   await AsyncStorage.setItem(PROMPTED_KEY, "true");
+}
+
+// Horario sugerido no pop-up de lembrete da Home, vindo da pergunta
+// "Quando voce prefere estudar?" do onboarding. null = sem sugestao.
+export async function setSuggestedStudyHour(hour) {
+  if (hour == null) {
+    await AsyncStorage.removeItem(SUGGESTED_HOUR_KEY);
+  } else {
+    await AsyncStorage.setItem(SUGGESTED_HOUR_KEY, String(hour));
+  }
+}
+
+export async function getSuggestedStudyHour() {
+  const value = await AsyncStorage.getItem(SUGGESTED_HOUR_KEY);
+  return value == null ? null : Number(value);
 }

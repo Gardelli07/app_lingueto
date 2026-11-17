@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Image,
   Pressable,
@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import * as Speech from "expo-speech";
+import { speakSentence, stopSpeaking } from "../grammarlab/feedback";
 import { PersonIcon, SpeakerIcon } from "./icons";
 import { colors, fonts } from "./theme";
 import { ChunkyButton, OptionButton, Title, WordChip } from "./ui";
@@ -27,10 +28,19 @@ export function LearnStep({ expression, onNext }) {
   const { width } = useWindowDimensions();
   const imageW = Math.min(width - 48, 420);
 
+  // Com audio gravado (`expression.audio`) toca o mp3; sem ele, a voz do
+  // celular le a expressao como antes.
   const listen = () => {
+    if (expression.audio) {
+      speakSentence(expression.phrase, false, { source: expression.audio });
+      return;
+    }
     Speech.stop();
     Speech.speak(expression.phrase, { language: "en-US", rate: 0.9 });
   };
+
+  // Corta o mp3 ao sair da tela de apresentacao.
+  useEffect(() => () => stopSpeaking(), [expression]);
 
   return (
     <View style={{ flex: 1 }}>

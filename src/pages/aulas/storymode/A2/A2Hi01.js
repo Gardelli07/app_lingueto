@@ -5,7 +5,7 @@ const LESSON_SLIDES = [
     component: "Exercise21",
     activity: {
       // Sem imagem ainda: a tela mostra so o player.
-      audioSource: require("../../../../../mp3/IC/A2/A2Hi01.mp3"),
+      audioSource: require("../../../../../mp3/SM/A2/A2Hi01.mp3"),
       audioDurationMs: 119954,
       title: "The Surprise Party",
       // Palavras ligadas por "_" formam uma expressao (toque para traduzir).

@@ -21,12 +21,15 @@ export function plainText(paragraphs) {
   return paragraphs.join(" ").replace(/_/g, " ");
 }
 
-const clean = (text) => text.replace(/^["“(]+|[.,!?;:"”)]+$/g, "");
+const clean = (text) => text.replace(/^["“(]+|[.,!?;:"”)…]+$/g, "");
 
 // Cada palavra vira um token tocavel; as que estao dentro de uma expressao
 // levam tambem a expressao e a traducao dela. Sem traducao, `tr` e null.
+// A chave com a caixa exata vem antes da em minusculo: so serve para siglas
+// que colidem com uma palavra comum ("IT" = TI x "it" = isso).
 export function tokenize(paragraphs, dictionary = {}) {
-  const lookup = (text) => dictionary[clean(text).toLowerCase()] || null;
+  const lookup = (text) =>
+    dictionary[clean(text)] || dictionary[clean(text).toLowerCase()] || null;
 
   return paragraphs.map((paragraph, pi) =>
     paragraph.split(" ").flatMap((raw, gi) => {

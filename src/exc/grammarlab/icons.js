@@ -232,6 +232,40 @@ export const KeyboardIcon = (props) => (
   </Stroke>
 );
 
+export const ChatIcon = (props) => (
+  <Stroke {...props}>
+    <Path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </Stroke>
+);
+
+export const ChatLinesIcon = (props) => (
+  <Stroke {...props}>
+    <Path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+    <Path d="M8 9h8M8 13h5" />
+  </Stroke>
+);
+
+export const SearchIcon = (props) => (
+  <Stroke {...props}>
+    <Circle cx="11" cy="11" r="7" />
+    <Path d="M21 21l-4.3-4.3" />
+  </Stroke>
+);
+
+export const PinIcon = (props) => (
+  <Stroke {...props}>
+    <Path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z" />
+    <Circle cx="12" cy="9" r="2.5" />
+  </Stroke>
+);
+
+export const GaugeIcon = (props) => (
+  <Stroke {...props}>
+    <Path d="M12 13l4-4" />
+    <Path d="M3.3 17a9 9 0 1 1 17.4 0" />
+  </Stroke>
+);
+
 export function SpeakerIcon({ size = 28, color = "#fff" }) {
   return (
     <Svg

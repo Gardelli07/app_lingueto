@@ -56,6 +56,30 @@ import {
   storyModeA2ModuleDefs,
   storyModeA2SampleLessons,
 } from "../pages/aulas/storymode/A2";
+import {
+  LISTENING_STORAGE_KEY,
+  LISTENING_COURSE_NAME,
+  listeningModuleDefs,
+  listeningSampleLessons,
+} from "../pages/aulas/listening/A0-A1";
+import {
+  PRONUNCIATION_STORAGE_KEY,
+  PRONUNCIATION_COURSE_NAME,
+  pronunciationModuleDefs,
+  pronunciationLessons,
+} from "../pages/aulas/pronunciation/A0-A1";
+import {
+  BUSINESS_STORAGE_KEY,
+  BUSINESS_COURSE_NAME,
+  businessModuleDefs,
+  businessSampleLessons,
+} from "../pages/aulas/business/A0-A1";
+import {
+  TRAVEL_STORAGE_KEY as TRAVEL_NEW_STORAGE_KEY,
+  TRAVEL_NEW_COURSE_NAME,
+  travelModuleDefs as travelNewModuleDefs,
+  travelLessons as travelNewLessons,
+} from "../pages/aulas/travel/A0-A1";
 
 export const COURSE_OPTIONS = [
   "Ingles Completo",
@@ -205,6 +229,56 @@ export const EXTRA_COURSES = [
       storageKey: STORY_MODE_A2_STORAGE_KEY,
       moduleDefs: storyModeA2ModuleDefs,
       lessons: storyModeA2SampleLessons,
+      available: true,
+    },
+  },
+  {
+    courseName: LISTENING_COURSE_NAME,
+    level: "Starter",
+    config: {
+      folder: "A0-A1",
+      routeName: "Listening",
+      storageKey: LISTENING_STORAGE_KEY,
+      moduleDefs: listeningModuleDefs,
+      lessons: listeningSampleLessons,
+      available: true,
+    },
+  },
+  {
+    courseName: PRONUNCIATION_COURSE_NAME,
+    level: "Starter",
+    config: {
+      folder: "A0-A1",
+      routeName: "Pronunciation",
+      storageKey: PRONUNCIATION_STORAGE_KEY,
+      moduleDefs: pronunciationModuleDefs,
+      // So as aulas que ja existem (as "Em breve" nao tem tela).
+      lessons: pronunciationLessons.filter((lesson) => lesson.screen),
+      available: true,
+    },
+  },
+  {
+    courseName: BUSINESS_COURSE_NAME,
+    level: "Starter",
+    config: {
+      folder: "A0-A1",
+      routeName: "Business",
+      storageKey: BUSINESS_STORAGE_KEY,
+      moduleDefs: businessModuleDefs,
+      lessons: businessSampleLessons,
+      available: true,
+    },
+  },
+  {
+    // Viagem nova (tile da Home); o "Ingles para viagem" antigo e o TRAVEL_LEVEL_CONFIG.
+    courseName: TRAVEL_NEW_COURSE_NAME,
+    level: "Starter",
+    config: {
+      folder: "A0-A1",
+      routeName: "Travel",
+      storageKey: TRAVEL_NEW_STORAGE_KEY,
+      moduleDefs: travelNewModuleDefs,
+      lessons: travelNewLessons,
       available: true,
     },
   },

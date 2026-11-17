@@ -10,6 +10,12 @@ export function normalizeAnswer(text) {
   return String(text || "").trim().toLowerCase().replace(/\s+/g, " ");
 }
 
+// A pista logo depois da lacuna ("___ (cook) pasta") so aparece antes de
+// responder: depois a frase ficaria repetida ("cook (cook) pasta").
+function withoutCue(after) {
+  return String(after || "").replace(/^\s*\([^)]*\)/, "");
+}
+
 // Digitar a resposta (Exercise27): digita a palavra que falta e confere no
 // Check ou no "done" do teclado. item: before, after, answer.
 export function TypeExercise({ item, instruction, typed, checked, correct, onChange, onSubmit }) {
@@ -29,7 +35,7 @@ export function TypeExercise({ item, instruction, typed, checked, correct, onCha
           <>
             {item.before}
             <Text style={blankStyle}>{blank}</Text>
-            {item.after}
+            {checked ? withoutCue(item.after) : item.after}
           </>
         }
         subtitle={item.instruction || instruction || "Type the missing word."}

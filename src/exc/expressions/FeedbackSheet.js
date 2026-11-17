@@ -33,9 +33,14 @@ export const copy = {
   continue: "Continuar",
 };
 
-// Troca o `{answer}` do texto pela resposta em verde e negrito.
+// Troca o `{answer}` do texto pela resposta em verde e negrito. Texto sem
+// o marcador aparece como esta, sem a resposta anexada no fim.
 function Explanation({ text, answer }) {
-  const [before, after = ""] = String(text || "").split("{answer}");
+  const value = String(text || "");
+  if (!value.includes("{answer}")) {
+    return <Text style={styles.body}>{value}</Text>;
+  }
+  const [before, after = ""] = value.split("{answer}");
   return (
     <Text style={styles.body}>
       {before}

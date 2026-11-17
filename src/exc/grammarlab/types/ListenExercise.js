@@ -11,8 +11,37 @@ const WAVE = [
 ];
 
 // Ouvir (Exercise25): escuta a frase em ingles (botao 0.5x para devagar) e
-// toca na que ouviu. item: say, options, correctAnswer.
+// toca na que ouviu. item: say, options, correctAnswer; audioSource e opcional
+// (audio gravado da frase; sem ele, a voz do celular le o `say`).
 export function ListenExercise({ item, instruction, picked, checked, speaking, onSpeak, onPick }) {
+  return (
+    <View>
+      <ExerciseHeader
+        icon={<HeadphonesIcon color={colors.accentSoft} />}
+        kicker={item.kicker || "LISTEN"}
+        title={item.title || "What do you hear?"}
+        subtitle={
+          item.instruction || instruction || "Tap the speaker, then choose the sentence."
+        }
+      />
+
+      <Player speaking={speaking} onSpeak={onSpeak} />
+
+      <View style={{ marginTop: 16 }}>
+        <OptionList
+          options={item.options}
+          answer={item.correctAnswer}
+          picked={picked}
+          checked={checked}
+          onPick={onPick}
+        />
+      </View>
+    </View>
+  );
+}
+
+// Alto-falante, onda e botao 0.5x; tambem usado pelos exercicios do Listening.
+export function Player({ speaking, onSpeak, label = "Ouvir a frase" }) {
   const ping = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     if (!speaking) {
@@ -32,75 +61,63 @@ export function ListenExercise({ item, instruction, picked, checked, speaking, o
   }, [speaking, ping]);
 
   return (
-    <View>
-      <ExerciseHeader
-        icon={<HeadphonesIcon color={colors.accentSoft} />}
-        kicker="LISTEN"
-        title={item.title || "What do you hear?"}
-        subtitle={
-          item.instruction || instruction || "Tap the speaker, then choose the sentence."
-        }
-      />
-
-      <View style={styles.player}>
-        <View>
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              styles.ping,
-              {
-                opacity: ping.interpolate({ inputRange: [0, 1], outputRange: [0.5, 0] }),
-                transform: [
-                  { scale: ping.interpolate({ inputRange: [0, 1], outputRange: [1, 1.45] }) },
-                ],
-              },
-            ]}
-          />
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Ouvir a frase"
-            onPress={() => onSpeak(false)}
-            style={({ pressed }) => [
-              styles.speaker,
-              pressed && { transform: [{ translateY: 3 }], boxShadow: "none" },
-            ]}
-          >
-            <SpeakerIcon color={colors.text} />
-          </Pressable>
-        </View>
-        <View
-          style={styles.wave}
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-        >
-          {WAVE.map((height, index) => (
-            <WaveBar key={index} height={height} index={index} active={speaking} />
-          ))}
-        </View>
+    <View style={styles.player}>
+      <View>
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.ping,
+            {
+              opacity: ping.interpolate({ inputRange: [0, 1], outputRange: [0.5, 0] }),
+              transform: [
+                { scale: ping.interpolate({ inputRange: [0, 1], outputRange: [1, 1.45] }) },
+              ],
+            },
+          ]}
+        />
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Ouvir devagar"
-          onPress={() => onSpeak(true)}
-          style={styles.slow}
+          accessibilityLabel={label}
+          onPress={() => onSpeak(false)}
+          style={({ pressed }) => [
+            styles.speaker,
+            pressed && { transform: [{ translateY: 3 }], boxShadow: "none" },
+          ]}
         >
-          <Text style={styles.slowText}>0.5×</Text>
+          <SpeakerIcon color={colors.text} />
         </Pressable>
       </View>
-
-      <View style={{ marginTop: 16 }}>
-        <OptionList
-          options={item.options}
-          answer={item.correctAnswer}
-          picked={picked}
-          checked={checked}
-          onPick={onPick}
-        />
+      <View
+        style={styles.wave}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        {WAVE.map((height, index) => (
+          <WaveBar key={index} height={height} index={index} active={speaking} />
+        ))}
       </View>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Ouvir devagar"
+        onPress={() => onSpeak(true)}
+        style={styles.slow}
+      >
+        <Text style={styles.slowText}>0.5×</Text>
+      </Pressable>
     </View>
   );
 }
 
-function WaveBar({ height, index, active }) {
+export function WaveBar({
+  height,
+  index,
+  active,
+  max = 40,
+  width = 3,
+  flex = true,
+  color = colors.accent,
+  idle = "#3a4470",
+}) {
   const value = useRef(new Animated.Value(1)).current;
   useEffect(() => {
     if (!active) {
@@ -130,11 +147,12 @@ function WaveBar({ height, index, active }) {
   return (
     <Animated.View
       style={{
-        flex: 1,
-        minWidth: 3,
-        height: Math.round(height * 40),
+        flex: flex ? 1 : undefined,
+        width: flex ? undefined : width,
+        minWidth: width,
+        height: Math.round(height * max),
         borderRadius: 99,
-        backgroundColor: active ? colors.accent : "#3a4470",
+        backgroundColor: active ? color : idle,
         transform: [{ scaleY: value }],
       }}
     />
