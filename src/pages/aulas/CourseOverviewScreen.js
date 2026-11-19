@@ -77,8 +77,14 @@ export default function CourseOverviewScreen({
     };
   }, []);
 
+  // "Proxima aula" do LessonScreen volta para esta tela (popTo) com o id da
+  // aula seguinte, que abre por cima dela. O ref libera o proximo pedido.
   useEffect(() => {
-    if (!autoOpenLessonId || openedRef.current) return;
+    if (!autoOpenLessonId) {
+      openedRef.current = false;
+      return;
+    }
+    if (openedRef.current) return;
     if (aulaAccessMap === null) return;
 
     const lesson = lessons.find(
@@ -92,7 +98,7 @@ export default function CourseOverviewScreen({
     navigation.setParams({ autoOpenLessonId: null });
 
     requestAnimationFrame(() => {
-      navigation.replace(lesson.screen, {
+      navigation.navigate(lesson.screen, {
         lesson,
         lessons,
       });

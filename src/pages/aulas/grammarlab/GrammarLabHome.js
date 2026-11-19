@@ -44,6 +44,24 @@ async function loadProgress(storageKey) {
   }
 }
 
+// Nivel do app (LEVEL_OPTIONS em src/util/courseCatalog.js) -> posicao no
+// CEFR, para achar a secao do curso que corresponde a ele.
+const APP_LEVEL_RANK = { Starter: 0, Elementary: 1, Intermediate: 2, Advanced: 4 };
+const CEFR_RANK = { A1: 0, A2: 1, B1: 2, B2: 3, C1: 4, C2: 5 };
+
+// Codigo da secao (ex.: "A1", "B1-B2") para o nivel do app: a do nivel dele
+// ou a mais alta abaixo dele (um aluno Advanced cai no B1-B2).
+function levelForAppLevel(shownLevels, appLevel) {
+  const rank = APP_LEVEL_RANK[appLevel];
+  if (rank == null) return null;
+  let target = null;
+  for (const level of shownLevels) {
+    const levelRank = CEFR_RANK[String(level.code).split("-")[0]];
+    if (levelRank != null && levelRank <= rank) target = level.code;
+  }
+  return target;
+}
+
 function plural(n, one, many) {
   return `${n} ${n === 1 ? one : many}`;
 }
@@ -146,11 +164,20 @@ export default function GrammarLabHome({
   const lessonsOfSameKey = (lesson) =>
     lessons.filter((item) => lessonKey(item) === lessonKey(lesson));
 
+  // "Proxima aula" do LessonScreen volta para esta tela (popTo) com o id da
+  // aula seguinte. A aula abre por cima desta tela, para um "voltar" so
+  // trazer de volta aqui. O ref libera o proximo pedido depois de atendido.
   useEffect(() => {
-    if (!autoOpenLessonId || openedRef.current) return;
+    if (!autoOpenLessonId) {
+      openedRef.current = false;
+      return;
+    }
+    if (openedRef.current) return;
     if (aulaAccessMap === null) return;
 
-    const openKey = autoOpenStorageKey || storageKey;
+    // A aula diz de qual chave e a proxima (Story Mode junta A0-A1 e A2, que
+    // repetem os ids); a prop fica para a rota antiga StoryModeA2.
+    const openKey = route?.params?.autoOpenStorageKey || autoOpenStorageKey || storageKey;
     const lesson = lessons.find(
       (item) =>
         String(item.id) === String(autoOpenLessonId) && lessonKey(item) === openKey,
@@ -160,10 +187,10 @@ export default function GrammarLabHome({
     if (!isLessonUnlocked(lesson.screen)) return;
 
     openedRef.current = true;
-    navigation.setParams({ autoOpenLessonId: null });
+    navigation.setParams({ autoOpenLessonId: null, autoOpenStorageKey: undefined });
 
     requestAnimationFrame(() => {
-      navigation.replace(lesson.screen, {
+      navigation.navigate(lesson.screen, {
         lesson,
         lessons: lessonsOfSameKey(lesson),
       });
@@ -206,6 +233,41 @@ export default function GrammarLabHome({
   const totalXp = (resumo?.xpTotal ?? 0) + (goals?.lifetimeBonusXp ?? 0);
   const streak = resumo?.streakAtual ?? 0;
   const todayGoals = goals?.goals ?? [];
+
+  // Tile da Home manda `scrollToLevel` (nivel do app): a pagina continua com
+  // todos os niveis, so rola ate a secao dele (ou a mais alta abaixo dele).
+  // Fica pendente ate a secao medir a posicao; o aluno arrastar a lista ou
+  // sair da tela cancela, para nao rolar sozinha depois.
+  const scrollRef = useRef(null);
+  const levelYRef = useRef({});
+  const pendingLevelRef = useRef(null);
+  const scrollToLevel = route?.params?.scrollToLevel;
+
+  const scrollToSection = (code) => {
+    const y = levelYRef.current[code];
+    if (y == null) return;
+    scrollRef.current?.scrollTo({ y: Math.max(0, y - 8), animated: true });
+  };
+
+  useEffect(() => {
+    if (!scrollToLevel) return;
+    navigation.setParams({ scrollToLevel: undefined });
+    const shown = levels.filter((level) =>
+      topics.some((topic) => topic.level === level.code),
+    );
+    const target = levelForAppLevel(shown, scrollToLevel);
+    // A primeira secao ja esta no topo.
+    if (!target || target === shown[0]?.code) return;
+    pendingLevelRef.current = target;
+    scrollToSection(target);
+  }, [scrollToLevel]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const sub = navigation.addListener("blur", () => {
+      pendingLevelRef.current = null;
+    });
+    return sub;
+  }, [navigation]);
 
   const goToLesson = (lesson) => {
     if (!lesson?.screen) return;
@@ -251,9 +313,13 @@ export default function GrammarLabHome({
       </View>
 
       <ScrollView
+        ref={scrollRef}
         style={{ flex: 1 }}
         contentContainerStyle={[styles.scroll, { paddingBottom: 32 + insets.bottom }]}
         showsVerticalScrollIndicator={false}
+        onScrollBeginDrag={() => {
+          pendingLevelRef.current = null;
+        }}
       >
         {showDailyGoals && todayGoals.length > 0 && <DailyGoals goals={todayGoals} />}
 
@@ -270,17 +336,25 @@ export default function GrammarLabHome({
           const levelTopics = topics.filter((topic) => topic.level === level.code);
           if (levelTopics.length === 0) return null;
           return (
-            <LevelSection
+            <View
               key={level.code}
-              level={level}
-              topics={levelTopics}
-              currentKey={currentTopic?.key}
-              onOpenTopic={(key) => {
-                const topic = topics.find((item) => item.key === key);
-                if (topic?.routeName) navigation.navigate(topic.routeName);
-                else setSheetTopicKey(key);
+              onLayout={(e) => {
+                levelYRef.current[level.code] = e.nativeEvent.layout.y;
+                // Remede quando o conteudo de cima muda (ex.: card de continuar).
+                if (pendingLevelRef.current === level.code) scrollToSection(level.code);
               }}
-            />
+            >
+              <LevelSection
+                level={level}
+                topics={levelTopics}
+                currentKey={currentTopic?.key}
+                onOpenTopic={(key) => {
+                  const topic = topics.find((item) => item.key === key);
+                  if (topic?.routeName) navigation.navigate(topic.routeName);
+                  else setSheetTopicKey(key);
+                }}
+              />
+            </View>
           );
         })}
       </ScrollView>

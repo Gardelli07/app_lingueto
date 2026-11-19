@@ -6,8 +6,8 @@ import { FLA1 } from "../../../../util/images";
 // Veio de C:\DEV\my-trip-to-florida (src/lessons/florida.ts, florida-04).
 // Motor do Business (Exercise33); cada parte traz o proprio glossary e
 // dictionary. Objetivo: Entender por que o preço muda no caixa (sales tax) e como funciona a gorjeta na Flórida.
-// Audios dos listens em mp3/FL/A0-A1 (Fl04L*), conferidos com o Vibe em
-// 2026-11-16. Partes ainda sem audio (o TTS le). Imagens em assets/FL/A0-A1
+// Audios em mp3/FL/A0-A1: listens (Fl04L*) conferidos com o Vibe em
+// 2026-11-16; partes (Fl04P1-3) geradas e conferidas em 2026-11-19. Imagens em assets/FL/A0-A1
 // (FlNNP1-3, mapa FLA1 em util/images.js).
 
 const LESSON_SLIDES = [
@@ -22,6 +22,8 @@ const LESSON_SLIDES = [
           "title": "The Price on the Tag",
           "imageDescription": "o imposto que aparece só no caixa",
           "image": FLA1.Fl04P1,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl04P1.mp3"),
+          "audioDurationMs": 26400,
           "blocks": [
             {
               "kind": "p",
@@ -91,6 +93,8 @@ const LESSON_SLIDES = [
           "title": "The Price on the Tag",
           "imageDescription": "gorjeta: quanto e para quem",
           "image": FLA1.Fl04P2,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl04P2.mp3"),
+          "audioDurationMs": 22480,
           "blocks": [
             {
               "kind": "p",
@@ -158,6 +162,8 @@ const LESSON_SLIDES = [
           "title": "The Price on the Tag",
           "imageDescription": "gorjeta já incluída e formas de pagamento",
           "image": FLA1.Fl04P3,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl04P3.mp3"),
+          "audioDurationMs": 26400,
           "blocks": [
             {
               "kind": "p",

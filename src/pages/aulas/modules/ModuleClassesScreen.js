@@ -52,24 +52,28 @@ export default function ModuleClassesScreen({ navigation, route, course }) {
     };
   }, [navigation]);
 
-  const openLesson = (lesson, replace = false) => {
+  const openLesson = (lesson) => {
     if (!isLessonUnlocked(lesson.screen)) {
       navigation.navigate("Paywall");
       return;
     }
-    const params = { lesson, lessons: topic.lessons };
-    if (replace) navigation.replace(lesson.screen, params);
-    else navigation.navigate(lesson.screen, params);
+    navigation.navigate(lesson.screen, { lesson, lessons: topic.lessons });
   };
 
-  // "Proxima aula" do LessonScreen volta para ca com a aula seguinte do tema.
+  // "Proxima aula" do LessonScreen volta para ca (popTo) com a aula seguinte
+  // do tema, que abre por cima desta tela: um "voltar" so traz de volta aqui.
+  // O ref libera o proximo pedido depois de atendido.
   useEffect(() => {
-    if (!autoOpenLessonId || openedRef.current || !accessLoaded) return;
+    if (!autoOpenLessonId) {
+      openedRef.current = false;
+      return;
+    }
+    if (openedRef.current || !accessLoaded) return;
     const lesson = topic.lessons.find((item) => String(item.id) === String(autoOpenLessonId));
     if (!lesson || !isLessonUnlocked(lesson.screen)) return;
     openedRef.current = true;
     navigation.setParams({ autoOpenLessonId: null });
-    requestAnimationFrame(() => openLesson(lesson, true));
+    requestAnimationFrame(() => openLesson(lesson));
   }, [autoOpenLessonId, accessLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // A medalha aparece com um pulo quando uma nova e ganha.

@@ -6,8 +6,8 @@ import { FLA1 } from "../../../../util/images";
 // Veio de C:\DEV\my-trip-to-florida (src/lessons/florida.ts, florida-05).
 // Motor do Business (Exercise33); cada parte traz o proprio glossary e
 // dictionary. Objetivo: Saber quais documentos levar, como agir na imigração e por que levar seguro saúde e a carteira de motorista física.
-// Audios dos listens em mp3/FL/A0-A1 (Fl05L*), conferidos com o Vibe em
-// 2026-11-16. Partes ainda sem audio (o TTS le). Imagens em assets/FL/A0-A1
+// Audios em mp3/FL/A0-A1: listens (Fl05L*) conferidos com o Vibe em
+// 2026-11-16; partes (Fl05P1-3) geradas e conferidas em 2026-11-19. Imagens em assets/FL/A0-A1
 // (FlNNP1-3, mapa FLA1 em util/images.js).
 
 const LESSON_SLIDES = [
@@ -22,6 +22,8 @@ const LESSON_SLIDES = [
           "title": "Your Documents",
           "imageDescription": "o visto e o passaporte",
           "image": FLA1.Fl05P1,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl05P1.mp3"),
+          "audioDurationMs": 23440,
           "blocks": [
             {
               "kind": "p",
@@ -97,6 +99,8 @@ const LESSON_SLIDES = [
           "title": "Your Documents",
           "imageDescription": "a imigração: o que levar e o que dizer",
           "image": FLA1.Fl05P2,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl05P2.mp3"),
+          "audioDurationMs": 23680,
           "blocks": [
             {
               "kind": "p",
@@ -170,6 +174,8 @@ const LESSON_SLIDES = [
           "title": "Your Documents",
           "imageDescription": "seguro saúde e carteira de motorista",
           "image": FLA1.Fl05P3,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl05P3.mp3"),
+          "audioDurationMs": 24000,
           "blocks": [
             {
               "kind": "p",

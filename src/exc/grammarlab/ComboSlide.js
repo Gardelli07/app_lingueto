@@ -718,7 +718,9 @@ const styles = StyleSheet.create({
     color: colors.accentSoft,
     marginLeft: -6,
   },
-  comboRow: { height: 34, marginTop: 14, justifyContent: "center" },
+  // alignItems: o ComboChip fica do tamanho do selo; esticado, o brilho
+  // amarelo do x5+ (que preenche o ComboChip) virava uma faixa ate a borda.
+  comboRow: { height: 34, marginTop: 14, justifyContent: "center", alignItems: "flex-start" },
   comboHint: { fontFamily: fonts.semibold, fontSize: 12, color: colors.textMuted },
   hintBox: {
     marginTop: 16,

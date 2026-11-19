@@ -39,7 +39,6 @@ import {
   loadProgress,
   findContinueLesson,
 } from "../util/courseCatalog";
-import { storyModeRouteForLevel } from "./aulas/storymode/levels";
 import StudyTimeModal from "../components/StudyTimeModal";
 import {
   DEFAULT_REMINDER_HOUR,
@@ -107,6 +106,8 @@ const COURSE_TILES = [
     key: "grammar_lab",
     label: "Grammar Lab",
     routeName: "GrammarLab",
+    // Abre a pagina com todos os niveis, rolada ate o nivel selecionado.
+    scrollToLevel: true,
     image: require("../../assets/Home/icone-grammar-lab.png"),
     color: { light: "#F2AE1C", dark: "#F5BC3E" },
   },
@@ -114,8 +115,8 @@ const COURSE_TILES = [
     key: "story_mode",
     label: "Story Mode",
     routeName: "StoryMode",
-    // Abre direto o nivel do aluno (A0-A1 ou A2); na tela troca entre eles.
-    routeForLevel: (level) => storyModeRouteForLevel(level, LEVEL_OPTIONS),
+    // Abre a pagina com todos os niveis, rolada ate o nivel selecionado.
+    scrollToLevel: true,
     image: require("../../assets/Home/icone-story-mode.png"),
     color: { light: "#45C068", dark: "#56CF7A" },
   },
@@ -646,9 +647,10 @@ export default function Inglescompleto({ navigation, route }) {
   );
   const [dailyGoalsState, setDailyGoalsState] = useState({ goals: [] });
   const [xpTotal, setXpTotal] = useState(0);
-  // { lesson, lessons, percent } do curso da ultima aula feita; null ate
-  // existir uma (findContinueLesson em courseCatalog.js).
-  const [continueTarget, setContinueTarget] = useState(null);
+  // { lesson, lessons, percent } do "Continue de onde parou", so dos cursos
+  // novos (findContinueLesson em courseCatalog.js); undefined enquanto carrega
+  // e null quando todas as aulas estao feitas.
+  const [continueTarget, setContinueTarget] = useState(undefined);
 
   // Pergunta o horario de estudo uma unica vez, logo na primeira Home apos o
   // login (a flag fica salva no dispositivo independente do usuario decidir
@@ -849,11 +851,6 @@ export default function Inglescompleto({ navigation, route }) {
     });
   }, [autoOpenLessonId, navigation, allLessons, activeLessons, aulaAccessMap]);
 
-  const totalLessons = activeLessons.length;
-  const completedCount = activeLessons.filter(
-    (item) => progressMap[item.id],
-  ).length;
-  const percent = totalLessons > 0 ? (completedCount / totalLessons) * 100 : 0;
   const totalXp = xpTotal + (dailyGoalsState.lifetimeBonusXp || 0);
   const levelProgress = useMemo(() => getLevelProgress(totalXp), [totalXp]);
 
@@ -866,14 +863,11 @@ export default function Inglescompleto({ navigation, route }) {
     }, {});
   }, [activeModuleDefs, activeLessons]);
 
-  const firstPendingLesson =
-    activeLessons.find((item) => !progressMap[item.id]) || activeLessons[0];
-
-  // "Continue de onde parou": sai do curso da ultima aula feita (qualquer
-  // curso, inclusive Grammar Lab e Story Mode); antes da primeira aula, fica
-  // a primeira pendente do curso selecionado.
-  const continueLesson = continueTarget ? continueTarget.lesson : firstPendingLesson;
-  const continuePercent = continueTarget ? continueTarget.percent : percent;
+  // "Continue de onde parou": so os cursos novos (os tiles). Os cursos antigos
+  // estao desativados, entao nao cai mais no curso selecionado.
+  const continueLoading = continueTarget === undefined;
+  const continueLesson = continueTarget ? continueTarget.lesson : null;
+  const continuePercent = continueTarget ? continueTarget.percent : 0;
 
   const recentActivity = useMemo(() => {
     const items = [];
@@ -1119,7 +1113,11 @@ export default function Inglescompleto({ navigation, route }) {
             <View style={{ flex: 1, minWidth: 0, marginLeft: 15 }}>
               <Text style={styles.heroKicker}>CONTINUE DE ONDE PAROU</Text>
               <Text style={styles.heroTitle} numberOfLines={2}>
-                {continueLesson ? continueLesson.title : "Tudo concluído"}
+                {continueLoading
+                  ? " "
+                  : continueLesson
+                    ? continueLesson.title
+                    : "Tudo concluído"}
               </Text>
               <View style={[styles.row, { marginTop: 5 }]}>
                 <Text style={styles.heroMeta}>⏱ 8 min</Text>
@@ -1136,8 +1134,9 @@ export default function Inglescompleto({ navigation, route }) {
           </View>
           <TouchableOpacity
             style={styles.primaryBtn}
-            // TEMPORARIO: acesso aos cursos desativado ate resolver a propriedade das aulas
-            // onPress={() => goToLesson(continueLesson, continueTarget?.lessons)}
+            onPress={() =>
+              continueLesson && goToLesson(continueLesson, continueTarget.lessons)
+            }
             activeOpacity={0.9}
           >
             <Text style={styles.primaryBtnTxt}>Continuar</Text>
@@ -1592,9 +1591,8 @@ export default function Inglescompleto({ navigation, route }) {
                 style={styles.courseTile}
                 onPress={() =>
                   navigation.navigate(
-                    tile.routeForLevel
-                      ? tile.routeForLevel(homeLevel)
-                      : tile.routeName,
+                    tile.routeName,
+                    tile.scrollToLevel ? { scrollToLevel: homeLevel } : undefined,
                   )
                 }
                 activeOpacity={0.85}

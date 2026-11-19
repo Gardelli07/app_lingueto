@@ -9,6 +9,7 @@ const LESSON_SLIDES = [
           id: "break-the-ice",
           phrase: "Break the ice",
           meaning: "Make people feel relaxed when things are awkward.",
+          audio: require("../../../../../mp3/EX/A0-A1/Ex01.mp3"),
           image: require("../../../../../assets/EX/A0-A1/break-the-ice.jpg"),
           meaningCheck: {
             options: [
@@ -34,6 +35,8 @@ const LESSON_SLIDES = [
           id: "call-it-a-day",
           phrase: "Call it a day",
           meaning: "Stop working on something for today.",
+          audio: require("../../../../../mp3/EX/A0-A1/Ex01B.mp3"),
+          image: require("../../../../../assets/EX/A0-A1/call-it-a-day.webp"),
           meaningCheck: {
             options: [
               { text: "Ligar para alguém" },

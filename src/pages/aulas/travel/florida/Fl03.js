@@ -6,8 +6,8 @@ import { FLA1 } from "../../../../util/images";
 // Veio de C:\DEV\my-trip-to-florida (src/lessons/florida.ts, florida-03).
 // Motor do Business (Exercise33); cada parte traz o proprio glossary e
 // dictionary. Objetivo: Conhecer as comidas típicas da Flórida e aprender as palavras para pedir e descrever comida.
-// Audios dos listens em mp3/FL/A0-A1 (Fl03L*), conferidos com o Vibe em
-// 2026-11-16. Partes ainda sem audio (o TTS le). Imagens em assets/FL/A0-A1
+// Audios em mp3/FL/A0-A1: listens (Fl03L*) conferidos com o Vibe em
+// 2026-11-16; partes (Fl03P1-3) geradas e conferidas em 2026-11-19. Imagens em assets/FL/A0-A1
 // (FlNNP1-3, mapa FLA1 em util/images.js).
 
 const LESSON_SLIDES = [
@@ -22,6 +22,8 @@ const LESSON_SLIDES = [
           "title": "A Taste of Florida",
           "imageDescription": "Miami: Cuban sandwich e café cubano",
           "image": FLA1.Fl03P1,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl03P1.mp3"),
+          "audioDurationMs": 27840,
           "blocks": [
             {
               "kind": "p",
@@ -102,6 +104,8 @@ const LESSON_SLIDES = [
           "title": "A Taste of Florida",
           "imageDescription": "frutos do mar: stone crab, grouper, conch fritters",
           "image": FLA1.Fl03P2,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl03P2.mp3"),
+          "audioDurationMs": 24400,
           "blocks": [
             {
               "kind": "p",
@@ -186,6 +190,8 @@ const LESSON_SLIDES = [
           "title": "A Taste of Florida",
           "imageDescription": "sobremesa e curiosidades: key lime pie, suco de laranja, jacaré",
           "image": FLA1.Fl03P3,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl03P3.mp3"),
+          "audioDurationMs": 23120,
           "blocks": [
             {
               "kind": "p",

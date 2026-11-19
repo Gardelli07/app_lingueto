@@ -7,7 +7,7 @@ import { FLA1 } from "../../../../util/images";
 // Motor do Business (Exercise33); cada parte traz o proprio glossary e
 // dictionary. Objetivo: Falar sobre planos de viagem: para onde, quando e por quanto tempo, e dizer o que você sabe ou não sabe fazer.
 // Audios em mp3/FL/A0-A1 (Fl01P1-3 das partes, Fl01L* dos listens),
-// conferidos com o Vibe em 2026-11-16. Imagens em assets/FL/A0-A1
+// conferidos com o Vibe em 2026-11-16 (Fl01P3 regravado em 2026-11-19). Imagens em assets/FL/A0-A1
 // (FlNNP1-3, mapa FLA1 em util/images.js).
 
 const LESSON_SLIDES = [
@@ -167,7 +167,7 @@ const LESSON_SLIDES = [
           "imageDescription": "o medo de falar inglês e a decisão de aprender",
           "image": FLA1.Fl01P3,
           "audioSource": require("../../../../../mp3/FL/A0-A1/Fl01P3.mp3"),
-          "audioDurationMs": 38920,
+          "audioDurationMs": 28960,
           "blocks": [
             {
               "kind": "p",

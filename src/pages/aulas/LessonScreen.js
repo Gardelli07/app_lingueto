@@ -1253,10 +1253,18 @@ export default function createLessonScreen(
     const goToNextLesson = async () => {
       stopActiveMedia();
       const nextLesson = findNextLesson();
-      navigation.replace(nextRouteName, {
-        ...nextRouteParams,
-        autoOpenLessonId: nextLesson ? nextLesson.id : null,
-      });
+      // popTo volta para a tela do curso que ja esta na pilha (em vez de
+      // empilhar uma copia dela, que obrigava a tocar "voltar" duas vezes);
+      // se ela nao estiver na pilha (aula aberta pela Home), troca a aula por
+      // ela. A tela do curso abre a proxima aula pelo autoOpenLessonId.
+      navigation.popTo(
+        nextRouteName,
+        {
+          ...nextRouteParams,
+          autoOpenLessonId: nextLesson ? nextLesson.id : null,
+        },
+        { merge: true },
+      );
     };
 
     const goToMeusErros = () => {

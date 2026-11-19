@@ -40,7 +40,6 @@ const moduleDefs = STORY_MODE_SOURCES.flatMap((source) =>
   source.moduleDefs.map((moduleItem) => ({
     ...moduleItem,
     id: `${source.level}-${moduleItem.id}`,
-    glyph: "ABC",
     level: source.level,
   })),
 );
@@ -69,13 +68,14 @@ function StoryModeScreen({ autoOpenStorageKey, ...props }) {
   );
 }
 
-// Rota StoryMode: as aulas do A0-A1 voltam para ela.
+// Rota StoryMode: as aulas do A0-A1 e do A2 voltam para ela (o
+// autoOpenStorageKey nos params diz de qual nivel e a proxima aula).
 export default function StoryModeHome(props) {
   return <StoryModeScreen {...props} />;
 }
 
-// Rota StoryModeA2: mesma pagina. As aulas do A2 (e o tile da Home para quem
-// e Elementary) voltam para ela, e o "proxima aula" abre a aula do A2.
+// Rota StoryModeA2: mesma pagina, mantida so por compatibilidade. Nada mais
+// navega para ela (o tile da Home abre StoryMode rolada ate o nivel).
 export function StoryModeA2Home(props) {
   return <StoryModeScreen {...props} autoOpenStorageKey={STORY_MODE_A2_STORAGE_KEY} />;
 }

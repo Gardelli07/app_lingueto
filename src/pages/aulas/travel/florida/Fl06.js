@@ -6,8 +6,8 @@ import { FLA1 } from "../../../../util/images";
 // Veio de C:\DEV\my-trip-to-florida (src/lessons/florida.ts, florida-06).
 // Motor do Business (Exercise33); cada parte traz o proprio glossary e
 // dictionary. Objetivo: Entender palavras e expressões que os moradores da Flórida usam no dia a dia.
-// Audios dos listens em mp3/FL/A0-A1 (Fl06L*), conferidos com o Vibe em
-// 2026-11-16. Partes ainda sem audio (o TTS le). Imagens em assets/FL/A0-A1
+// Audios em mp3/FL/A0-A1: listens (Fl06L*) conferidos com o Vibe em
+// 2026-11-16; partes (Fl06P1-3) geradas e conferidas em 2026-11-19. Imagens em assets/FL/A0-A1
 // (FlNNP1-3, mapa FLA1 em util/images.js).
 
 const LESSON_SLIDES = [
@@ -22,6 +22,8 @@ const LESSON_SLIDES = [
           "title": "Florida Words",
           "imageDescription": "Floridians, the Sunshine State e os snowbirds",
           "image": FLA1.Fl06P1,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl06P1.mp3"),
+          "audioDurationMs": 24080,
           "blocks": [
             {
               "kind": "p",
@@ -90,6 +92,8 @@ const LESSON_SLIDES = [
           "title": "Florida Words",
           "imageDescription": "falando do clima: muggy, pouring, sunburn",
           "image": FLA1.Fl06P2,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl06P2.mp3"),
+          "audioDurationMs": 24640,
           "blocks": [
             {
               "kind": "p",
@@ -163,6 +167,8 @@ const LESSON_SLIDES = [
           "title": "Florida Words",
           "imageDescription": "sotaques e frases do dia a dia: Spanglish, y'all, the Turnpike, Have a good one!",
           "image": FLA1.Fl06P3,
+          "audioSource": require("../../../../../mp3/FL/A0-A1/Fl06P3.mp3"),
+          "audioDurationMs": 26400,
           "blocks": [
             {
               "kind": "p",

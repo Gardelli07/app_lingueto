@@ -181,5 +181,6 @@ const LESSON_SLIDES = [
 export default createLessonScreen(LESSON_SLIDES, {
   storageKey: "@curso_progress_story_mode_A0-A1",
   nextRouteName: "StoryMode",
+  nextRouteParams: { autoOpenStorageKey: "@curso_progress_story_mode_A0-A1" },
   screenName: "StoryModeA0A1LessonScreen",
 });

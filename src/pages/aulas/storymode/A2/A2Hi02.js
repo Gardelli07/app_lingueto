@@ -1,10 +1,13 @@
 import createLessonScreen from "../../LessonScreen";
+import { SMA2 } from "../../../../util/images";
 
 const LESSON_SLIDES = [
   {
     component: "Exercise21",
     activity: {
-      // Sem imagem ainda: a tela mostra so o player.
+      image: SMA2.A2Hi02,
+      imageDescription:
+        "Um rapaz de mochila subindo num ônibus da cidade enquanto confere o celular",
       audioSource: require("../../../../../mp3/SM/A2/A2Hi02.mp3"),
       audioDurationMs: 92291,
       title: "The Wrong Bus",
@@ -294,6 +297,8 @@ const LESSON_SLIDES = [
 
 export default createLessonScreen(LESSON_SLIDES, {
   storageKey: "@curso_progress_story_mode_A2",
-  nextRouteName: "StoryModeA2",
+  // Mesma pagina do A0-A1 (rota StoryMode); a chave diz que a proxima aula e do A2.
+  nextRouteName: "StoryMode",
+  nextRouteParams: { autoOpenStorageKey: "@curso_progress_story_mode_A2" },
   screenName: "StoryModeA2LessonScreen",
 });

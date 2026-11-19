@@ -75,6 +75,11 @@ import {
   businessSampleLessons,
 } from "../pages/aulas/business/A0-A1";
 import {
+  BUSINESS_A2_STORAGE_KEY,
+  businessA2ModuleDefs,
+  businessA2SampleLessons,
+} from "../pages/aulas/business/A2";
+import {
   TRAVEL_STORAGE_KEY as TRAVEL_NEW_STORAGE_KEY,
   TRAVEL_NEW_COURSE_NAME,
   travelModuleDefs as travelNewModuleDefs,
@@ -270,6 +275,21 @@ export const EXTRA_COURSES = [
     },
   },
   {
+    // Business novo A2: ainda sem aulas; registrado para as aulas entrarem no
+    // "Continue de onde parou" assim que existirem. O "Bussines English"
+    // antigo (pasta ../pages/aulas/bussines) nao entra aqui de forma alguma.
+    courseName: BUSINESS_COURSE_NAME,
+    level: "Elementary",
+    config: {
+      folder: "A2",
+      routeName: "BusinessA2",
+      storageKey: BUSINESS_A2_STORAGE_KEY,
+      moduleDefs: businessA2ModuleDefs,
+      lessons: businessA2SampleLessons,
+      available: true,
+    },
+  },
+  {
     // Viagem nova (tile da Home); o "Ingles para viagem" antigo e o TRAVEL_LEVEL_CONFIG.
     courseName: TRAVEL_NEW_COURSE_NAME,
     level: "Starter",
@@ -406,29 +426,54 @@ export function findLessonByScreen(screen) {
   return null;
 }
 
+// "Continue de onde parou" da Home: so os cursos novos (EXTRA_COURSES), os
+// mesmos dos tiles; os antigos (COURSE_OPTIONS) estao desativados e nao podem
+// aparecer. Aula sem `screen` ainda nao existe ("Em breve") e e pulada.
+//
 // A proxima aula ainda nao concluida depois da ultima feita, no mesmo curso;
-// sem nenhuma, a propria ultima aula feita. Null quando nenhuma aula foi feita
-// (a Home cai no curso selecionado).
+// sem nenhuma, a propria ultima aula feita. Antes da primeira aula (ou se a
+// ultima for de um curso antigo), a primeira pendente dos cursos novos, na
+// ordem dos tiles. Null quando todas estao feitas.
 export async function findContinueLesson() {
-  const last = await loadLastLessonDone();
-  const found = last ? findLessonByScreen(last.screen) : null;
-  if (!found) return null;
-
-  const progress = await loadProgress(found.storageKey);
-  const lastIndex = found.lessons.findIndex(
-    (lesson) => lesson.screen === found.lesson.screen,
+  const courses = EXTRA_COURSES.filter((course) => course.config.available).map(
+    (course) => ({
+      lessons: course.config.lessons.filter((lesson) => lesson.screen),
+      storageKey: course.config.storageKey,
+    }),
   );
-  const nextLesson = found.lessons
-    .slice(lastIndex + 1)
-    .find((lesson) => !progress[lesson.id]);
-  const completed = found.lessons.filter((lesson) => progress[lesson.id]).length;
-
-  return {
-    lesson: nextLesson || found.lesson,
-    lessons: found.lessons,
-    percent:
-      found.lessons.length > 0 ? (completed / found.lessons.length) * 100 : 0,
+  const result = (course, lesson, progress) => {
+    const completed = course.lessons.filter((item) => progress[item.id]).length;
+    return {
+      lesson,
+      lessons: course.lessons,
+      percent:
+        course.lessons.length > 0 ? (completed / course.lessons.length) * 100 : 0,
+    };
   };
+
+  const last = await loadLastLessonDone();
+  const lastCourse = last
+    ? courses.find((course) =>
+        course.lessons.some((lesson) => lesson.screen === last.screen),
+      )
+    : null;
+  if (lastCourse) {
+    const progress = await loadProgress(lastCourse.storageKey);
+    const lastIndex = lastCourse.lessons.findIndex(
+      (lesson) => lesson.screen === last.screen,
+    );
+    const nextLesson = lastCourse.lessons
+      .slice(lastIndex + 1)
+      .find((lesson) => !progress[lesson.id]);
+    return result(lastCourse, nextLesson || lastCourse.lessons[lastIndex], progress);
+  }
+
+  for (const course of courses) {
+    const progress = await loadProgress(course.storageKey);
+    const pending = course.lessons.find((lesson) => !progress[lesson.id]);
+    if (pending) return result(course, pending, progress);
+  }
+  return null;
 }
 
 export async function loadGlobalProgressStats() {

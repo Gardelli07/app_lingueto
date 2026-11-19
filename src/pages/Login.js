@@ -351,40 +351,25 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.googleText}>Continuar com Google</Text>
           </TouchableOpacity>
 
-          {/* Apple (nativo no iOS, fallback no Android) */}
-          {Platform.OS === "ios" ? (
-            // O botao nativo da Apple nao aceita `disabled`, entao ele so fica
-            // esmaecido: o toque continua chegando e aceiteConfirmado() explica
-            // o que falta, em vez de o botao nao responder sem motivo aparente.
-            <View style={!aceitou && styles.botaoBloqueado}>
-              <AppleAuthentication.AppleAuthenticationButton
-                buttonType={
-                  AppleAuthentication.AppleAuthenticationButtonType.CONTINUE
-                }
-                buttonStyle={
-                  isDark
-                    ? AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
-                    : AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
-                }
-                cornerRadius={15}
-                style={styles.appleNativeButton}
-                onPress={handleAppleSignIn}
-              />
-            </View>
-          ) : (
-            <TouchableOpacity
-              style={[styles.appleButton, !aceitou && styles.botaoBloqueado]}
-              onPress={handleAppleSignIn}
-              activeOpacity={0.85}
-            >
-              <AntDesign
-                name="apple"
-                size={20}
-                color={CORES.LOGIN_APPLE_TEXT}
-              />
-              <Text style={styles.appleText}>Continuar com Apple</Text>
-            </TouchableOpacity>
-          )}
+          {/* Apple: botao proprio nas duas plataformas. O nativo
+              (AppleAuthenticationButton) nao aparecia no build do TestFlight
+              (18/11/2026). As regras da Apple aceitam botao proprio desde que
+              siga o padrao: logo da Apple, "Continuar com Apple", preto no
+              tema claro e branco no escuro (LOGIN_APPLE_BG/TEXT). No iOS o
+              toque abre a folha nativa da Apple; no Android, o aviso. */}
+          <TouchableOpacity
+            style={[styles.appleButton, !aceitou && styles.botaoBloqueado]}
+            onPress={handleAppleSignIn}
+            disabled={socialLoading}
+            activeOpacity={0.85}
+          >
+            <AntDesign
+              name="apple"
+              size={20}
+              color={CORES.LOGIN_APPLE_TEXT}
+            />
+            <Text style={styles.appleText}>Continuar com Apple</Text>
+          </TouchableOpacity>
 
           {/*
             LOGIN CORPORATIVO — escondido de proposito (30/09/2026).
@@ -608,11 +593,6 @@ const makeStyles = (CORES) =>
       alignItems: "center",
       justifyContent: "center",
       gap: 11,
-    },
-    appleNativeButton: {
-      width: "100%",
-      height: 56,
-      marginTop: 13,
     },
     appleText: {
       fontSize: 16,

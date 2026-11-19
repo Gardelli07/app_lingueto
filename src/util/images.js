@@ -959,6 +959,8 @@ export const SMA1 = {
 };
 
 export const SMA2 = {
+  A2Hi01: require("../../assets/SM/A2/A2Hi01.jpg"),
+  A2Hi02: require("../../assets/SM/A2/A2Hi02.jpg"),
   A2Hi03: require("../../assets/SM/A2/A2Hi03.jpg"),
   A2Hi04: require("../../assets/SM/A2/A2Hi04.jpg"),
   A2Hi05: require("../../assets/SM/A2/A2Hi05.jpg"),

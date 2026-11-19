@@ -6,7 +6,7 @@ const HINT =
 
 // Artigos a / an: a escolha depende do som da proxima palavra, nao da letra.
 // Os 5 tipos do Grammar Lab, um slide por tipo, e no fim uma historia do Story
-// Mode (sem mp3 e sem imagem: o player le o texto com TTS). O combo e o XP
+// Mode (com imagem e audio gravado, Gmm32S6.mp3). O combo e o XP
 // seguem de um slide para o outro (ComboSlide).
 const LESSON_SLIDES = [
   {
@@ -254,6 +254,11 @@ const LESSON_SLIDES = [
     component: "Exercise21",
     activity: {
       title: "Ana's Bag",
+      image: require("../../../../../assets/GL/A0-A1/Gmm32.webp"),
+      audioSource: require("../../../../../mp3/GL/A0-A1/Gmm32S6.mp3"),
+      audioDurationMs: 14400,
+      imageDescription:
+        "Uma estudante de mochila na calçada de casa, com o irmão lavando o carro e uma bicicleta laranja na garagem",
       // Palavras ligadas por "_" formam uma expressao (toque para traduzir).
       text: [
         "Hi! My_name_is Ana. I'm a student.",

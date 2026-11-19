@@ -20,7 +20,6 @@ export const businessModuleDefs = [
     id: 0,
     name: "Marketing",
     subtitle: "The Marketing Job",
-    glyph: "MKT",
     level: "A1",
     routeName: "MarketingTopics",
     locked: false,
