@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "see-you-around",
           phrase: "See you around",
           meaning: "An informal goodbye when you don't know when you'll meet again.",
+          meaningPt: "Uma despedida informal quando você não sabe quando vai ver a pessoa de novo.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex06.mp3"),
           image: require("../../../../../assets/EX/A0-A1/see-you-around.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "I don't know when I'll be back here, but",
             after: "!",
+            translation: "Não sei quando vou voltar aqui, mas ___!",
             distractors: ["long time no see", "how's it going", "catch up"],
             correctExplanation:
               "Sem data para voltar: see you around!",

@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "feel-down",
           phrase: "Feel down",
           meaning: "Feel sad.",
+          meaningPt: "Se sentir triste.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex13.mp3"),
           image: require("../../../../../assets/EX/A0-A1/feel-down.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "When it's dark and cold in winter, I sometimes",
             after: ".",
+            translation: "Quando está escuro e frio no inverno, às vezes eu ___.",
             distractors: ["in a good mood", "on edge", "over the moon"],
             correctExplanation:
               "O inverno escuro faz muita gente feel down.",

@@ -240,7 +240,15 @@ export function ListeningSlide({
 
   const position = questionOffset + q + 1;
   const done = questionOffset + q + (checked ? 1 : 0);
-  const exerciseProps = { item, instruction: activity.instruction, checked, picked };
+  // O "🌐 PT" do enunciado vem do PtContext da aula (ptToggle no
+  // createLessonScreen); instructionPt e a traducao da instrucao do slide.
+  const exerciseProps = {
+    item,
+    instruction: activity.instruction,
+    instructionPt: activity.instructionPt,
+    checked,
+    picked,
+  };
 
   return (
     <View style={[styles.root, { paddingTop: insets.top + 12 }]}>

@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "fed-up",
           phrase: "Fed up",
           meaning: "Bored and annoyed with something that has gone on for too long.",
+          meaningPt: "Cansado e irritado com algo que já dura tempo demais.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex09.mp3"),
           image: require("../../../../../assets/EX/A0-A1/fed-up.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "It's rained every day for two weeks. I'm so",
             after: "!",
+            translation: "Choveu todo dia por duas semanas. Estou tão ___!",
             distractors: ["over the moon", "in a good mood", "feel down"],
             correctExplanation:
               "Duas semanas de chuva: fed up!",

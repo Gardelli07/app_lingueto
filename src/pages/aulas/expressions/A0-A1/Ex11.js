@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "on-edge",
           phrase: "On edge",
           meaning: "Nervous and worried.",
+          meaningPt: "Nervoso e preocupado.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex11.mp3"),
           image: require("../../../../../assets/EX/A0-A1/on-edge.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "My exam results come out tomorrow, so I'm a bit",
             after: ".",
+            translation: "O resultado da minha prova sai amanhã, então estou meio ___.",
             distractors: ["over the moon", "in a good mood", "feel down"],
             correctExplanation:
               "Esperando o resultado da prova, ele está on edge.",

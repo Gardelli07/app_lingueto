@@ -5,6 +5,7 @@ import { playCorrect, playWrong } from "../grammarlab/feedback";
 import { PlayIcon } from "./icons";
 import { AnswerSheet } from "./Sheets";
 import { frameStyles, optionColors, PronunciationFrame, ThText } from "./Frame";
+import { PtLine } from "../ptToggle";
 import { gainForCorrect } from "./scoring";
 import { useVoicePractice } from "./useVoicePractice";
 import { colors, fonts } from "./theme";
@@ -83,7 +84,9 @@ export function DiscoverExercise({ activity, next, onAttempt, xpProjection, user
       }
     >
       <Text style={frameStyles.h1}>{activity.title}</Text>
+      <PtLine text={activity.title} style={frameStyles.pt} />
       <Text style={frameStyles.sub}>{activity.instruction}</Text>
+      <PtLine text={activity.instruction} style={frameStyles.pt} />
       <View style={styles.wordBox} accessible accessibilityLabel={activity.word}>
         <ThText text={activity.word} style={styles.wordBoxText} />
       </View>
@@ -107,6 +110,7 @@ export function DiscoverExercise({ activity, next, onAttempt, xpProjection, user
         })}
       </View>
       <Text style={styles.question}>{activity.question}</Text>
+      <PtLine text={activity.question} style={frameStyles.pt} />
       <View style={{ gap: 10, marginTop: 12 }}>
         {activity.options.map((text, i) => {
           const answered = pick !== null;

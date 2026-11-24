@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { ExerciseHeader } from "../grammarlab/ExerciseHeader";
+import { ExerciseHeader, ptFor } from "../grammarlab/ExerciseHeader";
 import { ChatIcon, PinIcon } from "../grammarlab/icons";
 import { colors, fonts } from "../grammarlab/theme";
 import { OptionList } from "../grammarlab/types/ChoiceExercise";
@@ -9,7 +9,19 @@ import { Player } from "../grammarlab/types/ListenExercise";
 // Dialogo (Exercise28): a conversa a duas vozes toca como um audio so e o texto
 // aparece depois de responder. item: question, lines ({ who, speaker, text }),
 // options, correctAnswer; variant "situation" e a versao "onde eles estao?".
-export function DialogueExercise({ item, instruction, picked, checked, speaking, onSpeak, onPick }) {
+// questionPt/instructionPt sao a traducao do "🌐 PT".
+export function DialogueExercise({
+  item,
+  instruction,
+  instructionPt,
+  picked,
+  checked,
+  speaking,
+  onSpeak,
+  onPick,
+  ptShown,
+  onTogglePt,
+}) {
   const situation = item.variant === "situation";
   return (
     <View>
@@ -30,6 +42,20 @@ export function DialogueExercise({ item, instruction, picked, checked, speaking,
             ? "Play the dialogue and use the clues."
             : "Play the conversation, then choose.")
         }
+        titlePt={item.questionPt}
+        subtitlePt={ptFor(
+          item.instruction,
+          item.instructionPt,
+          ptFor(
+            instruction,
+            instructionPt,
+            situation
+              ? "Ouça o diálogo e use as pistas."
+              : "Ouça a conversa e depois escolha.",
+          ),
+        )}
+        ptShown={ptShown}
+        onTogglePt={onTogglePt}
       />
 
       <Player speaking={speaking} onSpeak={onSpeak} label="Ouvir a conversa" />

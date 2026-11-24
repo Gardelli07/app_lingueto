@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "in-a-good-mood",
           phrase: "In a good mood",
           meaning: "Happy and friendly.",
+          meaningPt: "Feliz e simpático.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex12.mp3"),
           image: require("../../../../../assets/EX/A0-A1/in-a-good-mood.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "The boss is smiling and singing today. He's",
             after: ".",
+            translation: "O chefe está sorrindo e cantando hoje. Ele está ___.",
             distractors: ["fed up", "on edge", "under the weather"],
             correctExplanation:
               "Sorrindo e cantando: ele está in a good mood.",

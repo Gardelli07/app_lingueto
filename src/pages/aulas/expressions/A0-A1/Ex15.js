@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "my-treat",
           phrase: "My treat",
           meaning: "I will pay for this.",
+          meaningPt: "Eu pago essa.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex15.mp3"),
           image: require("../../../../../assets/EX/A0-A1/my-treat.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "Put your wallet away. This dinner is",
             after: "!",
+            translation: "Guarda a carteira. Esse jantar é ___!",
             distractors: ["dig in", "split the bill", "grab a bite"],
             correctExplanation:
               "Guarda a carteira: o jantar é my treat!",

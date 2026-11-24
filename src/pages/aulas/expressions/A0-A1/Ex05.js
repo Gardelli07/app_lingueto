@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "take-care",
           phrase: "Take care",
           meaning: "A friendly way to say goodbye and wish someone well.",
+          meaningPt: "Um jeito carinhoso de se despedir e desejar o bem da pessoa.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex05.mp3"),
           image: require("../../../../../assets/EX/A0-A1/take-care.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "OK, I have to go now. Bye, and",
             after: "!",
+            translation: "Bom, tenho que ir agora. Tchau, e ___!",
             distractors: ["catch up", "long time no see", "how's it going"],
             correctExplanation:
               "Para se despedir com carinho: take care!",

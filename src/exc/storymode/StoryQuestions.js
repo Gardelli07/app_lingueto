@@ -20,6 +20,7 @@ import {
   slideAccuracy,
 } from "../../util/exerciseProgress";
 import { C, F, WIN_TITLES } from "./theme";
+import { PtContextButton, PtLine } from "../ptToggle";
 import {
   BackIcon,
   BoltIcon,
@@ -262,6 +263,8 @@ export function StoryQuestions({
             </Text>
             {step.retry && <Text style={styles.retryTag}>Segunda chance</Text>}
           </View>
+          {/* "🌐 PT" das aulas A1: traduz a pergunta e a instrucao */}
+          <PtContextButton />
           {hasXp ? (
             <View style={styles.xpSmall}>
               <BoltIcon size={14} color={C.muted} />
@@ -277,9 +280,14 @@ export function StoryQuestions({
           <Text style={styles.question} accessibilityRole="header">
             {question.question}
           </Text>
+          <PtLine text={question.question} style={styles.questionPt} />
           <Text style={styles.sub}>
             {activity.questionsSubtitle || "Choose the correct answer."}
           </Text>
+          <PtLine
+            text={activity.questionsSubtitle || "Choose the correct answer."}
+            style={styles.subPt}
+          />
         </View>
 
         <View style={{ gap: 14 }} accessibilityRole="radiogroup">
@@ -620,6 +628,8 @@ const styles = StyleSheet.create({
     color: C.white,
   },
   sub: { fontFamily: F.l400, fontSize: 17, lineHeight: 26, color: C.muted },
+  questionPt: { marginTop: -6, fontFamily: F.l700, fontSize: 19, lineHeight: 26, color: C.muted },
+  subPt: { marginTop: -10, fontFamily: F.l400, fontSize: 15, lineHeight: 22, color: C.muted },
 
   opt: {
     flexDirection: "row",

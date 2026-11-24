@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "hows-it-going",
           phrase: "How's it going",
           meaning: "An informal way to ask how someone is.",
+          meaningPt: "Um jeito informal de perguntar como a pessoa está.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex04.mp3"),
           image: require("../../../../../assets/EX/A0-A1/hows-it-going.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "Hey, Jake! So,",
             after: "?",
+            translation: "E aí, Jake! Então, ___?",
             distractors: ["take care", "see you around", "nice to meet you"],
             correctExplanation:
               "Para perguntar como o amigo está: how's it going?",

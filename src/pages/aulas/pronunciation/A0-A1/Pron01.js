@@ -108,6 +108,7 @@ const LESSON_SLIDES = [
 
 export default createLessonScreen(LESSON_SLIDES, {
   storageKey: "@curso_progress_pronunciation_A0-A1",
+  ptToggle: true,
   nextRouteName: "Pronunciation",
   screenName: "PronunciationA0A1LessonScreen",
 });

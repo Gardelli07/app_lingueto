@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "catch-up",
           phrase: "Catch up",
           meaning: "Talk with someone about what has happened since you last met.",
+          meaningPt: "Conversar com alguém sobre o que aconteceu desde a última vez que vocês se viram.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex07.mp3"),
           image: require("../../../../../assets/EX/A0-A1/catch-up.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "We haven't talked in months! Let's have coffee and",
             after: ".",
+            translation: "A gente não se fala há meses! Vamos tomar um café e ___.",
             distractors: ["take care", "see you around", "long time no see"],
             correctExplanation:
               "Depois de meses sem conversar, é hora de catch up.",

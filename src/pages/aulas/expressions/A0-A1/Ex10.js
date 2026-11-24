@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "under-the-weather",
           phrase: "Under the weather",
           meaning: "A little sick or not feeling well.",
+          meaningPt: "Meio doente ou não se sentindo bem.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex10.mp3"),
           image: require("../../../../../assets/EX/A0-A1/under-the-weather.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "I'm not coming to work today. I have a headache and I feel a bit",
             after: ".",
+            translation: "Não vou trabalhar hoje. Estou com dor de cabeça e me sentindo meio ___.",
             distractors: ["over the moon", "in a good mood", "feel down"],
             correctExplanation:
               "Com dor de cabeça, ele está under the weather.",

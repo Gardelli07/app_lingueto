@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "split-the-bill",
           phrase: "Split the bill",
           meaning: "Share the cost of a meal.",
+          meaningPt: "Dividir o valor de uma refeição.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex16.mp3"),
           image: require("../../../../../assets/EX/A0-A1/split-the-bill.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "The meal was $60, so we decided to",
             after: ".",
+            translation: "A refeição deu 60 dólares, então decidimos ___.",
             distractors: ["help yourself", "have a sweet tooth", "my treat"],
             correctExplanation:
               "A conta deu 60 dólares e eles resolveram split the bill.",

@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "long-time-no-see",
           phrase: "Long time no see",
           meaning: "Said when you meet someone you haven't seen for a long time.",
+          meaningPt: "Dito quando você encontra alguém que não vê há muito tempo.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex03.mp3"),
           image: require("../../../../../assets/EX/A0-A1/long-time-no-see.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "Mark! I haven't seen you since school. Wow,",
             after: "!",
+            translation: "Mark! Não te vejo desde a escola. Nossa, ___!",
             distractors: ["nice to meet you", "see you around", "catch up"],
             correctExplanation:
               "Eles não se viam desde a escola: long time no see!",

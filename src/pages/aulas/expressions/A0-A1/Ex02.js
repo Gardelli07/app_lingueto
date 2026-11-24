@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "nice-to-meet-you",
           phrase: "Nice to meet you",
           meaning: "A polite thing to say when you meet someone for the first time.",
+          meaningPt: "Um jeito educado de falar quando você conhece alguém pela primeira vez.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex02.mp3"),
           image: require("../../../../../assets/EX/A0-A1/nice-to-meet-you.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "Hi, Laura! I'm Ben, Tom's brother. It's",
             after: ".",
+            translation: "Oi, Laura! Eu sou o Ben, irmão do Tom. ___.",
             distractors: ["long time no see", "take care", "catch up"],
             correctExplanation:
               "Na primeira vez que encontramos alguém, dizemos nice to meet you.",

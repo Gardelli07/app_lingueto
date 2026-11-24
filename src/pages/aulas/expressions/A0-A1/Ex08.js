@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "over-the-moon",
           phrase: "Over the moon",
           meaning: "Very, very happy.",
+          meaningPt: "Muito, muito feliz.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex08.mp3"),
           image: require("../../../../../assets/EX/A0-A1/over-the-moon.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "She passed her driving test, and she's",
             after: "!",
+            translation: "Ela passou na prova de direção e está ___!",
             distractors: ["fed up", "on edge", "feel down"],
             correctExplanation:
               "Ela passou no teste e está over the moon!",

@@ -205,6 +205,7 @@ const LESSON_SLIDES = [
 
 export default createLessonScreen(LESSON_SLIDES, {
   storageKey: "@curso_progress_grammar_lab_A0-A1",
+  ptToggle: true,
   nextRouteName: "GrammarLab",
   screenName: "GrammarLabA0A1LessonScreen",
 });

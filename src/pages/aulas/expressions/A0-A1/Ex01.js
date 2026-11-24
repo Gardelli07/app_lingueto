@@ -9,6 +9,7 @@ const LESSON_SLIDES = [
           id: "break-the-ice",
           phrase: "Break the ice",
           meaning: "Make people feel relaxed when things are awkward.",
+          meaningPt: "Deixar as pessoas à vontade quando o clima está estranho.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex01.mp3"),
           image: require("../../../../../assets/EX/A0-A1/break-the-ice.jpg"),
           meaningCheck: {
@@ -25,6 +26,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "This party is so quiet. Let’s play a game to",
             after: ".",
+            translation: "Essa festa está muito parada. Vamos jogar um jogo pra ___.",
             distractors: ["hit the sack", "spill the beans", "call it a day"],
             correctExplanation: "Perfeito! Um jogo ajuda a {answer}.",
             wrongExplanation:
@@ -35,6 +37,7 @@ const LESSON_SLIDES = [
           id: "call-it-a-day",
           phrase: "Call it a day",
           meaning: "Stop working on something for today.",
+          meaningPt: "Parar de trabalhar em algo por hoje.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex01B.mp3"),
           image: require("../../../../../assets/EX/A0-A1/call-it-a-day.webp"),
           meaningCheck: {
@@ -51,6 +54,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "We’ve been working for ten hours. Let’s",
             after: "!",
+            translation: "Estamos trabalhando há dez horas. Vamos ___!",
             distractors: ["break the ice", "hit the sack", "spill the beans"],
             correctExplanation:
               "Mandou bem! Depois de 10 horas, é hora de {answer}.",

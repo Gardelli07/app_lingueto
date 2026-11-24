@@ -10,6 +10,7 @@ const LESSON_SLIDES = [
           id: "grab-a-bite",
           phrase: "Grab a bite",
           meaning: "Eat something quickly.",
+          meaningPt: "Comer alguma coisa rapidinho.",
           audio: require("../../../../../mp3/EX/A0-A1/Ex14.mp3"),
           image: require("../../../../../assets/EX/A0-A1/grab-a-bite.webp"),
           meaningCheck: {
@@ -27,6 +28,7 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "We have 20 minutes before the film. Let's",
             after: ".",
+            translation: "Temos 20 minutos antes do filme. Vamos ___.",
             distractors: ["my treat", "have a sweet tooth", "help yourself"],
             correctExplanation:
               "Com 20 minutos, dá para grab a bite.",

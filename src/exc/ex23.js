@@ -108,6 +108,9 @@ export function Exercise23({
   const [comboXp, setComboXp] = useState(0);
   const [feedback, setFeedback] = useState(null);
   const [meaningPick, setMeaningPick] = useState(null);
+  // "🌐 PT": traduz enunciados e frases (nunca a expressao) e fica ligado
+  // de um passo para o outro.
+  const [showPt, setShowPt] = useState(false);
   // idle | buying | added | failed, da segunda chance do passo atual.
   const [chanceStatus, setChanceStatus] = useState("idle");
   // undefined enquanto as metas carregam; null se nenhuma andou.
@@ -214,7 +217,7 @@ export function Exercise23({
     }
   };
 
-  // Protegido contra toque duplo: sem isso o GOT IT/Continuar pulava um passo.
+  // Protegido contra toque duplo: sem isso o ENTENDI/Continuar pulava um passo.
   const advance = () => {
     if (buyingRef.current || advancedStepRef.current === index) return;
     advancedStepRef.current = index;
@@ -245,15 +248,18 @@ export function Exercise23({
           progress={progress}
           progressColor={feedback?.correct ? colors.green : colors.blue}
           onClose={() => navigation.goBack()}
+          ptShown={showPt}
+          onTogglePt={() => setShowPt((current) => !current)}
         />
         {/* a key reinicia o estado de cada passo (embaralhar, palavra escolhida) */}
         <View key={index} style={{ flex: 1 }}>
           {step.kind === "learn" ? (
-            <LearnStep expression={expression} onNext={advance} />
+            <LearnStep expression={expression} showPt={showPt} onNext={advance} />
           ) : step.kind === "meaning" ? (
             <MeaningStep
               expression={expression}
               answered={meaningPick}
+              showPt={showPt}
               xpBadge={
                 feedback?.correct && feedback.xpGain > 0
                   ? `+${feedback.xpGain} XP`
@@ -269,6 +275,7 @@ export function Exercise23({
             <FillStep
               expression={expression}
               checked={!!feedback}
+              showPt={showPt}
               onCheck={answer}
             />
           )}

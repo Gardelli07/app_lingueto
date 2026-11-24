@@ -6,6 +6,7 @@ import { formatXp } from "../../util/xp";
 import { BoltIcon, BulbIcon, XIcon } from "../grammarlab/icons";
 import { ArrowRightIcon } from "./icons";
 import { colors, fonts, STAGES, TH_BLUE } from "./theme";
+import { PtContextButton } from "../ptToggle";
 
 /*
   Moldura das etapas do Pronunciation Lab (Exercise34 a Exercise38): cada
@@ -81,6 +82,8 @@ export const PronunciationFrame = forwardRef(function PronunciationFrame(
             {STAGES[stage - 1]}
           </Text>
           {lessonTag ? <Text style={styles.lessonTag}>{lessonTag}</Text> : null}
+          {/* "🌐 PT" das aulas A1 (some fora delas) */}
+          <PtContextButton />
         </View>
       </View>
 
@@ -186,6 +189,8 @@ export function optionColors(state) {
 export const frameStyles = StyleSheet.create({
   h1: { marginTop: 12, fontFamily: fonts.extrabold, fontSize: 24, lineHeight: 30, color: colors.text },
   sub: { marginTop: 8, fontFamily: fonts.medium, fontSize: 16, lineHeight: 23, color: TH_BLUE },
+  // Traducao do "🌐 PT" embaixo do titulo / instrucao / pergunta.
+  pt: { marginTop: 4, fontFamily: fonts.medium, fontSize: 15, lineHeight: 21, color: "#9aa4c4" },
   label: {
     marginTop: 18,
     marginBottom: 8,
