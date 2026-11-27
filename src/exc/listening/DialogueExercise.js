@@ -27,8 +27,8 @@ export function DialogueExercise({ item, instruction, picked, checked, speaking,
           item.instruction ||
           instruction ||
           (situation
-            ? "Play the dialogue and use the clues."
-            : "Play the conversation, then choose.")
+            ? "Ouça o diálogo e use as pistas."
+            : "Ouça a conversa e depois escolha.")
         }
       />
 

@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "The boss is smiling and singing today. He's",
             after: ".",
-            translation: "O chefe está sorrindo e cantando hoje. Ele está ___.",
             distractors: ["fed up", "on edge", "under the weather"],
             correctExplanation:
               "Sorrindo e cantando: ele está in a good mood.",

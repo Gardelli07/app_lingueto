@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "Hi, Laura! I'm Ben, Tom's brother. It's",
             after: ".",
-            translation: "Oi, Laura! Eu sou o Ben, irmão do Tom. ___.",
             distractors: ["long time no see", "take care", "catch up"],
             correctExplanation:
               "Na primeira vez que encontramos alguém, dizemos nice to meet you.",

@@ -6,7 +6,7 @@ const LESSON_SLIDES = [
     activity: {
       questions: [
         {
-          question: "What does Sarah say?",
+          question: "O que a Sarah diz?",
           lines: [
             { who: "A", speaker: 0, text: "Hey, Sarah. Are you coming to the party tonight?" },
             { who: "Sarah", speaker: 1, text: "I don't think so. I have to work until nine." },
@@ -46,8 +46,8 @@ const LESSON_SLIDES = [
       questions: [
         {
           kicker: "WHAT DID THEY SAY?",
-          title: "What did they say?",
-          instruction: "Play the sentence, then choose what you heard.",
+          title: "O que eles disseram?",
+          instruction: "Ouça a frase e escolha o que você ouviu.",
           say: "Could you send me the file?",
           audioSource: require("../../../../../mp3/LS/A0-A1/Lsn01S3.mp3"),
           options: [
@@ -69,7 +69,7 @@ const LESSON_SLIDES = [
       questions: [
         {
           variant: "situation",
-          question: "Where are they?",
+          question: "Onde eles estão?",
           lines: [
             { who: "A", speaker: 0, text: "Excuse me, where's gate 14?" },
             { who: "B", speaker: 1, text: "It's on your left, next to the coffee shop." },

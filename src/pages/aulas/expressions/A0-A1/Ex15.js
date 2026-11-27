@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "Put your wallet away. This dinner is",
             after: "!",
-            translation: "Guarda a carteira. Esse jantar é ___!",
             distractors: ["dig in", "split the bill", "grab a bite"],
             correctExplanation:
               "Guarda a carteira: o jantar é my treat!",

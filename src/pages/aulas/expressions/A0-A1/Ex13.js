@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "When it's dark and cold in winter, I sometimes",
             after: ".",
-            translation: "Quando está escuro e frio no inverno, às vezes eu ___.",
             distractors: ["in a good mood", "on edge", "over the moon"],
             correctExplanation:
               "O inverno escuro faz muita gente feel down.",

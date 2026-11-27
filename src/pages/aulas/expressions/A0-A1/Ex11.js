@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "My exam results come out tomorrow, so I'm a bit",
             after: ".",
-            translation: "O resultado da minha prova sai amanhã, então estou meio ___.",
             distractors: ["over the moon", "in a good mood", "feel down"],
             correctExplanation:
               "Esperando o resultado da prova, ele está on edge.",

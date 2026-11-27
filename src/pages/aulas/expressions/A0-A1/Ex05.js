@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "OK, I have to go now. Bye, and",
             after: "!",
-            translation: "Bom, tenho que ir agora. Tchau, e ___!",
             distractors: ["catch up", "long time no see", "how's it going"],
             correctExplanation:
               "Para se despedir com carinho: take care!",

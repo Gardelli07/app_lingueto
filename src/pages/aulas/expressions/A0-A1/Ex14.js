@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "We have 20 minutes before the film. Let's",
             after: ".",
-            translation: "Temos 20 minutos antes do filme. Vamos ___.",
             distractors: ["my treat", "have a sweet tooth", "help yourself"],
             correctExplanation:
               "Com 20 minutos, dá para grab a bite.",

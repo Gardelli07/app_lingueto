@@ -23,8 +23,8 @@ export function CatchExercise({ item, instruction, picked, checked, speaking, on
       <ExerciseHeader
         icon={<SearchIcon color={colors.accentSoft} />}
         kicker="CATCH THE WORDS"
-        title={item.title || "What word did you hear?"}
-        subtitle={item.instruction || instruction || "Listen to the sentence and catch the word."}
+        title={item.title || "Que palavra você ouviu?"}
+        subtitle={item.instruction || instruction || "Ouça a frase e pegue a palavra."}
       />
       <Player speaking={speaking} onSpeak={onSpeak} />
 

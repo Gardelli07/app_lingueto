@@ -24,8 +24,8 @@ export function ReplyExercise({ item, instruction, picked, checked, correct, spe
       <ExerciseHeader
         icon={<ChatLinesIcon color={colors.accentSoft} />}
         kicker="COMPLETE THE CONVERSATION"
-        title={item.title || "What comes next?"}
-        subtitle={item.instruction || instruction || "Listen to your friend and pick the best reply."}
+        title={item.title || "O que vem depois?"}
+        subtitle={item.instruction || instruction || "Ouça seu amigo e escolha a melhor resposta."}
       />
 
       <View style={styles.card}>

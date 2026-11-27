@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "Mark! I haven't seen you since school. Wow,",
             after: "!",
-            translation: "Mark! Não te vejo desde a escola. Nossa, ___!",
             distractors: ["nice to meet you", "see you around", "catch up"],
             correctExplanation:
               "Eles não se viam desde a escola: long time no see!",

@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "The meal was $60, so we decided to",
             after: ".",
-            translation: "A refeição deu 60 dólares, então decidimos ___.",
             distractors: ["help yourself", "have a sweet tooth", "my treat"],
             correctExplanation:
               "A conta deu 60 dólares e eles resolveram split the bill.",

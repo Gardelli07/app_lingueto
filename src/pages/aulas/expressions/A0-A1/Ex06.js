@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "I don't know when I'll be back here, but",
             after: "!",
-            translation: "Não sei quando vou voltar aqui, mas ___!",
             distractors: ["long time no see", "how's it going", "catch up"],
             correctExplanation:
               "Sem data para voltar: see you around!",

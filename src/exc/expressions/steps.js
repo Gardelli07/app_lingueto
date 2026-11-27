@@ -67,12 +67,15 @@ export function LearnStep({ expression, onNext }) {
             style={({ pressed }) => [learn.listen, pressed && { opacity: 0.7 }]}
           >
             <SpeakerIcon />
-            <Text style={learn.listenText}>Listen</Text>
+            <Text style={learn.listenText}>Ouvir</Text>
           </Pressable>
         </View>
-        <Text style={learn.meaning}>{expression.meaning}</Text>
+        {/* Explicacao direto em portugues (aulas A1); a expressao fica em ingles. */}
+        <Text style={learn.meaning}>
+          {expression.meaningPt || expression.meaning}
+        </Text>
       </View>
-      <ChunkyButton label="GOT IT" onPress={onNext} />
+      <ChunkyButton label="ENTENDI" onPress={onNext} />
     </View>
   );
 }
@@ -97,12 +100,13 @@ export function MeaningStep({ expression, answered, xpBadge, onAnswer }) {
   return (
     <View style={{ flex: 1 }}>
       <View style={{ marginTop: 36 }}>
+        {/* Enunciado em portugues; so a expressao fica em ingles. */}
         <Title>
-          What does{" "}
+          O que{" "}
           <Text style={{ color: colors.blueText }}>
             {expression.phrase.toLowerCase()}
           </Text>{" "}
-          mean?
+          significa?
         </Title>
       </View>
       <View style={{ marginTop: 28, gap: 14 }}>

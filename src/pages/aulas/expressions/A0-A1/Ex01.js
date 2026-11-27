@@ -26,7 +26,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "This party is so quiet. Let’s play a game to",
             after: ".",
-            translation: "Essa festa está muito parada. Vamos jogar um jogo pra ___.",
             distractors: ["hit the sack", "spill the beans", "call it a day"],
             correctExplanation: "Perfeito! Um jogo ajuda a {answer}.",
             wrongExplanation:
@@ -54,7 +53,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "We’ve been working for ten hours. Let’s",
             after: "!",
-            translation: "Estamos trabalhando há dez horas. Vamos ___!",
             distractors: ["break the ice", "hit the sack", "spill the beans"],
             correctExplanation:
               "Mandou bem! Depois de 10 horas, é hora de {answer}.",

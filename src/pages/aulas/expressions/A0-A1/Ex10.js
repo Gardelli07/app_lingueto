@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "I'm not coming to work today. I have a headache and I feel a bit",
             after: ".",
-            translation: "Não vou trabalhar hoje. Estou com dor de cabeça e me sentindo meio ___.",
             distractors: ["over the moon", "in a good mood", "feel down"],
             correctExplanation:
               "Com dor de cabeça, ele está under the weather.",

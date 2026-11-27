@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "It's rained every day for two weeks. I'm so",
             after: "!",
-            translation: "Choveu todo dia por duas semanas. Estou tão ___!",
             distractors: ["over the moon", "in a good mood", "feel down"],
             correctExplanation:
               "Duas semanas de chuva: fed up!",

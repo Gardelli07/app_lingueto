@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "Hey, Jake! So,",
             after: "?",
-            translation: "E aí, Jake! Então, ___?",
             distractors: ["take care", "see you around", "nice to meet you"],
             correctExplanation:
               "Para perguntar como o amigo está: how's it going?",

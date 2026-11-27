@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "We haven't talked in months! Let's have coffee and",
             after: ".",
-            translation: "A gente não se fala há meses! Vamos tomar um café e ___.",
             distractors: ["take care", "see you around", "long time no see"],
             correctExplanation:
               "Depois de meses sem conversar, é hora de catch up.",

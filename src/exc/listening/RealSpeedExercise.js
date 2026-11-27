@@ -20,11 +20,11 @@ export function RealSpeedExercise({ item, instruction, picked, checked, playing,
       <ExerciseHeader
         icon={<GaugeIcon color={colors.amberText} />}
         kicker="REAL-SPEED ENGLISH"
-        title={item.title || "Can you understand it at real speed?"}
+        title={item.title || "Você consegue entender na velocidade real?"}
         subtitle={
           item.instruction ||
           instruction ||
-          "Hear it clearly first, then the way people really say it."
+          "Ouça primeiro com calma, depois do jeito que as pessoas falam de verdade."
         }
       />
 
@@ -126,7 +126,7 @@ export function RealSpeedExercise({ item, instruction, picked, checked, playing,
         </View>
       )}
 
-      <Text style={styles.question}>WHAT DID YOU HEAR?</Text>
+      <Text style={styles.question}>O QUE VOCÊ OUVIU?</Text>
       <OptionList
         options={item.options}
         answer={item.correctAnswer}

@@ -28,7 +28,6 @@ const LESSON_SLIDES = [
           fillBlank: {
             before: "She passed her driving test, and she's",
             after: "!",
-            translation: "Ela passou na prova de direção e está ___!",
             distractors: ["fed up", "on edge", "feel down"],
             correctExplanation:
               "Ela passou no teste e está over the moon!",
