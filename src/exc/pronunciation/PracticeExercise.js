@@ -11,7 +11,6 @@ import { BoltIcon } from "../grammarlab/icons";
 import { MicIcon, PlayIcon, SpeakerIcon, StopIcon, UsersIcon } from "./icons";
 import { FeedbackSheet, PremiumSheet } from "./Sheets";
 import { Dots, frameStyles, PronunciationFrame, ThText, Tip } from "./Frame";
-import { PtLine } from "../ptToggle";
 import { neutralAttempt } from "./scoring";
 import { useVoicePractice } from "./useVoicePractice";
 import { colors, fonts, TH_BLUE } from "./theme";
@@ -239,7 +238,6 @@ export function PracticeExercise({ variant, activity, next, onAttempt, userXp = 
       }
     >
       <Text style={frameStyles.h1}>{activity.title}</Text>
-      <PtLine text={activity.title} style={frameStyles.pt} />
       <Dots count={items.length} at={index} />
       <View
         key={index}

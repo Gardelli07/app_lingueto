@@ -525,7 +525,6 @@ const LESSON_SLIDES = [
 
 export default createLessonScreen(LESSON_SLIDES, {
   storageKey: TRAVEL_STORAGE_KEY,
-  ptToggle: true,
   nextRouteName: "FloridaClasses",
   nextRouteParams: { topicNum: "01" },
   screenName: "FloridaLessonScreen",

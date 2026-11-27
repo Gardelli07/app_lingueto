@@ -466,7 +466,6 @@ const LESSON_SLIDES = [
 
 export default createLessonScreen(LESSON_SLIDES, {
   storageKey: BUSINESS_STORAGE_KEY,
-  ptToggle: true,
   // Volta para as aulas da Season 1 do Marketing.
   nextRouteName: "MarketingClasses",
   nextRouteParams: { topicNum: "01" },

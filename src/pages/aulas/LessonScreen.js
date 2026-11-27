@@ -53,7 +53,6 @@ import { Exercise35 } from "../../exc/ex35";
 import { Exercise36 } from "../../exc/ex36";
 import { Exercise37 } from "../../exc/ex37";
 import { Exercise38 } from "../../exc/ex38";
-import { PtContext } from "../../exc/ptToggle";
 import Feedback from "../../exc/feedback";
 import { Images } from "../../util/images";
 import {
@@ -807,14 +806,7 @@ function slideQuestionCount({ slide, originalIndex }, reviewQuestionKeys) {
 export default function createLessonScreen(
   slides,
   // nextRouteParams: params extras da tela de volta (ex.: o topico da Viagem).
-  // ptToggle: liga o botao "🌐 PT" dos enunciados (cursos A1), ver exc/ptToggle.
-  {
-    storageKey,
-    nextRouteName,
-    nextRouteParams,
-    screenName = "LessonScreen",
-    ptToggle = false,
-  },
+  { storageKey, nextRouteName, nextRouteParams, screenName = "LessonScreen" },
 ) {
   if (!storageKey || !nextRouteName) {
     throw new Error("createLessonScreen requires storageKey and nextRouteName");
@@ -893,9 +885,6 @@ export default function createLessonScreen(
     // Combo e XP mostrado que seguem de um slide do Grammar Lab para o
     // outro (ComboSlide le ao montar e grava a cada resposta).
     const comboSessionRef = useRef({ combo: 0, gained: 0 });
-    // "🌐 PT" das aulas A1 (ptToggle): um estado so para a aula inteira, que
-    // continua ligado de um slide para o outro.
-    const [ptShown, setPtShown] = useState(false);
 
     useEffect(() => {
       updateProgress(progressAnim, currentSlideIndex, slideCount);
@@ -1295,13 +1284,6 @@ export default function createLessonScreen(
       currentSlide.type !== "reviewFinish";
 
     const slideContent = (
-      <PtContext.Provider
-        value={
-          ptToggle
-            ? { shown: ptShown, toggle: () => setPtShown((current) => !current) }
-            : null
-        }
-      >
       <LessonSlideRenderer
         key={currentSlideInstanceKey}
         slide={currentSlide}
@@ -1338,7 +1320,6 @@ export default function createLessonScreen(
           ...levelProgress,
         }}
       />
-      </PtContext.Provider>
     );
 
     return (

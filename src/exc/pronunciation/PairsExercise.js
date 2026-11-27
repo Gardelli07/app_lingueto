@@ -6,7 +6,6 @@ import { playCorrect, playWrong } from "../grammarlab/feedback";
 import { SpeakerIcon } from "./icons";
 import { AnswerSheet } from "./Sheets";
 import { frameStyles, optionColors, PronunciationFrame } from "./Frame";
-import { PtLine } from "../ptToggle";
 import { gainForCorrect } from "./scoring";
 import { useVoicePractice } from "./useVoicePractice";
 import { colors, fonts } from "./theme";
@@ -134,11 +133,9 @@ export function PairsExercise({
       }
     >
       <Text style={frameStyles.h1}>{activity.title}</Text>
-      <PtLine text={activity.title} style={frameStyles.pt} />
       <Text style={[frameStyles.sub, { fontSize: 15 }]}>
         {activity.instruction} · {q + 1} / {total}
       </Text>
-      <PtLine text={activity.instruction} style={frameStyles.pt} />
       <View style={{ alignItems: "center", marginTop: 24 }}>
         <Pressable
           accessibilityRole="button"

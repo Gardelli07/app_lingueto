@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, Easing, Pressable, StyleSheet, Text, View } from "react-native";
-import { ExerciseHeader, ptFor } from "../ExerciseHeader";
+import { ExerciseHeader } from "../ExerciseHeader";
 import { HeadphonesIcon, SpeakerIcon } from "../icons";
 import { colors, fonts } from "../theme";
 import { OptionList } from "./ChoiceExercise";
@@ -12,20 +12,8 @@ const WAVE = [
 
 // Ouvir (Exercise25): escuta a frase em ingles (botao 0.5x para devagar) e
 // toca na que ouviu. item: say, options, correctAnswer; audioSource e opcional
-// (audio gravado da frase; sem ele, a voz do celular le o `say`). O "🌐 PT"
-// so aparece quando quem usa passa `onTogglePt` (hoje, o Listening).
-export function ListenExercise({
-  item,
-  instruction,
-  instructionPt,
-  picked,
-  checked,
-  speaking,
-  onSpeak,
-  onPick,
-  ptShown,
-  onTogglePt,
-}) {
+// (audio gravado da frase; sem ele, a voz do celular le o `say`).
+export function ListenExercise({ item, instruction, picked, checked, speaking, onSpeak, onPick }) {
   return (
     <View>
       <ExerciseHeader
@@ -35,14 +23,6 @@ export function ListenExercise({
         subtitle={
           item.instruction || instruction || "Tap the speaker, then choose the sentence."
         }
-        titlePt={ptFor(item.title, item.titlePt, "O que você ouve?")}
-        subtitlePt={ptFor(
-          item.instruction,
-          item.instructionPt,
-          ptFor(instruction, instructionPt, "Toque no alto-falante e escolha a frase."),
-        )}
-        ptShown={ptShown}
-        onTogglePt={onTogglePt}
       />
 
       <Player speaking={speaking} onSpeak={onSpeak} />

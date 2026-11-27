@@ -1,7 +1,7 @@
 import React from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { useBump, useShake } from "../grammarlab/anim";
-import { ExerciseHeader, ptFor } from "../grammarlab/ExerciseHeader";
+import { ExerciseHeader } from "../grammarlab/ExerciseHeader";
 import { CheckIcon, SearchIcon, XIcon } from "../grammarlab/icons";
 import { colors, fonts } from "../grammarlab/theme";
 import { optionState } from "../grammarlab/types/ChoiceExercise";
@@ -17,18 +17,7 @@ const LOOK = {
 // Pegar a palavra (Exercise29): ouve a frase e toca na palavra que ouviu; a
 // transcricao aparece depois. item: say, transcript (`**palavra**` destaca),
 // options, correctAnswer.
-export function CatchExercise({
-  item,
-  instruction,
-  instructionPt,
-  picked,
-  checked,
-  speaking,
-  onSpeak,
-  onPick,
-  ptShown,
-  onTogglePt,
-}) {
+export function CatchExercise({ item, instruction, picked, checked, speaking, onSpeak, onPick }) {
   return (
     <View>
       <ExerciseHeader
@@ -36,14 +25,6 @@ export function CatchExercise({
         kicker="CATCH THE WORDS"
         title={item.title || "What word did you hear?"}
         subtitle={item.instruction || instruction || "Listen to the sentence and catch the word."}
-        titlePt={ptFor(item.title, item.titlePt, "Que palavra você ouviu?")}
-        subtitlePt={ptFor(
-          item.instruction,
-          item.instructionPt,
-          ptFor(instruction, instructionPt, "Ouça a frase e pegue a palavra."),
-        )}
-        ptShown={ptShown}
-        onTogglePt={onTogglePt}
       />
       <Player speaking={speaking} onSpeak={onSpeak} />
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { ExerciseHeader, ptFor } from "../grammarlab/ExerciseHeader";
+import { ExerciseHeader } from "../grammarlab/ExerciseHeader";
 import { ChatLinesIcon, SpeakerIcon } from "../grammarlab/icons";
 import { colors, fonts } from "../grammarlab/theme";
 import { OptionList } from "../grammarlab/types/ChoiceExercise";
@@ -12,19 +12,7 @@ const quoted = (option) => `“${option}”`;
 
 // Completar a conversa (Exercise30): a fala do amigo toca como audio e o balao
 // do aluno recebe a resposta escolhida. item: say, friend, options, correctAnswer.
-export function ReplyExercise({
-  item,
-  instruction,
-  instructionPt,
-  picked,
-  checked,
-  correct,
-  speaking,
-  onSpeak,
-  onPick,
-  ptShown,
-  onTogglePt,
-}) {
+export function ReplyExercise({ item, instruction, picked, checked, correct, speaking, onSpeak, onPick }) {
   const replyLook = !checked
     ? { bg: "transparent", border: "#3a4470", fg: colors.textMuted, style: "dashed" }
     : correct
@@ -38,14 +26,6 @@ export function ReplyExercise({
         kicker="COMPLETE THE CONVERSATION"
         title={item.title || "What comes next?"}
         subtitle={item.instruction || instruction || "Listen to your friend and pick the best reply."}
-        titlePt={ptFor(item.title, item.titlePt, "O que vem depois?")}
-        subtitlePt={ptFor(
-          item.instruction,
-          item.instructionPt,
-          ptFor(instruction, instructionPt, "Ouça seu amigo e escolha a melhor resposta."),
-        )}
-        ptShown={ptShown}
-        onTogglePt={onTogglePt}
       />
 
       <View style={styles.card}>

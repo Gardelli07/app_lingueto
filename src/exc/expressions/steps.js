@@ -11,7 +11,7 @@ import * as Speech from "expo-speech";
 import { speakSentence, stopSpeaking } from "../grammarlab/feedback";
 import { PersonIcon, SpeakerIcon } from "./icons";
 import { colors, fonts } from "./theme";
-import { ChunkyButton, OptionButton, PtText, Title, WordChip } from "./ui";
+import { ChunkyButton, OptionButton, Title, WordChip } from "./ui";
 
 function shuffle(items) {
   const a = [...items];
@@ -24,9 +24,7 @@ function shuffle(items) {
 
 /* ---------- 1 · Apresenta a expressao ---------- */
 
-// A explicacao fica em ingles; a traducao (`meaningPt`) so aparece com o
-// "🌐 PT" ligado.
-export function LearnStep({ expression, showPt, onNext }) {
+export function LearnStep({ expression, onNext }) {
   const { width } = useWindowDimensions();
   const imageW = Math.min(width - 48, 420);
 
@@ -69,17 +67,12 @@ export function LearnStep({ expression, showPt, onNext }) {
             style={({ pressed }) => [learn.listen, pressed && { opacity: 0.7 }]}
           >
             <SpeakerIcon />
-            <Text style={learn.listenText}>Ouvir</Text>
+            <Text style={learn.listenText}>Listen</Text>
           </Pressable>
         </View>
-        <View style={{ alignItems: "center", gap: 8 }}>
-          <Text style={learn.meaning}>{expression.meaning}</Text>
-          {showPt && expression.meaningPt ? (
-            <Text style={learn.meaningPt}>{expression.meaningPt}</Text>
-          ) : null}
-        </View>
+        <Text style={learn.meaning}>{expression.meaning}</Text>
       </View>
-      <ChunkyButton label="ENTENDI" onPress={onNext} />
+      <ChunkyButton label="GOT IT" onPress={onNext} />
     </View>
   );
 }
@@ -87,9 +80,8 @@ export function LearnStep({ expression, showPt, onNext }) {
 /* ---------- 2 · O que significa ---------- */
 
 // `answered` e o indice (na ordem embaralhada) escolhido, depois de responder;
-// `xpBadge` aparece na alternativa certa quando o aluno acerta. Com `showPt`
-// o enunciado ganha a traducao embaixo (a expressao fica em ingles).
-export function MeaningStep({ expression, answered, xpBadge, showPt, onAnswer }) {
+// `xpBadge` aparece na alternativa certa quando o aluno acerta.
+export function MeaningStep({ expression, answered, xpBadge, onAnswer }) {
   const options = useMemo(
     () => shuffle(expression.meaningCheck.options),
     [expression],
@@ -112,15 +104,6 @@ export function MeaningStep({ expression, answered, xpBadge, showPt, onAnswer })
           </Text>{" "}
           mean?
         </Title>
-        {showPt ? (
-          <PtText>
-            O que significa{" "}
-            <Text style={{ color: colors.blueText }}>
-              {expression.phrase.toLowerCase()}
-            </Text>
-            ?
-          </PtText>
-        ) : null}
       </View>
       <View style={{ marginTop: 28, gap: 14 }}>
         {options.map((o, i) => (
@@ -140,9 +123,7 @@ export function MeaningStep({ expression, answered, xpBadge, showPt, onAnswer })
 
 /* ---------- 3 · Completar a frase ---------- */
 
-// Com `showPt` aparecem o enunciado e a frase em portugues, com a lacuna
-// (a expressao) sem traduzir.
-export function FillStep({ expression, checked, showPt, onCheck }) {
+export function FillStep({ expression, checked, onCheck }) {
   const answer = expression.phrase.toLowerCase();
   const words = useMemo(
     () => shuffle([answer, ...expression.fillBlank.distractors]),
@@ -161,7 +142,6 @@ export function FillStep({ expression, checked, showPt, onCheck }) {
     <View style={{ flex: 1 }}>
       <View style={{ marginTop: 36 }}>
         <Title>Fill in the blank</Title>
-        {showPt ? <PtText>Complete a frase</PtText> : null}
       </View>
 
       <View style={fill.row}>
@@ -200,11 +180,6 @@ export function FillStep({ expression, checked, showPt, onCheck }) {
             </Pressable>
             <Text style={fill.word}>{expression.fillBlank.after}</Text>
           </View>
-          {showPt && expression.fillBlank.translation ? (
-            <PtText style={fill.translation}>
-              {expression.fillBlank.translation}
-            </PtText>
-          ) : null}
         </View>
       </View>
 
@@ -222,7 +197,7 @@ export function FillStep({ expression, checked, showPt, onCheck }) {
 
       <View style={{ flex: 1 }} />
       <ChunkyButton
-        label="VERIFICAR"
+        label="CHECK"
         disabled={!picked || checked}
         onPress={() => onCheck(picked === answer)}
       />
@@ -258,14 +233,6 @@ const learn = StyleSheet.create({
     color: "#475066",
     textAlign: "center",
   },
-  meaningPt: {
-    maxWidth: 300,
-    fontFamily: fonts.medium,
-    fontSize: 16,
-    lineHeight: 23,
-    color: colors.muted,
-    textAlign: "center",
-  },
 });
 
 const fill = StyleSheet.create({
@@ -292,13 +259,6 @@ const fill = StyleSheet.create({
   },
   sentence: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", rowGap: 4 },
   word: { fontFamily: fonts.semibold, fontSize: 19, lineHeight: 32, color: colors.text },
-  translation: {
-    marginTop: 10,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    fontSize: 15,
-  },
   blank: {
     paddingHorizontal: 10,
     borderRadius: 10,

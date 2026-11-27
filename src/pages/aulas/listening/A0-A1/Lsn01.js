@@ -7,7 +7,6 @@ const LESSON_SLIDES = [
       questions: [
         {
           question: "What does Sarah say?",
-          questionPt: "O que a Sarah diz?",
           lines: [
             { who: "A", speaker: 0, text: "Hey, Sarah. Are you coming to the party tonight?" },
             { who: "Sarah", speaker: 1, text: "I don't think so. I have to work until nine." },
@@ -48,9 +47,7 @@ const LESSON_SLIDES = [
         {
           kicker: "WHAT DID THEY SAY?",
           title: "What did they say?",
-          titlePt: "O que eles disseram?",
           instruction: "Play the sentence, then choose what you heard.",
-          instructionPt: "Ouça a frase e escolha o que você ouviu.",
           say: "Could you send me the file?",
           audioSource: require("../../../../../mp3/LS/A0-A1/Lsn01S3.mp3"),
           options: [
@@ -73,7 +70,6 @@ const LESSON_SLIDES = [
         {
           variant: "situation",
           question: "Where are they?",
-          questionPt: "Onde eles estão?",
           lines: [
             { who: "A", speaker: 0, text: "Excuse me, where's gate 14?" },
             { who: "B", speaker: 1, text: "It's on your left, next to the coffee shop." },
@@ -140,7 +136,6 @@ const LESSON_SLIDES = [
 
 export default createLessonScreen(LESSON_SLIDES, {
   storageKey: "@curso_progress_listening_A0-A1",
-  ptToggle: true,
   nextRouteName: "Listening",
   screenName: "ListeningA0A1LessonScreen",
 });

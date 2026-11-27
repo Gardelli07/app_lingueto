@@ -3,36 +3,8 @@ import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { CloseIcon } from "./icons";
 import { colors, fonts, ledge } from "./theme";
 
-// Botao "🌐 PT" (o mesmo do CoffeeShop): liga/desliga a traducao dos
-// enunciados e frases, nunca da expressao em si.
-export function PtToggle({ active, onPress }) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={active ? "Esconder tradução" : "Mostrar tradução"}
-      accessibilityState={{ selected: !!active }}
-      onPress={onPress}
-      hitSlop={6}
-      style={[styles.pt, active && styles.ptActive]}
-    >
-      <Text style={[styles.ptText, active && { color: "#FFFFFF" }]}>🌐 PT</Text>
-    </Pressable>
-  );
-}
-
-// Texto da traducao que aparece embaixo do original com o "🌐 PT" ligado.
-export function PtText({ children, style }) {
-  return <Text style={[styles.ptLine, style]}>{children}</Text>;
-}
-
-// Barra do topo: fechar + progresso da aula (+ "🌐 PT" quando ha onTogglePt).
-export function TopBar({
-  progress,
-  progressColor = colors.blue,
-  onClose,
-  ptShown,
-  onTogglePt,
-}) {
+// Barra do topo: fechar + progresso da aula.
+export function TopBar({ progress, progressColor = colors.blue, onClose }) {
   const width = useRef(new Animated.Value(progress)).current;
   useEffect(() => {
     Animated.timing(width, {
@@ -71,7 +43,6 @@ export function TopBar({
           ]}
         />
       </View>
-      {onTogglePt ? <PtToggle active={ptShown} onPress={onTogglePt} /> : null}
     </View>
   );
 }
@@ -202,26 +173,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   fill: { height: 14, borderRadius: 99 },
-
-  pt: {
-    height: 34,
-    paddingHorizontal: 12,
-    borderRadius: 99,
-    borderWidth: 2,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  ptActive: { backgroundColor: colors.blue, borderColor: colors.blue },
-  ptText: { fontFamily: fonts.bold, fontSize: 13, color: colors.text },
-  ptLine: {
-    marginTop: 6,
-    fontFamily: fonts.semibold,
-    fontSize: 16,
-    lineHeight: 22,
-    color: colors.muted,
-  },
 
   chunky: {
     height: 58,

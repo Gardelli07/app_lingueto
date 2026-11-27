@@ -1,6 +1,6 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { ExerciseHeader, ptFor } from "../grammarlab/ExerciseHeader";
+import { ExerciseHeader } from "../grammarlab/ExerciseHeader";
 import { BoltIcon, CheckIcon, GaugeIcon, SpeakerIcon } from "../grammarlab/icons";
 import { colors, fonts } from "../grammarlab/theme";
 import { OptionList } from "../grammarlab/types/ChoiceExercise";
@@ -14,19 +14,7 @@ const BARS_REAL = [0.5, 0.8, 0.95, 0.7, 0.9, 1, 0.85, 0.6, 0.9, 0.75, 1, 0.8, 0.
 // aparece como alternativa), options, correctAnswer, reductions ([de, para]).
 // Ao responder, o quadro "Na fala real" entra no lugar dos players: abaixo das
 // alternativas ele ficaria atras do painel de feedback.
-export function RealSpeedExercise({
-  item,
-  instruction,
-  instructionPt,
-  picked,
-  checked,
-  playing,
-  heardNormal,
-  onPlay,
-  onPick,
-  ptShown,
-  onTogglePt,
-}) {
+export function RealSpeedExercise({ item, instruction, picked, checked, playing, heardNormal, onPlay, onPick }) {
   return (
     <View>
       <ExerciseHeader
@@ -38,18 +26,6 @@ export function RealSpeedExercise({
           instruction ||
           "Hear it clearly first, then the way people really say it."
         }
-        titlePt={ptFor(item.title, item.titlePt, "Você consegue entender na velocidade real?")}
-        subtitlePt={ptFor(
-          item.instruction,
-          item.instructionPt,
-          ptFor(
-            instruction,
-            instructionPt,
-            "Ouça primeiro com calma, depois do jeito que as pessoas falam de verdade.",
-          ),
-        )}
-        ptShown={ptShown}
-        onTogglePt={onTogglePt}
       />
 
       {checked ? (
